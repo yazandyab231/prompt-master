@@ -8,6 +8,8 @@ export type RouterRoute = {
   turnId?: string
   /** The model the turn's first request named. */
   answeredBy?: string
+  /** The prompt's opening words, for /router's list. */
+  preview?: string
 }
 
 /** This session's counts: prompts judged, prompts Opus rated, prompts sent to Haiku. */
@@ -20,6 +22,7 @@ declare module 'claude-code' {
       pending: Shaped<RouterRoute | null>
       current: Shaped<RouterRoute | null>
       stats: Shaped<RouterStats>
+      recent: Shaped<RouterRoute[]>
     }
   }
 }

@@ -6,8 +6,10 @@ import {
   MAX_CONTEXT_TOKENS,
   RATER_SYSTEM,
   freeFilter,
+  haikuNotice,
   isRatedEasy,
   modelName,
+  previewOf,
   ratingPrompt,
 } from './rules'
 
@@ -15,6 +17,8 @@ const CHEAP_MODEL = 'haiku'
 const RATER_MODEL = 'opus'
 /** A judged prompt applies to the turn that starts within this long. */
 const PENDING_MS = 15_000
+/** How many decisions /router lists. */
+const RECENT = 8
 
 const isOn = atom({ plugin: 'model-router', key: 'isOn' } as const, true)
 const pending = atom({ plugin: 'model-router', key: 'pending' } as const, null as RouterRoute | null, {
@@ -28,6 +32,9 @@ const stats = atom(
   { total: 0, rated: 0, routed: 0 } as RouterStats,
   { shape: 'stats-1' },
 )
+const recent = atom({ plugin: 'model-router', key: 'recent' } as const, [] as RouterRoute[], {
+  shape: 'recent-1',
+})
 
 /** Only what the person typed, on the computer or from the phone, is routed. */
 function isPersonsPrompt(e: PromptSubmitInput): boolean {
@@ -85,10 +92,22 @@ async function judge($: EngineInterface, e: PromptSubmitInput): Promise<RouterRo
 async function report($: EngineInterface): Promise<string> {
   const s = await read($, stats)
   const on = await read($, isOn)
+  const last = await read($, recent)
 
   return [
     `Model router is ${on ? 'on' : 'off'}.`,
     `This session: ${s.total} prompts judged, ${s.rated} rated by Opus, ${s.routed} sent to Haiku.`,
+    ...(last.length === 0
+      ? []
+      : [
+          '',
+          'Last replies, newest first:',
+          ...last.map(
+            route =>
+              `  ${modelName(route.answeredBy ?? '?')} · ${route.why}${route.preview ? ` · "${route.preview}"` : ''}`,
+          ),
+        ]),
+    '',
     on ? 'Turn it off with /router off.' : 'Turn it on with /router on.',
   ].join('\n')
 }
@@ -121,7 +140,7 @@ export const register: Register = on => {
       return next(e)
     }
 
-    const route = await judge($, e)
+    const route = { ...(await judge($, e)), preview: previewOf(e.text) }
     await update($, pending, () => route)
     await update($, stats, s => ({
       ...s,
@@ -169,7 +188,15 @@ export const register: Register = on => {
       const route = await read($, current)
 
       if (route !== null && route.turnId === e.turnId && route.answeredBy !== undefined) {
+        await update($, recent, list => [route, ...list].slice(0, RECENT))
         $.ui.status(`router: ${modelName(route.answeredBy)} answered · ${route.why}`)
+
+        // The status line isn't drawn in every app; a notice in the chat is.
+        if (route.model === 'cheap') {
+          await $.session
+            .append({ message: { type: 'system', content: [{ type: 'text', text: haikuNotice(route.why) }] } })
+            .catch(() => undefined)
+        }
       }
     }
 

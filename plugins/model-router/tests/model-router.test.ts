@@ -1,8 +1,8 @@
 import type { On, PromptSubmitArgs } from 'claude-code'
-import { expect, test } from 'claude-code/testing'
+import { expect, mock, test } from 'claude-code/testing'
 import type { Engine } from 'claude-code/testing'
 
-import { freeFilter, isRatedEasy, modelName } from '../hooks/rules'
+import { freeFilter, isRatedEasy, modelName, previewOf } from '../hooks/rules'
 
 const MAIN = 'claude-opus-5-5'
 
@@ -71,6 +71,14 @@ async function ask($: Engine, text: string, prompt: Partial<PromptSubmitArgs> = 
   await $.turn.complete({ turnId: 't1', answer: 'ok', durationMs: 5, isAborted: false, reason: 'end_turn' } as never)
 }
 
+/** The notices the router added to the chat. */
+function notices(session: ReturnType<typeof mock.session>): string[] {
+  return session
+    .appended()
+    .filter(row => row.message.type === 'system')
+    .flatMap(row => row.message.content.map(block => ('text' in block ? String(block.text) : '')))
+}
+
 function world(over: Partial<World> = {}): World {
   return { ratings: [], models: [], agentModels: [], status: [], ...over }
 }
@@ -97,9 +105,10 @@ test('only a clear EASY counts as easy', () => {
   expect(modelName('claude-haiku-5-5')).toBe('Haiku')
 })
 
-test('an easy question goes to Haiku and the status line says so', async ($, on) => {
+test('an easy question goes to Haiku, and the chat and status line say so', async ($, on) => {
   const w = world({ rater: 'EASY' })
   engine(on, w)
+  const session = mock.session(on)
   await start($)
 
   await ask($, 'What is the capital of Japan?')
@@ -108,17 +117,22 @@ test('an easy question goes to Haiku and the status line says so', async ($, on)
   expect(w.ratings[0]).toContain('<request>\nWhat is the capital of Japan?\n</request>')
   expect(w.models).toEqual(['haiku'])
   expect(w.status.at(-1)).toBe('router: Haiku answered · Opus rated it easy')
+  expect(notices(session)).toEqual([
+    '↳ Haiku answered this (Opus rated it easy). /router for details or to turn it off.',
+  ])
 })
 
-test('a question Opus rates hard stays on the main model', async ($, on) => {
+test('a question Opus rates hard stays on the main model, with no notice', async ($, on) => {
   const w = world({ rater: 'HARD' })
   engine(on, w)
+  const session = mock.session(on)
   await start($)
 
   await ask($, 'Should I take the job offer or stay where I am?')
 
   expect(w.models).toEqual([MAIN])
   expect(w.status.at(-1)).toBe('router: Opus answered · Opus rated it hard')
+  expect(notices(session)).toEqual([])
 })
 
 test('code talk skips the rating entirely', async ($, on) => {
@@ -188,4 +202,35 @@ test("a subagent's requests keep their own model", async ($, on) => {
 
   expect(w.models).toEqual(['haiku'])
   expect(w.agentModels).toEqual([MAIN])
+})
+
+test('/router lists the last replies, newest first', async ($, on) => {
+  const w = world({ rater: 'EASY' })
+  engine(on, w)
+  await start($)
+
+  await ask($, 'fix the bug in login.ts')
+  await ask($, 'What is the capital of Japan?')
+
+  const ran = await $.command.run({
+    command: 'router',
+    args: '',
+    origin: { kind: 'composer' },
+    presentation: { isFullscreen: false, columns: 80 },
+  })
+
+  expect(ran.text).toBe(
+    [
+      'Model router is on.',
+      'This session: 2 prompts judged, 1 rated by Opus, 1 sent to Haiku.',
+      '',
+      'Last replies, newest first:',
+      '  Haiku · Opus rated it easy · "What is the capital of Japan?"',
+      '  Opus · mentions code, files or errors · "fix the bug in login.ts"',
+      '',
+      'Turn it off with /router off.',
+    ].join('\n'),
+  )
+  expect(previewOf('  a   b\n c ')).toBe('a b c')
+  expect(previewOf('x'.repeat(60)).length).toBe(50)
 })
