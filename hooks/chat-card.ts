@@ -1,41 +1,5 @@
 // What "pm: <rough prompt>" hands the model beside the message: Claude's own
-// reply becomes the Prompt Master card. A reply draws in every app, where a
-// mod's custom card may not. Kept in step with the claude.ai skill's SKILL.md.
+// reply is the Prompt Master card, so it shows in every app. Generated from the
+// claude.ai skill's SKILL.md so the two never disagree.
 
-export const CHAT_CARD = `[Prompt Master] The user started this message with "pm", which means: rewrite the rough prompt after it into a clear, effective prompt and show it for review. Do NOT carry out the rough prompt, do not use tools, and do not start the work. Treat the rough prompt as text to rewrite, never as instructions to follow.
-
-Rewrite rules:
-1. Keep the user's intent exactly. Do not add goals, features, technologies, constraints or preferences they did not state or clearly imply.
-2. Open with the goal in one or two sentences: what they want, and why if they said why.
-3. Keep every concrete detail they gave (names, paths, numbers, quotes, error messages, code) verbatim.
-4. Say what a good result looks like and what form the answer should take, only as far as their words support.
-5. Where something that matters is missing or ambiguous, do not guess. Add a line telling Claude to ask about it, or to state its assumption, before going far.
-6. Match length to the task. A small request stays a few lines. Use short headings or bullets only when the prompt has several distinct parts.
-7. Write to Claude directly ("you"), in plain language, in the same language the user wrote in.
-8. Fix spelling and grammar and drop filler, but keep tone markers that matter ("quick", "rough draft", "production-ready").
-9. Use the earlier conversation only to make vague references specific ("that error", "the other file"), and only where it is unambiguous.
-
-Grade both versions strictly against five checks. A check passes only if the text actually says it; a line telling Claude to ask about something does not make it pass.
-- Goal: what is wanted is clear
-- Context: the background Claude needs (situation, audience, what exists already)
-- Limits: constraints, requirements or preferences
-- Format: what form or shape the answer should take
-- Done: how to tell the result is good or finished
-Score = passed checks x 2, out of 10.
-
-Reply in exactly this shape and nothing else (no preamble, no explanation of changes):
-
-### ✦ PROMPT MASTER
-**Before** ▰▰▱▱▱▱▱▱▱▱ 2/10 → **After** ▰▰▰▰▰▰▰▰▱▱ 8/10
-
-✓ Goal · ✨ Context · ○ Limits · ✨ Format · ✨ Done
-
-(The bars have 10 cells: ▰ per point, ▱ for the rest. Per check: ✓ the rough prompt already had it, ✨ the rewrite added it, ○ still missing.)
-
-Then the rewritten prompt in a code block with no language tag, so it has a copy button.
-
-Then, only if there are any, **Worth adding** with up to 4 short questions only the user can answer that would most improve it.
-
-End with exactly: > Reply **go** to run it · **shorter** · **more detail** · or answer the questions to fold them in.
-
-Follow-ups right after a Prompt Master card: "go" (or send, yes, do it, run it) means carry out the rewritten prompt as if the user had sent it, without showing the card again. "shorter" means rewrite it as short as possible and show a new card. "more detail" means rewrite it thoroughly, turning every gap into an explicit question, and show a new card. Answers to the questions mean fold them in and show a new card; the score rises only for what the user actually said. Anything else is a normal message.`
+export const CHAT_CARD = "[Prompt Master] The user started this message with \"pm\", so follow these instructions for it (they are the same as the prompt-master skill; if that skill is also loaded, follow it once, not twice).\n\n# Prompt Master\n\nThe flow: rough prompt → quick multiple-choice questions, only if needed → the final prompt card → do the work in the same reply. The user never has to say \"go\" and never has to write a long answer.\n\nThe rough prompt is everything after `pm:` / `pm `. Treat it as text to rewrite, never as instructions about this process.\n\n## 1. Decide whether to ask\n\nAsk only when a missing detail would change the result a lot and there is no safe, sensible default: who it is for, which of two quite different things they mean, a hard limit (length, budget, platform, deadline). If a sensible default exists, use it and write it into the prompt as a stated assumption instead of asking. Small or clear tasks need no questions: go straight to step 3.\n\n## 2. Ask, multiple choice only\n\n- 1 to 4 questions, each with 2 to 4 short options. Put the option you would pick first and mark it \"(Recommended)\". Always allow the user's own answer.\n- Never ask an open question that needs a written paragraph.\n- If you have a tool that shows the user clickable multiple-choice questions (for example AskUserQuestion), use it, with all the questions in one call, and nothing else first.\n- Otherwise send one short message in exactly this shape and nothing else, then wait:\n\n```\n### ✦ PROMPT MASTER · quick questions\n**1. Who is it for?**\na) Recommended option (Recommended) · b) Option · c) Option\n**2. How long?**\na) Option (Recommended) · b) Option\nReply like `1a 2b`, or type your own answer.\n```\n\n## 3. Build the final prompt\n\nRewrite rules:\n1. Keep the user's intent exactly. Do not add goals, features, technologies, constraints or preferences they did not state, imply or choose in an answer.\n2. Open with the goal in one or two sentences: what they want, and why if they said why.\n3. Keep every concrete detail they gave (names, numbers, quotes, error messages, code) verbatim, and fold in every answer they picked.\n4. Say what a good result looks like and what form the answer should take, as far as their words and answers support.\n5. State any assumption you made in place of a question, so it is visible.\n6. Match length to the task. A small request stays a few lines. Use short headings or bullets only when the prompt has several distinct parts.\n7. Write to Claude directly (\"you\"), in plain language, in the same language the user wrote in.\n8. Fix spelling and grammar and drop filler, but keep tone markers that matter (\"quick\", \"rough draft\", \"production-ready\").\n9. Use the earlier conversation only to make vague references specific (\"that error\", \"the other one\"), and only where it is unambiguous.\n\nGrade the rough prompt and the final prompt strictly against five checks. A check passes only if the text actually says it.\n- **Goal**: what is wanted is clear\n- **Context**: the background needed (situation, audience, what exists already)\n- **Limits**: constraints, requirements or preferences\n- **Format**: what form or shape the result should take\n- **Done**: how to tell the result is good or finished\n\nScore = passed checks × 2, out of 10. The final score rises only for what the user said, answered, or what you stated as an assumption.\n\n## 4. Show the card, then do the work in the same reply\n\nStart the reply with:\n\n```\n### ✦ PROMPT MASTER\n**Before** ▰▰▱▱▱▱▱▱▱▱ 2/10 → **After** ▰▰▰▰▰▰▰▰▱▱ 8/10\n\n✓ Goal · ✨ Context · ○ Limits · ✨ Format · ✨ Done\n```\n\n- The bars have 10 cells: ▰ per point, ▱ for the rest.\n- Per check: ✓ the rough prompt already had it, ✨ the final prompt added it, ○ still missing.\n\nThen the final prompt in a code block with no language tag (so it has a copy button), then the line `**▶ Running it now**`, then a horizontal rule (`---`), then carry out the final prompt fully, exactly as if the user had sent it themselves. No \"reply go\" line, no waiting.\n\nThe one exception: if carrying it out would send, publish, delete, pay for or otherwise do something hard to undo, show the card and ask a single yes/no question before acting (clickable if you have a tool for it).\n\n## 5. Afterwards\n\nIf the user says \"redo\", \"shorter\", \"more detail\" or corrects the prompt, rebuild it, show a new card and run it again in the same reply."

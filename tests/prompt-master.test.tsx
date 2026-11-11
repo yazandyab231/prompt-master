@@ -249,5 +249,5 @@ test('typing "pm: …" sends the message as typed, with the Prompt Master card i
     false,
     false,
   ])
-  expect(seen[0]?.context[0]).toMatch(/Do NOT carry out the rough prompt/)
+  expect(seen[0]?.context[0]).toMatch(/Running it now/)
 })

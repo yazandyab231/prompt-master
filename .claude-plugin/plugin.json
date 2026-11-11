@@ -1,6 +1,6 @@
 {
   "name": "prompt-master",
-  "version": "0.3.0",
-  "description": "Type \"pm:\" before a rough prompt and Claude rewrites it, scores it before and after, and waits for \"go\". Works in any app; richer cards where the app draws mod UI.",
+  "version": "0.4.0",
+  "description": "Type \"pm:\" before a rough prompt: Claude asks quick multiple-choice questions only if needed, shows the improved prompt with a before/after score, and does the task right away.",
   "types": "./types/index.d.ts"
 }
