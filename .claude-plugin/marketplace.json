@@ -1,5 +1,17 @@
 {
   "name": "prompt-master",
-  "owner": { "name": "yazandyab231" },
-  "plugins": [{ "name": "prompt-master", "source": "./" }]
+  "owner": {
+    "name": "yazandyab231"
+  },
+  "description": "Prompt Master and other Claude Code mods by yazandyab231.",
+  "plugins": [
+    {
+      "name": "prompt-master",
+      "source": "./plugins/prompt-master"
+    },
+    {
+      "name": "session-relay",
+      "source": "./plugins/session-relay"
+    }
+  ]
 }

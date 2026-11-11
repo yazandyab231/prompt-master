@@ -1,0 +1,9 @@
+{
+  "name": "session-relay",
+  "version": "0.1.0",
+  "description": "Pass work between two Claude Code sessions: one plans, /handoff sends the plan to the other to build, and it reports back.",
+  "types": "./types/index.d.ts",
+  "author": {
+    "name": "yazandyab231"
+  }
+}

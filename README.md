@@ -46,14 +46,39 @@ pm: make my login page faster
 
 - The score is Claude grading its own rewrite against a strict checklist. Read it as "what the prompt now says", not as proof the prompt is good. The **before** ring is the honest signal: it shows what your rough prompt left out.
 - The rewrite can't know what you didn't tell it. Answer the "Worth adding" questions; that's where most of the improvement comes from.
-- With a conversation to read, the rewrite runs on the session's own model. In a new chat it uses Sonnet. You can change the model at the top of `hooks/rewrite.ts`.
+- With a conversation to read, the rewrite runs on the session's own model. In a new chat it uses Sonnet. You can change the model at the top of `plugins/prompt-master/hooks/rewrite.ts`.
+
+## More mods in this repo
+
+Each mod installs on its own, the same way as Prompt Master.
+
+### Session relay
+
+Pass work between two Claude Code sessions on the same computer: one plans, the other builds, and it reports back.
+
+```
+/plugin install session-relay --marketplace yazandyab231/prompt-master
+```
+
+- `/relay` lists the sessions you can reach and shows this session's name.
+- `/relay <name>` picks the session to send work to. `/relay off` stops it.
+- `/handoff [note]` sends Claude's last reply, plus your note, to that session to carry out. It replies here with a summary when done.
+- The status line shows where `/handoff` goes and how many messages came back.
+
+The other session treats the handoff as a message from another session, so it may ask you before it starts.
 
 ## Develop
 
+Each plugin lives in its own folder under `plugins/`. Check and test one at a time:
+
 ```bash
-claude plugin validate .
+claude plugin validate plugins/prompt-master
+claude plugin test plugins/prompt-master
 ```
 
 ```bash
-claude plugin test .
+claude plugin validate plugins/session-relay
+claude plugin test plugins/session-relay
 ```
+
+`claude plugin validate .` checks the marketplace file.
