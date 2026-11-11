@@ -67,6 +67,19 @@ Pass work between two Claude Code sessions on the same computer: one plans, the 
 
 The other session treats the handoff as a message from another session, so it may ask you before it starts.
 
+### Agent dashboard
+
+A **Dashboard** panel beside the chat: the agents running right now and what each is doing, plus this project's git branch, uncommitted files and the open tasks in `TASKS.md`.
+
+```
+/plugin install agent-dashboard --marketplace yazandyab231/prompt-master
+```
+
+- The panel opens by itself where there's room for it beside the chat. `/dash` opens it anywhere.
+- Click an agent to open its conversation.
+- It refreshes after every turn, checks agents every few seconds, and has a **Refresh** button.
+- Tasks are Markdown checkboxes in `TASKS.md` in the project folder: `- [ ] open`, `- [x] done`.
+
 ## Develop
 
 Each plugin lives in its own folder under `plugins/`. Check and test one at a time:
@@ -79,6 +92,11 @@ claude plugin test plugins/prompt-master
 ```bash
 claude plugin validate plugins/session-relay
 claude plugin test plugins/session-relay
+```
+
+```bash
+claude plugin validate plugins/agent-dashboard
+claude plugin test plugins/agent-dashboard
 ```
 
 `claude plugin validate .` checks the marketplace file.

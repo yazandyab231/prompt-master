@@ -12,6 +12,10 @@
     {
       "name": "session-relay",
       "source": "./plugins/session-relay"
+    },
+    {
+      "name": "agent-dashboard",
+      "source": "./plugins/agent-dashboard"
     }
   ]
 }
