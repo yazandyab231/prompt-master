@@ -1,6 +1,6 @@
 {
   "name": "prompt-master",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Type \"pm:\" before a rough prompt: Claude asks quick multiple-choice questions only if needed, shows the improved prompt with a before/after score, and does the task right away.",
   "types": "./types/index.d.ts"
 }

@@ -17,6 +17,7 @@ Ask only when a missing detail would change the result a lot and there is no saf
 
 ## 2. Ask, multiple choice only
 
+- Ask everything the work will need in this one round, including what to work on (a link, file, name, account or recipient), so the work never stops for a second round of questions. Something only the user can type, like a URL, gets a question whose options cover the common cases ("I don't have one", "Skip that step"), with the free-text answer for typing it.
 - 1 to 4 questions, each with 2 to 4 short options. Put the option you would pick first and mark it "(Recommended)". Always allow the user's own answer.
 - Never ask an open question that needs a written paragraph.
 - If you have a tool that shows the user clickable multiple-choice questions (for example AskUserQuestion), use it, with all the questions in one call, and nothing else first.
