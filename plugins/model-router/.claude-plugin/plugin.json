@@ -1,6 +1,6 @@
 {
   "name": "model-router",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Sends easy prompts to Haiku to save your limits: a free filter keeps code, files, errors and long prompts on your model, and Opus rates the rest.",
   "author": { "name": "yazandyab231" },
   "types": "./types/index.d.ts"
