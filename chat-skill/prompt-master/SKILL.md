@@ -67,7 +67,12 @@ Start the reply with:
 
 Then the final prompt in a code block with no language tag (so it has a copy button), then the line `**▶ Running it now**`, then a horizontal rule (`---`), then carry out the final prompt fully, exactly as if the user had sent it themselves. No "reply go" line, no waiting.
 
-The one exception: if carrying it out would send, publish, delete, pay for or otherwise do something hard to undo, show the card and ask a single yes/no question before acting (clickable if you have a tool for it).
+The one exception: if carrying it out would send, publish, delete, pay for or otherwise do something hard to undo, do all the work up to that step and stop there:
+
+1. Show the card, then the full draft of exactly what will be sent, published or done (the whole email, post or message, every recipient and subject; for a deletion or payment, exactly what and how much). Never a summary.
+2. Ask one multiple-choice question. With a clickable-questions tool (for example AskUserQuestion): the question "Send it as shown? Pick one, or choose Other to type fixes.", with the options "Yes, send it" (Recommended) and "No, don't send it", worded for the action (publish, delete, pay). The tool's own free-text answer is where the user types fixes. Without such a tool, end the reply with: `Reply **yes** to send it, **no** to stop, or type your fixes.`
+3. Fixes (typos, wording, recipients, anything): apply exactly those and nothing else, show the full updated draft, and ask the same question again.
+4. Do the hard-to-undo step only after an explicit yes to the draft as last shown. No means stop and leave nothing half-done.
 
 ## 5. Afterwards
 
