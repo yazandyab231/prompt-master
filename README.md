@@ -80,6 +80,24 @@ A **Dashboard** panel beside the chat: the agents running right now and what eac
 - It refreshes after every turn, checks agents every few seconds, and has a **Refresh** button.
 - Tasks are Markdown checkboxes in `TASKS.md` in the project folder: `- [ ] open`, `- [x] done`.
 
+### Model router
+
+Sends easy prompts to Haiku so your more expensive model's limits last longer.
+
+```
+/plugin install model-router --marketplace yazandyab231/prompt-master
+```
+
+How it decides, for each prompt you type:
+
+1. **Free filter, no model call:** prompts over 300 characters, prompts that mention code, files, paths or errors, prompts with attachments, and conversations already past about 40,000 tokens stay on your model.
+2. **Opus rates the rest:** one short Opus call reads only your prompt and answers EASY or HARD. When unsure, it says HARD.
+3. **EASY runs on Haiku.** Everything else stays on your model. Subagents always keep their own model.
+
+The status line shows who answered and why, like `router: Haiku answered · Opus rated it easy`. `/router` shows this session's counts, and `/router off` / `/router on` switch it.
+
+Good to know: the rating is an extra Opus call and adds a moment before the reply. Haiku is weaker on anything that turns out harder than it looked. If a Haiku answer is off, ask again with more detail or switch the router off.
+
 ## Develop
 
 Each plugin lives in its own folder under `plugins/`. Check and test one at a time:
@@ -97,6 +115,11 @@ claude plugin test plugins/session-relay
 ```bash
 claude plugin validate plugins/agent-dashboard
 claude plugin test plugins/agent-dashboard
+```
+
+```bash
+claude plugin validate plugins/model-router
+claude plugin test plugins/model-router
 ```
 
 `claude plugin validate .` checks the marketplace file.
