@@ -90,7 +90,7 @@ Sends easy prompts to Haiku so your more expensive model's limits last longer.
 
 How it decides, for each prompt you type:
 
-1. **Free filter, no model call:** prompts over 300 characters, prompts that mention code, files, paths or errors, prompts with attachments, and conversations already past about 40,000 tokens stay on your model.
+1. **Free filter, no model call:** prompts over 300 characters, prompts that mention code, files, paths or errors, prompts with attachments, and conversations that have grown by more than about 40,000 tokens stay on your model. Claude's own built-in instructions, which every request carries, don't count toward that.
 2. **Opus rates the rest:** one short Opus call reads only your prompt and answers EASY or HARD. When unsure, it says HARD.
 3. **EASY runs on Haiku.** Everything else stays on your model. Subagents always keep their own model.
 

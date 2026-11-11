@@ -3,9 +3,10 @@ import type { EngineInterface, PromptSubmitInput, Register, TurnStepChunk } from
 
 import type { RouterRoute, RouterStats } from '../types'
 import {
-  MAX_CONTEXT_TOKENS,
+  MAX_CONVERSATION_TOKENS,
   RATER_SYSTEM,
   answerFooter,
+  conversationTokens,
   freeFilter,
   isRatedEasy,
   modelName,
@@ -32,6 +33,7 @@ const stats = atom(
   { total: 0, rated: 0, routed: 0 } as RouterStats,
   { shape: 'stats-1' },
 )
+const baseline = atom({ plugin: 'model-router', key: 'baseline' } as const, null as number | null)
 const recent = atom({ plugin: 'model-router', key: 'recent' } as const, [] as RouterRoute[], {
   shape: 'recent-1',
 })
@@ -61,8 +63,14 @@ async function judge($: EngineInterface, e: PromptSubmitInput): Promise<RouterRo
 
   try {
     const { context } = await $.session.usage()
+    const tokens = context.tokens ?? 0
 
-    if ((context.tokens ?? 0) > MAX_CONTEXT_TOKENS) {
+    // Unknown until the session's first response; the first size seen is its fixed start.
+    if (tokens > 0 && (await read($, baseline)) === null) {
+      await update($, baseline, () => tokens)
+    }
+
+    if (conversationTokens(tokens, await read($, baseline)) > MAX_CONVERSATION_TOKENS) {
       return main('long conversation')
     }
   } catch {

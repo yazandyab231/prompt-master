@@ -2,11 +2,21 @@
 export const MAX_PROMPT_CHARS = 300
 
 /**
- * Conversations past this many tokens stay on the main model: Haiku would read
- * the whole conversation again without the main model's prompt cache, which
- * can cost more than it saves.
+ * Conversations that grew past this many tokens stay on the main model: Haiku
+ * would read the whole conversation again without the main model's prompt
+ * cache, which can cost more than it saves.
  */
-export const MAX_CONTEXT_TOKENS = 40_000
+export const MAX_CONVERSATION_TOKENS = 40_000
+
+/**
+ * How far the conversation has grown since the session's first measured size.
+ * That first size is mostly the fixed start every request carries (Claude's
+ * instructions and tool list, about 87,000 tokens in a cloud session), which
+ * is no measure of the conversation.
+ */
+export function conversationTokens(tokens: number, baseline: number | null): number {
+  return baseline === null ? 0 : Math.max(0, tokens - baseline)
+}
 
 /** Code, file names, paths and error talk: work for the main model. */
 const WORK =
