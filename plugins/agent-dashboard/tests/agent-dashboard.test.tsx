@@ -22,12 +22,17 @@ const GIT = '## main...origin/main [ahead 2, behind 1]\n M src/app.ts\n?? notes.
 const TASKS = '# Tasks\n- [ ] **Fix the login bug** - from Sam\n- [x] Ship v1\n* [ ] Write the README\n'
 
 // Nothing sits beneath the mod: each hook here stands for the engine.
-function engine(on: On, files: { git?: string; tasks?: string }, opened: string[] = []) {
+function engine(
+  on: On,
+  files: { git?: string; tasks?: string },
+  opened: string[] = [],
+  shown: { isPlaced: true } | { isPlaced: false; reason: string } = { isPlaced: true },
+) {
   on('command.register', (_, e) => ({ value: { command: e.name } }))
   on('ui.open', (_, e) => {
     opened.push(e.id)
 
-    return { value: { isPlaced: true } }
+    return { value: shown }
   })
   on('clock.every', () => ({ value: undefined }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
@@ -113,6 +118,39 @@ test('/dash opens the panel', async ($, on) => {
     presentation: { isFullscreen: false, columns: 80 },
   })
 
-  expect(ran.text).toBe('Dashboard opened.')
+  expect(ran.text).toBe('Dashboard opened in the side panel.')
   expect(opened).toEqual(['agent-dashboard'])
+})
+
+test('/dash shows the dashboard as text where the app shows no side panel', async ($, on) => {
+  engine(on, { git: GIT, tasks: TASKS }, [], { isPlaced: false, reason: 'the mobile app places no panes' })
+  await start($)
+
+  const ran = await $.command.run({
+    command: 'dash',
+    args: '',
+    origin: { kind: 'bridge' },
+    presentation: { isFullscreen: false, columns: 40 },
+  })
+
+  expect(ran.text).toBe(
+    [
+      'Agents',
+      '  ● Research: Reading the sources (running)',
+      '  ✓ general-purpose: Drafting the script (completed)',
+      '',
+      'Project',
+      '  Branch: main ↑2 ↓1',
+      '  2 changed files:',
+      '    M  src/app.ts',
+      '    ?? notes.md',
+      '',
+      'Tasks',
+      '  2 open · 1 done',
+      '  • Fix the login bug - from Sam',
+      '  • Write the README',
+      '',
+      "(Shown here because this app didn't show the side panel: the mobile app places no panes)",
+    ].join('\n'),
+  )
 })
