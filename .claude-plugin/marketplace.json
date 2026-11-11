@@ -20,6 +20,17 @@
     {
       "name": "model-router",
       "source": "./plugins/model-router"
+    },
+    {
+      "name": "day-trader-skill",
+      "description": "Third-party: Jake Schincariol's 11 day-trading skills (MIT), pinned to the reviewed commit 3d0f4ef.",
+      "source": {
+        "source": "github",
+        "repo": "Jakeschincariol/day-trader-skill",
+        "sha": "3d0f4ef6986f4984b7c6bd46f7ff4f87744c3abd"
+      },
+      "homepage": "https://github.com/Jakeschincariol/day-trader-skill",
+      "license": "MIT"
     }
   ]
 }
