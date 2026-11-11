@@ -2,7 +2,7 @@
 
 A Claude Code mod that turns a rough prompt into a clear one before Claude acts on it.
 
-Start a message with `pm:` and your rough prompt:
+Start a message with `pm:` (or `/pm` where the app sends it) and your rough prompt. Nothing else triggers it, so every other message gets a normal, quick reply.
 
 1. If something important is missing, Claude asks 1 to 4 quick **multiple-choice** questions (clickable where the app supports it, otherwise reply like `1a 2b`). Clear prompts skip this.
 2. Claude shows the final prompt with a **before → after** score against five checks: **Goal, Context, Limits, Format, Done**.

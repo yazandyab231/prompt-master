@@ -229,19 +229,19 @@ test('typing "pm: …" sends the message as typed, with the Prompt Master card i
   })
   await $.session.start({ cwd: '/', surface: 'mobile', isInteractive: true })
 
-  for (const text of ['Pm: ' + ROUGH, 'pm ' + ROUGH, 'pm2 restart the server', 'pmf is my goal', 'help me with pm:']) {
+  for (const text of ['Pm: ' + ROUGH, 'PM:' + ROUGH, 'pm ' + ROUGH, 'pm2 restart the server', 'help me with pm:']) {
     await $.prompt.submit({ text, origin: { kind: 'bridge' }, wait: false })
   }
 
   // Nothing is dropped: every message reaches the model as typed.
   expect(seen.map(one => one.text)).toEqual([
     'Pm: ' + ROUGH,
+    'PM:' + ROUGH,
     'pm ' + ROUGH,
     'pm2 restart the server',
-    'pmf is my goal',
     'help me with pm:',
   ])
-  // Only the two "pm" messages carry the card instructions.
+  // Only "pm:" carries the card instructions; a bare "pm " stays a quick reply.
   expect(seen.map(one => one.context.some(block => block.includes('PROMPT MASTER')))).toEqual([
     true,
     true,

@@ -9,10 +9,11 @@ import { rewrite } from './rewrite'
 
 const COMMAND = 'pm'
 const MAX_DRAFTS = 20
-// "pm: rough prompt" (or "pm rough prompt") as an ordinary message: apps may
-// not send a slash command they don't know, or draw a mod's card, but they
-// always send text and always show Claude's reply.
-const TRIGGER = /^\s*\/?pm(?::|\s)\s*([\s\S]+)$/i
+// "pm: rough prompt" (or "/pm rough prompt" sent as text) as an ordinary
+// message: apps may not send a slash command they don't know, or draw a mod's
+// card, but they always send text and always show Claude's reply. Nothing else
+// triggers it, so every other message gets a quick, normal reply.
+const TRIGGER = /^\s*(?:pm:|\/pm\s)\s*([\s\S]+)$/i
 // Only what a person typed; never a plugin's message (our own Send included).
 const TYPED = new Set(['composer', 'bridge', 'sdk', 'unclassified'])
 
