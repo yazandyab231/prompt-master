@@ -54,6 +54,18 @@ export function isRatedEasy(reply: string): boolean {
   return /\bEASY\b/i.test(reply) && !/\bHARD\b/i.test(reply)
 }
 
+/** A prompt's opening words on one line, for /router's list. */
+export function previewOf(text: string, max = 50): string {
+  const line = text.trim().replace(/\s+/g, ' ')
+
+  return line.length > max ? `${line.slice(0, max - 1)}…` : line
+}
+
+/** The line added to the chat after a reply Haiku wrote. */
+export function haikuNotice(why: string): string {
+  return `↳ Haiku answered this (${why}). /router for details or to turn it off.`
+}
+
 /** A model id as people say it. */
 export function modelName(id: string): string {
   for (const family of ['Haiku', 'Sonnet', 'Opus', 'Fable']) {

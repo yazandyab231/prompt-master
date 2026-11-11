@@ -94,7 +94,7 @@ How it decides, for each prompt you type:
 2. **Opus rates the rest:** one short Opus call reads only your prompt and answers EASY or HARD. When unsure, it says HARD.
 3. **EASY runs on Haiku.** Everything else stays on your model. Subagents always keep their own model.
 
-The status line shows who answered and why, like `router: Haiku answered · Opus rated it easy`. `/router` shows this session's counts, and `/router off` / `/router on` switch it.
+After any reply Haiku wrote, a short line in the chat says so, like `↳ Haiku answered this (Opus rated it easy)`. Replies from your own model stay quiet. Where the app draws a status line, it also shows who answered each reply. `/router` lists the last replies and who wrote each, plus this session's counts, and `/router off` / `/router on` switch it.
 
 Good to know: the rating is an extra Opus call and adds a moment before the reply. Haiku is weaker on anything that turns out harder than it looked. If a Haiku answer is off, ask again with more detail or switch the router off.
 
