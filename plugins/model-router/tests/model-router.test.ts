@@ -1,18 +1,29 @@
-import type { On, PromptSubmitArgs } from 'claude-code'
-import { expect, mock, test } from 'claude-code/testing'
+import type { On, PromptSubmitArgs, TurnStepChunk } from 'claude-code'
+import { expect, test } from 'claude-code/testing'
 import type { Engine } from 'claude-code/testing'
 
-import { freeFilter, isRatedEasy, modelName, previewOf } from '../hooks/rules'
+import { answerFooter, freeFilter, isRatedEasy, modelName, previewOf } from '../hooks/rules'
 
 const MAIN = 'claude-opus-5-5'
+const ANSWER = 'The capital of Japan is Tokyo.'
 
 type World = {
   rater?: string | null // the rater's reply; null: the call fails
   contextTokens?: number
+  stop?: 'end_turn' | 'tool_use' // why each response stops
   ratings: string[] // the prompts the rater was asked about
   models: string[] // the model each main-loop request named
   agentModels: string[] // the model each subagent request named
+  answers: string[] // the text the person saw stream, per main-loop request
+  kinds: string[] // the chunk kinds of each main-loop request, in order
   status: (string | undefined)[]
+}
+
+const ZERO = {
+  input_tokens: 0,
+  output_tokens: 0,
+  cache_creation_input_tokens: 0,
+  cache_read_input_tokens: 0,
 }
 
 // Nothing sits beneath the mod: each hook here stands for the engine.
@@ -42,49 +53,70 @@ function engine(on: On, world: World) {
   })
   on('prompt.submit', (_, e) => ({ text: e.text }))
   on('turn.start', (_, e) => ({ turnId: e.turnId }))
+  // The model streams its answer in two pieces, then the stop. (A test can't
+  // make the engine's own opaque chunks; chunks made here carry no ref.)
   on('turn.step', async function* (_, e) {
     ;(e.agentId === undefined ? world.models : world.agentModels).push(e.model)
 
-    return { turnId: e.turnId, index: e.index, answer: 'ok', toolUses: [], stopReason: 'end_turn', usage: null }
+    yield { kind: 'text', index: 0, text: 'The capital of Japan ' } as const
+    yield { kind: 'text', index: 0, text: 'is Tokyo.' } as const
+    yield { kind: 'stop', stopReason: world.stop ?? 'end_turn', usage: null } as const
+
+    return {
+      turnId: e.turnId,
+      index: e.index,
+      answer: ANSWER,
+      toolUses: [],
+      stopReason: world.stop ?? 'end_turn',
+      usage: null,
+    }
   })
   on('turn.complete', (_, e) => ({ text: e.answer }))
 }
 
-const ZERO = {
-  input_tokens: 0,
-  output_tokens: 0,
-  cache_creation_input_tokens: 0,
-  cache_read_input_tokens: 0,
+/** One request of the turn, read the way the app reads it: chunk by chunk. */
+async function step($: Engine, w: World, input: { index: number; agentId?: string }) {
+  const seen: TurnStepChunk[] = []
+
+  for await (const chunk of $.turn.step({ turnId: 't1', model: MAIN, messageCount: 1, ...input })) {
+    seen.push(chunk)
+  }
+
+  if (input.agentId === undefined) {
+    w.answers.push(seen.map(chunk => (chunk.kind === 'text' ? chunk.text : '')).join(''))
+    w.kinds.push(seen.map(chunk => chunk.kind).join(','))
+  }
 }
 
 /** The person types `text`; its turn runs one request, then ends. */
-async function ask($: Engine, text: string, prompt: Partial<PromptSubmitArgs> = {}) {
+async function ask($: Engine, w: World, text: string, prompt: Partial<PromptSubmitArgs> = {}) {
   await $.prompt.submit({ text, origin: { kind: 'composer' }, wait: false, ...prompt } as never)
   await $.turn.start({ text, turnId: 't1' })
-
-  const stream = $.turn.step({ turnId: 't1', index: 0, model: MAIN, messageCount: 1 })
-
-  for await (const _ of stream) {
-    // the chunks don't matter here
-  }
-
-  await $.turn.complete({ turnId: 't1', answer: 'ok', durationMs: 5, isAborted: false, reason: 'end_turn' } as never)
-}
-
-/** The notices the router added to the chat. */
-function notices(session: ReturnType<typeof mock.session>): string[] {
-  return session
-    .appended()
-    .filter(row => row.message.type === 'system')
-    .flatMap(row => row.message.content.map(block => ('text' in block ? String(block.text) : '')))
+  await step($, w, { index: 0 })
+  await $.turn.complete({
+    turnId: 't1',
+    answer: ANSWER,
+    durationMs: 5,
+    isAborted: false,
+    reason: 'end_turn',
+  } as never)
 }
 
 function world(over: Partial<World> = {}): World {
-  return { ratings: [], models: [], agentModels: [], status: [], ...over }
+  return { ratings: [], models: [], agentModels: [], answers: [], kinds: [], status: [], ...over }
 }
 
 async function start($: Engine) {
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+}
+
+function router($: Engine, args = '') {
+  return $.command.run({
+    command: 'router',
+    args,
+    origin: { kind: 'composer' },
+    presentation: { isFullscreen: false, columns: 80 },
+  })
 }
 
 test('the free filter keeps code, files, errors and long prompts on the main model', () => {
@@ -105,34 +137,45 @@ test('only a clear EASY counts as easy', () => {
   expect(modelName('claude-haiku-5-5')).toBe('Haiku')
 })
 
-test('an easy question goes to Haiku, and the chat and status line say so', async ($, on) => {
+test('an easy question goes to Haiku, whose answer ends with a line saying so', async ($, on) => {
   const w = world({ rater: 'EASY' })
   engine(on, w)
-  const session = mock.session(on)
   await start($)
 
-  await ask($, 'What is the capital of Japan?')
+  await ask($, w, 'What is the capital of Japan?')
 
   expect(w.ratings.length).toBe(1)
   expect(w.ratings[0]).toContain('<request>\nWhat is the capital of Japan?\n</request>')
   expect(w.models).toEqual(['haiku'])
-  expect(w.status.at(-1)).toBe('router: Haiku answered · Opus rated it easy')
-  expect(notices(session)).toEqual([
-    '↳ Haiku answered this (Opus rated it easy). /router for details or to turn it off.',
+  expect(w.answers).toEqual([
+    `${ANSWER}\n\n*↳ Haiku answered this (Opus rated it easy). /router for details or to turn it off.*`,
   ])
+  // Nothing is lost or reordered: the line rides on the last text piece.
+  expect(w.kinds).toEqual(['text,text,stop'])
+  expect(w.status.at(-1)).toBe('router: Haiku answered · Opus rated it easy')
 })
 
-test('a question Opus rates hard stays on the main model, with no notice', async ($, on) => {
-  const w = world({ rater: 'HARD' })
+test('a Haiku step that stops for a tool call gets no line', async ($, on) => {
+  const w = world({ rater: 'EASY', stop: 'tool_use' })
   engine(on, w)
-  const session = mock.session(on)
   await start($)
 
-  await ask($, 'Should I take the job offer or stay where I am?')
+  await ask($, w, 'What is the capital of Japan?')
+
+  expect(w.models).toEqual(['haiku'])
+  expect(w.answers).toEqual([ANSWER])
+})
+
+test('a question Opus rates hard stays on the main model, its answer untouched', async ($, on) => {
+  const w = world({ rater: 'HARD' })
+  engine(on, w)
+  await start($)
+
+  await ask($, w, 'Should I take the job offer or stay where I am?')
 
   expect(w.models).toEqual([MAIN])
+  expect(w.answers).toEqual([ANSWER])
   expect(w.status.at(-1)).toBe('router: Opus answered · Opus rated it hard')
-  expect(notices(session)).toEqual([])
 })
 
 test('code talk skips the rating entirely', async ($, on) => {
@@ -140,10 +183,11 @@ test('code talk skips the rating entirely', async ($, on) => {
   engine(on, w)
   await start($)
 
-  await ask($, 'fix the bug in login.ts')
+  await ask($, w, 'fix the bug in login.ts')
 
   expect(w.ratings.length).toBe(0)
   expect(w.models).toEqual([MAIN])
+  expect(w.answers).toEqual([ANSWER])
   expect(w.status.at(-1)).toBe('router: Opus answered · mentions code, files or errors')
 })
 
@@ -152,7 +196,7 @@ test('a long conversation stays on the main model without a rating', async ($, o
   engine(on, w)
   await start($)
 
-  await ask($, 'What is the capital of Japan?')
+  await ask($, w, 'What is the capital of Japan?')
 
   expect(w.ratings.length).toBe(0)
   expect(w.models).toEqual([MAIN])
@@ -163,7 +207,7 @@ test('a failed rating keeps the main model', async ($, on) => {
   engine(on, w)
   await start($)
 
-  await ask($, 'What is the capital of Japan?')
+  await ask($, w, 'What is the capital of Japan?')
 
   expect(w.models).toEqual([MAIN])
   expect(w.status.at(-1)).toBe('router: Opus answered · rating failed (api-error)')
@@ -174,17 +218,13 @@ test('/router off stops routing and rating', async ($, on) => {
   engine(on, w)
   await start($)
 
-  const off = await $.command.run({
-    command: 'router',
-    args: 'off',
-    origin: { kind: 'composer' },
-    presentation: { isFullscreen: false, columns: 80 },
-  })
-  await ask($, 'What is the capital of Japan?')
+  const off = await router($, 'off')
+  await ask($, w, 'What is the capital of Japan?')
 
   expect(off.text).toContain('Model router is off.')
   expect(w.ratings.length).toBe(0)
   expect(w.models).toEqual([MAIN])
+  expect(w.answers).toEqual([ANSWER])
 })
 
 test("a subagent's requests keep their own model", async ($, on) => {
@@ -192,13 +232,9 @@ test("a subagent's requests keep their own model", async ($, on) => {
   engine(on, w)
   await start($)
 
-  await ask($, 'What is the capital of Japan?')
-
+  await ask($, w, 'What is the capital of Japan?')
   // The same turn's id, but from a subagent's loop: never rerouted.
-  const stream = $.turn.step({ turnId: 't1', index: 1, model: MAIN, messageCount: 3, agentId: 'a1' })
-  for await (const _ of stream) {
-    // nothing to read
-  }
+  await step($, w, { index: 1, agentId: 'a1' })
 
   expect(w.models).toEqual(['haiku'])
   expect(w.agentModels).toEqual([MAIN])
@@ -209,17 +245,10 @@ test('/router lists the last replies, newest first', async ($, on) => {
   engine(on, w)
   await start($)
 
-  await ask($, 'fix the bug in login.ts')
-  await ask($, 'What is the capital of Japan?')
+  await ask($, w, 'fix the bug in login.ts')
+  await ask($, w, 'What is the capital of Japan?')
 
-  const ran = await $.command.run({
-    command: 'router',
-    args: '',
-    origin: { kind: 'composer' },
-    presentation: { isFullscreen: false, columns: 80 },
-  })
-
-  expect(ran.text).toBe(
+  expect((await router($)).text).toBe(
     [
       'Model router is on.',
       'This session: 2 prompts judged, 1 rated by Opus, 1 sent to Haiku.',
@@ -233,4 +262,5 @@ test('/router lists the last replies, newest first', async ($, on) => {
   )
   expect(previewOf('  a   b\n c ')).toBe('a b c')
   expect(previewOf('x'.repeat(60)).length).toBe(50)
+  expect(answerFooter('why')).toContain('↳ Haiku answered this (why).')
 })

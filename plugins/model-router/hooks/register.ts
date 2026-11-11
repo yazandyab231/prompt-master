@@ -1,12 +1,12 @@
 import { atom, read, update } from 'claude-code'
-import type { EngineInterface, PromptSubmitInput, Register } from 'claude-code'
+import type { EngineInterface, PromptSubmitInput, Register, TurnStepChunk } from 'claude-code'
 
 import type { RouterRoute, RouterStats } from '../types'
 import {
   MAX_CONTEXT_TOKENS,
   RATER_SYSTEM,
+  answerFooter,
   freeFilter,
-  haikuNotice,
   isRatedEasy,
   modelName,
   previewOf,
@@ -178,7 +178,46 @@ export const register: Register = on => {
       await update($, current, r => (r === null ? r : { ...r, answeredBy: model }))
     }
 
-    return yield* next(model === e.model ? e : { ...e, model })
+    if (route.model !== 'cheap') {
+      return yield* next(e)
+    }
+
+    // Haiku's final answer ends with a line saying so. The last text piece is
+    // held, with whatever follows it, until the response's stop says whether
+    // this is the final answer (end_turn) or a step before a tool call.
+    const stream = next({ ...e, model })
+    let held: TurnStepChunk[] = []
+
+    for await (const chunk of stream) {
+      if (chunk.kind === 'text') {
+        for (const piece of held) {
+          yield piece
+        }
+        held = [chunk]
+      } else if (chunk.kind === 'stop') {
+        const last = held[0]
+
+        if (chunk.stopReason === 'end_turn' && last?.kind === 'text') {
+          held[0] = { ...last, text: last.text + answerFooter(route.why) }
+        }
+
+        for (const piece of held) {
+          yield piece
+        }
+        held = []
+        yield chunk
+      } else if (held.length > 0) {
+        held.push(chunk)
+      } else {
+        yield chunk
+      }
+    }
+
+    for (const piece of held) {
+      yield piece
+    }
+
+    return await stream.result
   })
 
   on('turn.complete', async ($, e, next) => {
@@ -190,13 +229,6 @@ export const register: Register = on => {
       if (route !== null && route.turnId === e.turnId && route.answeredBy !== undefined) {
         await update($, recent, list => [route, ...list].slice(0, RECENT))
         $.ui.status(`router: ${modelName(route.answeredBy)} answered · ${route.why}`)
-
-        // The status line isn't drawn in every app; a notice in the chat is.
-        if (route.model === 'cheap') {
-          await $.session
-            .append({ message: { type: 'system', content: [{ type: 'text', text: haikuNotice(route.why) }] } })
-            .catch(() => undefined)
-        }
       }
     }
 

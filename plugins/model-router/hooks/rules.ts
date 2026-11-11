@@ -61,9 +61,13 @@ export function previewOf(text: string, max = 50): string {
   return line.length > max ? `${line.slice(0, max - 1)}…` : line
 }
 
-/** The line added to the chat after a reply Haiku wrote. */
-export function haikuNotice(why: string): string {
-  return `↳ Haiku answered this (${why}). /router for details or to turn it off.`
+/**
+ * The line that ends a reply Haiku wrote. It goes in the answer's own text,
+ * the one thing every app shows (the Claude app on a cloud session draws no
+ * status line and shows no notices).
+ */
+export function answerFooter(why: string): string {
+  return `\n\n*↳ Haiku answered this (${why}). /router for details or to turn it off.*`
 }
 
 /** A model id as people say it. */
