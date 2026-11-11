@@ -16,6 +16,10 @@
     {
       "name": "agent-dashboard",
       "source": "./plugins/agent-dashboard"
+    },
+    {
+      "name": "model-router",
+      "source": "./plugins/model-router"
     }
   ]
 }
