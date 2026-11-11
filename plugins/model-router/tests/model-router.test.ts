@@ -2,7 +2,7 @@ import type { On, PromptSubmitArgs, TurnStepChunk } from 'claude-code'
 import { expect, test } from 'claude-code/testing'
 import type { Engine } from 'claude-code/testing'
 
-import { answerFooter, freeFilter, isRatedEasy, modelName, previewOf } from '../hooks/rules'
+import { answerFooter, conversationTokens, freeFilter, isRatedEasy, modelName, previewOf } from '../hooks/rules'
 
 const MAIN = 'claude-opus-5-5'
 const ANSWER = 'The capital of Japan is Tokyo.'
@@ -135,6 +135,9 @@ test('only a clear EASY counts as easy', () => {
   expect(isRatedEasy('EASY or HARD')).toBe(false)
   expect(isRatedEasy('')).toBe(false)
   expect(modelName('claude-haiku-5-5')).toBe('Haiku')
+  expect(conversationTokens(90_000, null)).toBe(0)
+  expect(conversationTokens(90_000, 87_000)).toBe(3_000)
+  expect(conversationTokens(50_000, 87_000)).toBe(0) // after a compaction
 })
 
 test('an easy question goes to Haiku, whose answer ends with a line saying so', async ($, on) => {
@@ -191,15 +194,32 @@ test('code talk skips the rating entirely', async ($, on) => {
   expect(w.status.at(-1)).toBe('router: Opus answered · mentions code, files or errors')
 })
 
-test('a long conversation stays on the main model without a rating', async ($, on) => {
-  const w = world({ rater: 'EASY', contextTokens: 90_000 })
+test("a cloud session's fixed start is not a long conversation", async ($, on) => {
+  // Seen live: Claude's instructions and tools are ~87,000 tokens before anyone types.
+  const w = world({ rater: 'EASY', contextTokens: 87_000 })
   engine(on, w)
   await start($)
 
   await ask($, w, 'What is the capital of Japan?')
+  w.contextTokens = 87_600
+  await ask($, w, 'What is the capital of Saudi Arabia?')
 
-  expect(w.ratings.length).toBe(0)
-  expect(w.models).toEqual([MAIN])
+  expect(w.ratings.length).toBe(2)
+  expect(w.models).toEqual(['haiku', 'haiku'])
+})
+
+test('a conversation that grew past 40,000 tokens stays on the main model without a rating', async ($, on) => {
+  const w = world({ rater: 'EASY', contextTokens: 87_000 })
+  engine(on, w)
+  await start($)
+
+  await ask($, w, 'What is the capital of Japan?')
+  w.contextTokens = 87_000 + 45_000
+  await ask($, w, 'What is the capital of Saudi Arabia?')
+
+  expect(w.ratings.length).toBe(1)
+  expect(w.models).toEqual(['haiku', MAIN])
+  expect(w.status.at(-1)).toBe('router: Opus answered · long conversation')
 })
 
 test('a failed rating keeps the main model', async ($, on) => {

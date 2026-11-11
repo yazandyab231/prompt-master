@@ -23,6 +23,8 @@ declare module 'claude-code' {
       current: Shaped<RouterRoute | null>
       stats: Shaped<RouterStats>
       recent: Shaped<RouterRoute[]>
+      /** The session's size in tokens when the router first measured it: its fixed start. */
+      baseline: number | null
     }
   }
 }
