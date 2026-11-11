@@ -217,3 +217,37 @@ test('an empty /pm shows how to use it', async ($, on) => {
 
   expect(out.text).toMatch(/^Usage/)
 })
+
+test('typing "pm: …" sends the message as typed, with the Prompt Master card instructions beside it', async ($, on) => {
+  const seen: { text: string; context: readonly string[] }[] = []
+  on('command.register', () => ({ value: { command: 'pm' } }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  on('prompt.submit', (_, e) => {
+    seen.push({ text: e.text, context: e.context ?? [] })
+
+    return { text: e.text }
+  })
+  await $.session.start({ cwd: '/', surface: 'mobile', isInteractive: true })
+
+  for (const text of ['Pm: ' + ROUGH, 'pm ' + ROUGH, 'pm2 restart the server', 'pmf is my goal', 'help me with pm:']) {
+    await $.prompt.submit({ text, origin: { kind: 'bridge' }, wait: false })
+  }
+
+  // Nothing is dropped: every message reaches the model as typed.
+  expect(seen.map(one => one.text)).toEqual([
+    'Pm: ' + ROUGH,
+    'pm ' + ROUGH,
+    'pm2 restart the server',
+    'pmf is my goal',
+    'help me with pm:',
+  ])
+  // Only the two "pm" messages carry the card instructions.
+  expect(seen.map(one => one.context.some(block => block.includes('PROMPT MASTER')))).toEqual([
+    true,
+    true,
+    false,
+    false,
+    false,
+  ])
+  expect(seen[0]?.context[0]).toMatch(/Do NOT carry out the rough prompt/)
+})

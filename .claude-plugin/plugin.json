@@ -1,6 +1,6 @@
 {
   "name": "prompt-master",
-  "version": "0.2.0",
-  "description": "Rewrites a rough prompt into a clear one with a before/after prompt check, then sends it in one tap. /pm on any surface, plus a Prompt Master box on desktop.",
+  "version": "0.3.0",
+  "description": "Type \"pm:\" before a rough prompt and Claude rewrites it, scores it before and after, and waits for \"go\". Works in any app; richer cards where the app draws mod UI.",
   "types": "./types/index.d.ts"
 }

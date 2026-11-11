@@ -1,17 +1,18 @@
 # Prompt Master
 
-A Claude Code mod that turns a rough prompt into a clear one before you send it.
+A Claude Code mod that turns a rough prompt into a clear one before Claude acts on it.
 
-Type `/pm` followed by your rough prompt. A card appears in the chat that:
+Start a message with `pm:` and Claude replies with a Prompt Master card instead of doing the task:
 
-- rewrites the prompt while keeping your intent, without inventing requirements you didn't state
-- scores it **before → after** against five checks: **Goal, Context, Limits, Format, Done**
-- lists the questions only you can answer ("Worth adding before you send")
-- gives you **Send ✦**, **Shorter** and **More detail** buttons
+- the prompt rewritten, keeping your intent and not inventing requirements you didn't state
+- a **before → after** score against five checks: **Goal, Context, Limits, Format, Done**
+- the questions only you can answer ("Worth adding")
 
-In the desktop app there's also a Prompt Master box above the text box, with its own field and a **✦ Rewrite** button.
+Reply **go** to run the rewritten prompt, **shorter** or **more detail** to redo it, or answer the questions to fold them in. This works in every app, phones included, because the card is Claude's own reply.
 
-When the conversation already has messages, the rewrite reads them, so "fix that bug" becomes the actual bug. In a new chat it rewrites the prompt on its own.
+Where the app draws mod UI (for example the terminal), there's also `/pm <rough prompt>`, which shows an animated card with **Send ✦**, **Shorter** and **More detail** buttons, plus a Prompt Master box above the text box in the desktop app.
+
+When the conversation already has messages, the rewrite uses them, so "fix that bug" becomes the actual bug.
 
 ## Install
 
@@ -34,7 +35,7 @@ In the desktop app, where `/plugin` doesn't run: click **+** next to the prompt 
 ## Use
 
 ```
-/pm make my login page not suck, its slow and ugly
+pm: make my login page faster
 ```
 
 ## Good to know
