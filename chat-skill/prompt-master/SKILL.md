@@ -1,11 +1,11 @@
 ---
 name: prompt-master
-description: Turns a rough prompt into a clear one, asks quick multiple-choice questions only if needed, then does the task right away. Use ONLY when the user's message starts with "pm:" or "/pm" (any capitalization), and for the user's replies to Prompt Master's own questions, drafts or cards. Never use it for any other message, even one that talks about prompts; those get a normal, quick reply.
+description: Turns a rough prompt into a clear one, asks quick multiple-choice questions only if needed, shows the draft prompt with a one-tap Yes / No / type fixes, and starts the task the moment the user says yes. Use ONLY when the user's message starts with "pm:" or "/pm" (any capitalization), and for the user's replies to Prompt Master's own questions, drafts or cards. Never use it for any other message, even one that talks about prompts; those get a normal, quick reply.
 ---
 
 # Prompt Master
 
-The flow: rough prompt → quick multiple-choice questions, only if needed → the final prompt card → do the work in the same reply. The user never has to say "go" and never has to write a long answer.
+The flow: rough prompt → one round of multiple-choice questions, only if needed → the draft prompt card with one tap: Yes / No / type fixes → on Yes, the work starts immediately. The user never types "go" and never writes a long answer.
 
 Prompt Master runs only when the message starts with `pm:` or `/pm`. Every other message gets a normal, direct reply: no card, no score, no questions. The user relies on this for quick answers.
 
@@ -54,7 +54,7 @@ Grade the rough prompt and the final prompt strictly against five checks. A chec
 
 Score = passed checks × 2, out of 10. The final score rises only for what the user said, answered, or what you stated as an assumption.
 
-## 4. Show the card, then do the work in the same reply
+## 4. Show the draft prompt and confirm with one tap
 
 Start the reply with:
 
@@ -66,17 +66,27 @@ Start the reply with:
 ```
 
 - The bars have 10 cells: ▰ per point, ▱ for the rest.
-- Per check: ✓ the rough prompt already had it, ✨ the final prompt added it, ○ still missing.
+- Per check: ✓ the rough prompt already had it, ✨ the draft prompt added it, ○ still missing.
 
-Then the final prompt in a code block with no language tag (so it has a copy button), then the line `**▶ Running it now**`, then a horizontal rule (`---`), then carry out the final prompt fully, exactly as if the user had sent it themselves. No "reply go" line, no waiting.
+Then the draft prompt in a code block with no language tag (so it has a copy button). Then ask one multiple-choice question:
 
-The one exception: if carrying it out would send, publish, delete, pay for or otherwise do something hard to undo, do all the work up to that step and stop there:
+- With a clickable-questions tool (for example AskUserQuestion): the question "Run this prompt? Pick one, or choose Other to type fixes.", with the options "Yes, run it" (Recommended) and "No, stop here". The tool's own free-text answer is where the user types fixes.
+- Without such a tool, end the reply with: `Reply **yes** to run it, **no** to stop, or type your fixes.`
 
-1. Show the card, then the full draft of exactly what will be sent, published or done (the whole email, post or message, every recipient and subject; for a deletion or payment, exactly what and how much). Never a summary.
-2. Ask one multiple-choice question. With a clickable-questions tool (for example AskUserQuestion): the question "Send it as shown? Pick one, or choose Other to type fixes.", with the options "Yes, send it" (Recommended) and "No, don't send it", worded for the action (publish, delete, pay). The tool's own free-text answer is where the user types fixes. Without such a tool, end the reply with: `Reply **yes** to send it, **no** to stop, or type your fixes.`
-3. Fixes (typos, wording, recipients, anything): apply exactly those and nothing else, show the full updated draft, and ask the same question again.
+Then:
+- **Yes** (or yes, go, run it, do it): immediately carry out the draft prompt fully, exactly as if the user had sent it themselves. Start with `**▶ Running it now**` and a horizontal rule (`---`); do not show the card again and do not ask anything more unless step 5 applies.
+- **Fixes** (typos, wording, anything): apply exactly those and nothing else, show the updated card and draft prompt, and ask the same question again.
+- **No**: stop, with one short line saying nothing was run.
+
+## 5. Hard-to-undo steps get their own yes
+
+If carrying out the prompt would send, publish, delete, pay for or otherwise do something hard to undo, do all the work up to that step and stop there:
+
+1. Show the full draft of exactly what will be sent, published or done (the whole email, post or message, every recipient and subject; for a deletion or payment, exactly what and how much). Never a summary.
+2. Ask one multiple-choice question the same way: "Send it as shown? Pick one, or choose Other to type fixes.", with "Yes, send it" (Recommended) and "No, don't send it", worded for the action (publish, delete, pay). Without a clickable tool: `Reply **yes** to send it, **no** to stop, or type your fixes.`
+3. Fixes: apply exactly those, show the full updated draft, and ask again.
 4. Do the hard-to-undo step only after an explicit yes to the draft as last shown. No means stop and leave nothing half-done.
 
-## 5. Afterwards
+## 6. Afterwards
 
-If the user says "redo", "shorter", "more detail" or corrects the prompt, rebuild it, show a new card and run it again in the same reply.
+If the user says "redo", "shorter", "more detail" or corrects the prompt, rebuild it, show a new card and draft prompt, and ask the Yes / No / fixes question again.

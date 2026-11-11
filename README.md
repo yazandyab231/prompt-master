@@ -5,10 +5,10 @@ A Claude Code mod that turns a rough prompt into a clear one before Claude acts 
 Start a message with `pm:` (or `/pm` where the app sends it) and your rough prompt. Nothing else triggers it, so every other message gets a normal, quick reply.
 
 1. If something important is missing, Claude asks 1 to 4 quick **multiple-choice** questions (clickable where the app supports it, otherwise reply like `1a 2b`). Clear prompts skip this.
-2. Claude shows the final prompt with a **before → after** score against five checks: **Goal, Context, Limits, Format, Done**.
-3. Claude does the task right away in the same reply. No "go" needed, except for anything hard to undo (sending, publishing, deleting, paying): there it shows the full draft and asks **Yes / No**, with a box to type fixes, and only acts on a yes.
+2. Claude shows the draft prompt with a **before → after** score against five checks: **Goal, Context, Limits, Format, Done**, and asks **Yes / No** with a box to type fixes (clickable where the app supports it, otherwise reply `yes`, `no` or your fixes).
+3. On **Yes**, Claude starts the task immediately. Anything hard to undo (sending, publishing, deleting, paying) gets one more Yes / No on the full draft of exactly what will happen.
 
-Say "redo", "shorter" or "more detail" to rebuild and rerun it. This works in every app, phones included, because the card is Claude's own reply.
+Say "redo", "shorter" or "more detail" to rebuild the draft prompt. This works in every app, phones included, because the card is Claude's own reply.
 
 ### For normal Claude chats
 

@@ -1,6 +1,6 @@
 {
   "name": "prompt-master",
-  "version": "0.5.1",
-  "description": "Type \"pm:\" before a rough prompt: Claude asks quick multiple-choice questions only if needed, shows the improved prompt with a before/after score, and does the task right away.",
+  "version": "0.6.0",
+  "description": "Type \"pm:\" before a rough prompt: quick multiple-choice questions only if needed, then the draft prompt with a one-tap Yes / No / type fixes, and the task starts the moment you say yes.",
   "types": "./types/index.d.ts"
 }
