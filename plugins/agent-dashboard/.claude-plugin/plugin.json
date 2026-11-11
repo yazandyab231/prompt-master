@@ -1,0 +1,7 @@
+{
+  "name": "agent-dashboard",
+  "version": "0.1.0",
+  "description": "A Dashboard panel beside the chat: the agents running now and what each is doing, plus this project's branch, changed files and TASKS.md tasks.",
+  "author": { "name": "yazandyab231" },
+  "types": "./types/index.d.ts"
+}
