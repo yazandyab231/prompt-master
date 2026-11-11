@@ -3,6 +3,7 @@ import type { EngineInterface, Register } from 'claude-code'
 
 import type { DashAgent, DashProject } from '../types'
 import { parseGitStatus, parseTasks } from './project'
+import { agentMark, dashboardText, ordered } from './text'
 
 const PANE = 'agent-dashboard'
 const TITLE = 'Dashboard'
@@ -20,17 +21,6 @@ const project = atom(
   null as DashProject | null,
   { shape: 'project-1' },
 )
-
-const ACTIVE = new Set(['pending', 'running', 'waiting'])
-const MARK: Record<string, string> = {
-  pending: '○',
-  running: '●',
-  waiting: '◐',
-  idle: '◌',
-  completed: '✓',
-  failed: '✗',
-  killed: '✗',
-}
 
 async function refreshAgents($: EngineInterface): Promise<void> {
   const rows: DashAgent[] = (await $.agent.list()).map(agent => ({
@@ -91,11 +81,22 @@ export const register: Register = on => {
     return next(e)
   })
 
+  // Apps that show no side panel (a phone, the web) get the dashboard as text.
   on('command.run', { command: 'dash' }, async $ => {
-    await $.ui.open({ id: PANE, title: TITLE })
+    const opened = await $.ui.open({ id: PANE, title: TITLE })
     await refreshAll($).catch(() => undefined)
 
-    return { text: 'Dashboard opened.' }
+    if (opened.isPlaced) {
+      return { text: 'Dashboard opened in the side panel.' }
+    }
+
+    return {
+      text: [
+        dashboardText(await read($, agents), await read($, project)),
+        '',
+        `(Shown here because this app didn't show the side panel: ${opened.reason})`,
+      ].join('\n'),
+    }
   })
 
   // A turn can change files, finish an agent or tick off a task.
@@ -114,24 +115,21 @@ export const register: Register = on => {
 
     const list = await read($, agents)
     const proj = await read($, project)
-    const ordered = [
-      ...list.filter(agent => ACTIVE.has(agent.status)),
-      ...list.filter(agent => !ACTIVE.has(agent.status)),
-    ]
+    const agentsInOrder = ordered(list)
     const git = proj?.git ?? null
     const tasks = proj?.tasks ?? null
 
     return (
       <Box flexDirection="column">
         <Text bold>Agents</Text>
-        {ordered.length === 0 && <Text dimColor>No agents running.</Text>}
-        {ordered.map(agent => (
+        {agentsInOrder.length === 0 && <Text dimColor>No agents running.</Text>}
+        {agentsInOrder.map(agent => (
           <Button
             key={`agent-${agent.id}`}
             plain
             onPress={() => $.ui.view({ agentId: agent.id }).then(() => undefined)}
           >
-            {fit(`${MARK[agent.status] ?? '·'} ${agent.name}: ${agent.task}`)}{' '}
+            {fit(`${agentMark(agent.status)} ${agent.name}: ${agent.task}`)}{' '}
             <Text dimColor>{agent.status}</Text>
           </Button>
         ))}
