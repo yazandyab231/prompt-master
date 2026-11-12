@@ -40,6 +40,18 @@ Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
   a few big winners still means most single trades lose. Rule kept as approved; watch whether it holds up.
 - 15:51 flat-by-close check: no open position, nothing to sell. Day 1 final: cash $4,970.49, -$29.51.
 
+**Rules v2 from Fri 11-13** (owner: "hold stocks if you want, any rule, just make money"): swing trades up to 5 days,
+proven on 2 years of each stock's own daily bars against a buy-every-day baseline; $100 risk a trade, max 3 positions.
+See README. Day trades keep the v1 rules.
+
+**Preview for Fri 11-13** (daily scan after Thursday's close, 203 setups; top 16 by trading value backtested):
+- PASS APP bull_flag n=16 win 81% avg R +0.79 (baseline +0.07): plan from 393.68, stop 343.39, risk 50.29 → 1 share. Small sample.
+- PASS AMD breakout_20d n=85 win 60% avg R +0.44 (baseline +0.17): from 585.30, stop 496.07, risk 89.22 → 1 share.
+- PASS COST breakout_20d n=61 win 53% avg R +0.14 (baseline +0.04): from 1,092.21, stop 1,049.23, risk 42.97 → 2 shares.
+- Marginal: XEL edge +0.016 (too small to matter). Failed (no edge over baseline): ABT (n=11), PGR, JNJ, LOW, AVGO,
+  FISV, CEG, BRK.B, CVS, ANET, VRT; MCD's bull flag did not fire under the backtest's rule.
+- Wide 2xATR stops at $100 risk mean small positions (1 to 2 shares). The 08:44 run redoes this with news before buying.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
