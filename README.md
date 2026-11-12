@@ -98,6 +98,21 @@ Any reply Haiku wrote ends with a short italic line saying so, like *↳ Haiku a
 
 Good to know: the rating is an extra Opus call and adds a moment before the reply. Haiku is weaker on anything that turns out harder than it looked. If a Haiku answer is off, ask again with more detail or switch the router off.
 
+### Day Trader skill (third-party)
+
+Not made here: [Jake Schincariol's day-trader-skill](https://github.com/Jakeschincariol/day-trader-skill) (MIT), listed in this marketplace so it installs like the mods above.
+
+```
+/plugin install day-trader-skill@prompt-master
+```
+
+Eleven skills: chart scanner, news monitor, entry timer, exit planner, a "time machine" replay, risk manager, budget manager, order executor, price alerts, earnings analyst and a Pelosi (congressional trades) tracker. They show up as `/day-trader-skill:trader-scanner` and so on. Start with `/day-trader-skill:trader-scanner`.
+
+- **Pinned.** The entry points at commit `3d0f4ef`, which was read before listing: the Python only reads public data (Yahoo Finance, SEC EDGAR, House Clerk, Nasdaq, Stooq), sends nothing out, and has no hooks. Updates from the author don't arrive until the pin is moved here.
+- **Paper trading by default.** Nothing places an order unless you connect a broker yourself, and even then each order needs a risk-check pass, your typed yes and Claude's Allow once card.
+- Needs Python 3.8+ (nothing to pip install). The SEC tools ask for your name and email in `trader/config.json`.
+- Not financial advice. Its own showcase TSLA trade replayed to "close to a coin flip" over 33 real past setups.
+
 ## Develop
 
 Each plugin lives in its own folder under `plugins/`. Check and test one at a time:
