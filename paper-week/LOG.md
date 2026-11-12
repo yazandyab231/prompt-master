@@ -21,4 +21,14 @@ Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
 
 ## Scheduled check-ins
 
-(trigger IDs, filled in after they are created)
+All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
+
+| id | when |
+|----|------|
+| trig_01SE34e59CYoFJFeQxuKh7BP | 08:44 pre-market review |
+| trig_01QYVfcb4TDatGu1VypE2b5T | 09:48 after the opening range |
+| trig_01H8KZFjBq7iD5vyJDZA6guv | 10:17 to 15:17 hourly, intraday |
+| trig_01CXu5vwBQK46E25FzWHKwRs | 10:47 to 14:47 hourly, intraday |
+| trig_01Mm6LMTrhLm856n8whte46a | 15:33 pre-close review |
+| trig_01SvFUKhs3mbZtaaL6vDwfrw | 15:51 flat by close |
+| trig_016bKygZ9PTh3aiexwEtUHXR | once, Thu 2026-11-19 16:12, final report |
