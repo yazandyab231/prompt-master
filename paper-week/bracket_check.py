@@ -5,7 +5,10 @@ the target was touched after the entry time. A bar that touches both counts
 as the stop (the worse case, same rule as trader-timemachine). A bar that
 opens past the stop fills at its open (a gap), not at the stop.
 
-    python3 bracket_check.py SYMBOL ENTRY_HHMM STOP TARGET
+    python3 bracket_check.py SYMBOL ENTRY_HHMM STOP TARGET [ENTRY_DATE]
+
+ENTRY_DATE (YYYY-MM-DD, default today) lets a swing position held over
+several days be checked on every bar since its entry.
 
 Exit code: 0 = stop or target hit (prints FILLED ...), 1 = still open, 2 = error.
 """
@@ -19,7 +22,7 @@ NY = ZoneInfo("America/New_York")
 
 
 def bars(sym):
-    url = "https://query2.finance.yahoo.com/v8/finance/chart/%s?range=1d&interval=5m" % sym
+    url = "https://query2.finance.yahoo.com/v8/finance/chart/%s?range=1mo&interval=5m" % sym
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
     with urllib.request.urlopen(req, timeout=30) as r:
         res = json.load(r)["chart"]["result"][0]
@@ -37,20 +40,27 @@ def main(argv):
     sym, hhmm, stop, target = argv[0].upper(), argv[1], float(argv[2]), float(argv[3])
     eh, em = map(int, hhmm.split(":"))
     now = dt.datetime.now(NY)
+    day = dt.date.fromisoformat(argv[4]) if len(argv) > 4 else now.date()
+    start = dt.datetime(day.year, day.month, day.day, eh, em, tzinfo=NY)
     rows, last = bars(sym)
-    # Only bars that START at or after the entry minute and have CLOSED.
+    first = True
+    # Only bars that START at or after the entry time and have CLOSED.
     for t, o, h, l, c in rows:
-        start_min = t.hour * 60 + t.minute
-        if start_min < eh * 60 + em or t + dt.timedelta(minutes=5) > now:
+        if t < start or t + dt.timedelta(minutes=5) > now:
             continue
+        new_day = not first and t.hour == 9 and t.minute == 30
+        first = False
+        if new_day and o >= target:
+            print("FILLED TARGET (gap) %s %s %s bar at %.2f" % (sym, t.strftime("%m-%d"), t.strftime("%H:%M"), o))
+            return 0
         if o <= stop:
-            print("FILLED STOP (gap) %s %s bar at %.2f" % (sym, t.strftime("%H:%M"), o))
+            print("FILLED STOP (gap) %s %s %s bar at %.2f" % (sym, t.strftime("%m-%d"), t.strftime("%H:%M"), o))
             return 0
         if l <= stop:
-            print("FILLED STOP %s %s bar at %.2f" % (sym, t.strftime("%H:%M"), stop))
+            print("FILLED STOP %s %s %s bar at %.2f" % (sym, t.strftime("%m-%d"), t.strftime("%H:%M"), stop))
             return 0
         if h >= target:
-            print("FILLED TARGET %s %s bar at %.2f" % (sym, t.strftime("%H:%M"), target))
+            print("FILLED TARGET %s %s %s bar at %.2f" % (sym, t.strftime("%m-%d"), t.strftime("%H:%M"), target))
             return 0
     print("OPEN %s last %.2f (stop %.2f, target %.2f) at %s" % (sym, last, stop, target, now.strftime("%H:%M")))
     return 1
