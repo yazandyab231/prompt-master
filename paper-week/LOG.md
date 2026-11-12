@@ -38,6 +38,7 @@ Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
   so 09:48 could never see one). The morning breakouts are the strategy's main window.
 - Lesson: a JNJ history of 6 targets vs 13 stops (avg R +0.17) was only barely positive. Positive average R from
   a few big winners still means most single trades lose. Rule kept as approved; watch whether it holds up.
+- 15:51 flat-by-close check: no open position, nothing to sell. Day 1 final: cash $4,970.49, -$29.51.
 
 ## Scheduled check-ins
 
