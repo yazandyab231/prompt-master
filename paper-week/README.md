@@ -47,7 +47,7 @@ cd paper-week   # every skill reads and writes ./trader/
 3. **Pre-market (~08:45):** `scan.py universe`, `scan.py daily --show 30` (save the
    list as the day's shortlist), `news.py --tickers <top hits> --no-sec --hours 18`,
    `ptr.py` (Congress trades) as background. Write a short shortlist note in LOG.md.
-4. **During 09:47 to 15:30, flat, under the day's limits:** `scan.py orb --show 40`,
+4. **During 09:52 to 15:30, flat, under the day's limits:** `scan.py orb --show 40`,
    pick FRESH triggers, then for the best one: news.py → `entry.py check SYM --write`
    → `alerts.py quote SYM --write` → `exit.py plan --entry PX --time "HH:MM AM/PM" --write`
    → `timemachine.py run --until 15:55 --write` → (both averages > 0?) → `size.py --write`

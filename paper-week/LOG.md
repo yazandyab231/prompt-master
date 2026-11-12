@@ -29,6 +29,16 @@ Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
   Plan at 405.92: stop 402.85, target 412.06 (2R). Time machine to 15:55: target 0.0%, stop 4.8%, neither 95.2%, avg R +0.008;
   history 31 fires: 4 target, 18 stop, 9 neither, avg R -0.354 → history negative → NO TRADE (rule: both averages > 0).
 
+**Day 1 summary (Thu 11-12):** 1 trade, 0 wins, 1 loss. Result -$29.51. Cash $4,970.49 (-0.59% vs $5,000).
+- What happened: started at 12:23, after the morning breakouts (most fired 9:50 to 10:00). Took JNJ's fresh 12:20
+  breakout; its 13:40 bar hit the stop. Loss = exactly the planned max loss, so sizing and the stop worked.
+  JNJ at 15:34 is 284.88, still under the 286.01 entry: holding would have lost ~$15 instead of $29.51.
+- Skipped: ADBE (breakout failed before entry), UNH (history of this setup on UNH is negative, avg R -0.354).
+- Fix: the 'after opening range' check moved from 09:48 to 09:52 (the first breakout bar closes at 09:50,
+  so 09:48 could never see one). The morning breakouts are the strategy's main window.
+- Lesson: a JNJ history of 6 targets vs 13 stops (avg R +0.17) was only barely positive. Positive average R from
+  a few big winners still means most single trades lose. Rule kept as approved; watch whether it holds up.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
@@ -36,7 +46,7 @@ All New York time, Monday to Friday, into this chat. Delete all of them after th
 | id | when |
 |----|------|
 | trig_01SE34e59CYoFJFeQxuKh7BP | 08:44 pre-market review |
-| trig_01QYVfcb4TDatGu1VypE2b5T | 09:48 after the opening range |
+| trig_01QYVfcb4TDatGu1VypE2b5T | 09:52 after the opening range (was 09:48) |
 | trig_01H8KZFjBq7iD5vyJDZA6guv | 10:17 to 15:17 hourly, intraday |
 | trig_01CXu5vwBQK46E25FzWHKwRs | 10:47 to 14:47 hourly, intraday |
 | trig_01Mm6LMTrhLm856n8whte46a | 15:33 pre-close review |
