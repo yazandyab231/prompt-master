@@ -1,0 +1,28 @@
+{
+  "created_by": "trader-exit",
+  "symbol": "JNJ",
+  "side": "buy",
+  "date": "2026-11-12",
+  "setup": "orb",
+  "entry": 285.98,
+  "entry_time": "12:30 PM",
+  "entry_bar": null,
+  "interval": "5m",
+  "opening_range": {
+    "high": 285.48,
+    "low": 282.0,
+    "minutes": 15
+  },
+  "stop": 283.74,
+  "stop_rule": "or_mid",
+  "stop_label": "opening-range midpoint",
+  "target": 290.46,
+  "target_r": 2.0,
+  "target_label": "2R (two times the risk)",
+  "risk_per_share": 2.24,
+  "reward_risk": 2.0,
+  "flat_by": "15:55",
+  "stop_detail": "($285.48 + $282.00) / 2 = $283.74",
+  "created_at": "2026-11-12T17:30:08Z",
+  "note": "A stop is a plan, not a guarantee: a gap or a fast market can fill past it."
+}

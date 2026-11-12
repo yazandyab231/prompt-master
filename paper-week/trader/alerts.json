@@ -1,0 +1,29 @@
+{
+  "rules": [
+    {
+      "id": "jnj-plan-stop",
+      "symbol": "JNJ",
+      "type": "stop",
+      "price": 283.74,
+      "note": "plan stop: opening-range midpoint",
+      "date": "2026-11-12"
+    },
+    {
+      "id": "jnj-plan-target",
+      "symbol": "JNJ",
+      "type": "target",
+      "price": 290.46,
+      "note": "plan target: 2R (two times the risk)",
+      "date": "2026-11-12"
+    },
+    {
+      "id": "jnj-flat-by",
+      "symbol": "JNJ",
+      "type": "time",
+      "at": "15:55",
+      "label": "flat by close",
+      "before_close": true,
+      "date": "2026-11-12"
+    }
+  ]
+}

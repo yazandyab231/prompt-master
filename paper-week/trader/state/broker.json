@@ -1,0 +1,14 @@
+{
+  "orders": [
+    {
+      "at": "2026-11-12T12:30:27-05:00",
+      "date": "2026-11-12",
+      "status": "filled",
+      "symbol": "JNJ",
+      "side": "buy",
+      "qty": "13",
+      "price": 286.01,
+      "plain": "BUY 13 JNJ at 286.01"
+    }
+  ]
+}

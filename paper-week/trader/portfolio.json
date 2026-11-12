@@ -1,0 +1,17 @@
+{
+  "cash": 1281.87,
+  "positions": [
+    {
+      "ticker": "JNJ",
+      "shares": 13.0,
+      "lots": [
+        {
+          "id": "JNJ-1",
+          "date": "2026-11-12",
+          "shares": 13.0,
+          "cost": 3718.13
+        }
+      ]
+    }
+  ]
+}

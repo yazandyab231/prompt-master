@@ -1,0 +1,16 @@
+{
+  "as_of": "2026-11-12T17:30:26Z",
+  "source": "yahoo",
+  "note": "Delayed quotes for alerts and sizing checks. Your broker's price is the one that fills. detail.fetched is when each price was read.",
+  "prices": {
+    "JNJ": 286.009
+  },
+  "detail": {
+    "JNJ": {
+      "prev_close": 280.41,
+      "time": "2026-11-12T17:30:23Z",
+      "source": "yahoo",
+      "fetched": "2026-11-12T17:30:26Z"
+    }
+  }
+}
