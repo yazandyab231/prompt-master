@@ -1,7 +1,8 @@
-# Paper week: $5,000 pretend account (do not merge)
+# Paper month: $5,000 pretend account (do not merge)
 
-Working files for one week of simulated day trading with the day-trader skills,
-Thu 2026-11-12 to the close on Thu 2026-11-19. Pretend money only: no broker is
+Working files for a month of simulated trading with the day-trader skills, Thu 2026-11-12 to
+the close on Fri 2026-12-11 (extended from one week at the owner's request), with a weekly report
+every Friday from 2026-11-20. Pretend money only: no broker is
 connected and nothing is ever placed. This folder lives on the session branch
 so it survives machine restarts; it is not meant for `main`.
 
@@ -9,7 +10,7 @@ Trade-by-trade results: [LOG.md](LOG.md).
 
 ## Rules v2 (from Fri 2026-11-13; the owner said "hold stocks if you want, any rule, just make money")
 
-Pretend money only, as before. Everything still sold by the close on Thu 2026-11-19.
+Pretend money only, as before. Everything still sold by the close on Fri 2026-12-11.
 
 **Swing trades (main approach).** Hold up to 5 market days.
 - Candidates: trader-scanner's `daily` scan before the open (breakout_20d, bull_flag, reclaim_ma20,
@@ -23,7 +24,17 @@ Pretend money only, as before. Everything still sold by the close on Thu 2026-11
 - Size: risk up to $100 a trade (2%): shares = floor(100 / risk a share), capped by $3,750 a position
   and by cash minus a $500 buffer. Up to 3 positions at once, no margin, no shorts.
 - Exit: stop or target (checked on every 5-minute bar with `bracket_check.py SYM HH:MM STOP TARGET DATE`),
-  else at the close of day 5, else by 15:51 on Thu 2026-11-19.
+  else at the close of day 5, else by 15:51 on Fri 2026-12-11.
+
+**Market calendar:** closed Thu 2026-11-26 (Thanksgiving). Fri 2026-11-27 closes at 13:00: no day trades
+that day, and anything that must be sold that day is sold at the 13:00 close.
+
+**Watch item: NVDA** (added 2026-11-12). CEO Jensen Huang resigned on 11-12 amid a reported scandal
+(stock -4.3% that day, -30.5% from its 10-06 high, at its 52-week low), with earnings due soon. Over
+10 years, buying NVDA at a fresh RSI-under-30 reading did WORSE than a random day (20 days later:
+median -4.9%, up 44% of the time, n=9; random day +4.5%). No NVDA entry before its earnings report is
+out. After that, it is treated like any other candidate: it needs a daily setup that passes the v2
+proof. Log its status in the pre-market review.
 
 **Day trades (opening-range breakouts) still allowed** with the v1 rules below, only with cash left
 over and never more than 3 positions in total.
@@ -79,8 +90,8 @@ cd paper-week   # every skill reads and writes ./trader/
    → `timemachine.py run --until 15:55 --write` → (both averages > 0?) → `size.py --write`
    → `check.py` (PASS?) → live quote → `ticket.py fill ... --side buy` → `alerts.py add --from-plan`.
    Log every decision, including "no trade, because ...".
-5. **~15:51:** sell day trades, swing positions on their day 5, and EVERYTHING on Thu 2026-11-19,
+5. **~15:51:** sell day trades, swing positions on their day 5, and EVERYTHING on Fri 2026-12-11,
    at the live price (`ticket.py fill --side sell`). Other swing positions stay open overnight.
 6. Commit and push after every change. Short note in the chat after every buy or sell.
-7. **After the close on 2026-11-19:** final report in the chat and in LOG.md; delete
+7. **After the close on 2026-12-11:** final report in the chat and in LOG.md; delete
    every scheduled task listed in LOG.md.

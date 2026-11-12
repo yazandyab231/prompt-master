@@ -1,4 +1,4 @@
-# Trade log: $5,000 pretend account
+# Trade log: $5,000 pretend account (one month, to Fri 2026-12-11)
 
 Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
 
@@ -52,6 +52,9 @@ See README. Day trades keep the v1 rules.
   FISV, CEG, BRK.B, CVS, ANET, VRT; MCD's bull flag did not fire under the backtest's rule.
 - Wide 2xATR stops at $100 risk mean small positions (1 to 2 shares). The 08:44 run redoes this with news before buying.
 
+**Test extended to one month** (owner, 11-12 evening): ends at the close on Fri 2026-12-11, weekly report every
+Friday from 11-20. NVDA put on watch (CEO resigned 11-12, earnings due): no entry before earnings; see README.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
@@ -64,4 +67,5 @@ All New York time, Monday to Friday, into this chat. Delete all of them after th
 | trig_01CXu5vwBQK46E25FzWHKwRs | 10:47 to 14:47 hourly, intraday |
 | trig_01Mm6LMTrhLm856n8whte46a | 15:33 pre-close review |
 | trig_01SvFUKhs3mbZtaaL6vDwfrw | 15:51 flat by close |
-| trig_016bKygZ9PTh3aiexwEtUHXR | once, Thu 2026-11-19 16:12, final report |
+| trig_016bKygZ9PTh3aiexwEtUHXR | once, Fri 2026-12-11 16:12, final report (was Thu 11-19) |
+| trig_01VsikGPHoRDWNsykG3BnLWj | Fridays 16:21, weekly report (from 11-20) |
