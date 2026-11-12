@@ -25,6 +25,9 @@ Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
 - Today so far: 1 of 3 entries, $29.51 of $150 max loss used. Result -$29.51.
 - 14:17 ORB rescan: 143 breakouts, newest still ADBE at 13:40 (already failed). No fresh breakout since → no trade.
 - 14:47 ORB rescan: 139 breakouts, nothing new since 13:40 → no trade.
+- 15:18 ORB rescan: fresh UNH breakout at 15:15 (405.89 over 405.72). News: routine (board appointment, valuation pieces).
+  Plan at 405.92: stop 402.85, target 412.06 (2R). Time machine to 15:55: target 0.0%, stop 4.8%, neither 95.2%, avg R +0.008;
+  history 31 fires: 4 target, 18 stop, 9 neither, avg R -0.354 → history negative → NO TRADE (rule: both averages > 0).
 
 ## Scheduled check-ins
 

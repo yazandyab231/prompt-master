@@ -1,22 +1,22 @@
 {
   "created_by": "trader-entry",
-  "symbol": "JNJ",
+  "symbol": "UNH",
   "setup": "orb",
   "side": "buy",
   "date": "2026-11-12",
   "status": "triggered",
-  "time": "12:20 PM",
-  "bar_start": "12:15",
-  "bar_index": 33,
-  "price": 285.74,
-  "level": 285.48,
+  "time": "3:15 PM",
+  "bar_start": "15:10",
+  "bar_index": 68,
+  "price": 405.89,
+  "level": 405.72,
   "interval": "5m",
   "opening_range": {
-    "high": 285.48,
-    "low": 282.0,
+    "high": 405.72,
+    "low": 399.99,
     "minutes": 15
   },
   "source": "yahoo",
-  "checked_at": "2026-11-12T17:29:54Z",
-  "reason": "the 12:15 bar closed above the range high"
+  "checked_at": "2026-11-12T20:23:54Z",
+  "reason": "the 15:10 bar closed above the range high"
 }
