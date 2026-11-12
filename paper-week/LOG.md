@@ -18,6 +18,7 @@ Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
 - Size 13 shares (position cap binds), risk check PASS, max loss $29.12 at plan, $29.51 at the fill.
 - Bought 13 JNJ at 286.01 (12:30). Cash $1,281.87.
 - Today: 1 of 3 entries, $29.51 of $150 max loss used.
+- 12:47 check: JNJ open, last 285.05 (-$12.48 unrealized); stop and target not touched. Holding; no new entry (one position at a time).
 
 ## Scheduled check-ins
 
