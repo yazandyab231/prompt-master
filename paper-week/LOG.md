@@ -69,3 +69,4 @@ All New York time, Monday to Friday, into this chat. Delete all of them after th
 | trig_01SvFUKhs3mbZtaaL6vDwfrw | 15:51 flat by close |
 | trig_016bKygZ9PTh3aiexwEtUHXR | once, Fri 2026-12-11 16:12, final report (was Thu 11-19) |
 | trig_01VsikGPHoRDWNsykG3BnLWj | Fridays 16:21, weekly report (from 11-20) |
+| trig_011HsZPUjU6nUx4agGiXkq2o | once, Fri 2026-12-11 18:07 Riyadh (10:07 NY): reminder to the owner in a new chat, with a phone push |
