@@ -9,6 +9,16 @@
       "qty": "13",
       "price": 286.01,
       "plain": "BUY 13 JNJ at 286.01"
+    },
+    {
+      "at": "2026-11-12T13:48:01-05:00",
+      "date": "2026-11-12",
+      "status": "filled",
+      "symbol": "JNJ",
+      "side": "sell",
+      "qty": "13",
+      "price": 283.74,
+      "plain": "SELL 13 JNJ at 283.74"
     }
   ]
 }

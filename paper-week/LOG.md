@@ -4,7 +4,7 @@ Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
 
 | # | date | stock | shares | buy | stop | target | sell | result | why |
 |---|------|-------|--------|-----|------|--------|------|--------|-----|
-| 1 | 11-12 | JNJ | 13 | 286.01 @ 12:30 | 283.74 | 290.46 | (open) | | fresh 15-min opening-range breakout at 12:20; time machine avg R +0.14 (sim) / +0.17 (31 real past fires) |
+| 1 | 11-12 | JNJ | 13 | 286.01 @ 12:30 | 283.74 | 290.46 | 283.74 @ 13:40 (stop) | -$29.51 | fresh 15-min opening-range breakout at 12:20; time machine avg R +0.14 (sim) / +0.17 (31 real past fires) |
 
 ## Thu 2026-11-12
 
@@ -20,6 +20,9 @@ Start: $5,000.00 cash on Thu 2026-11-12. Prices are free, delayed Yahoo quotes.
 - Today: 1 of 3 entries, $29.51 of $150 max loss used.
 - 12:47 check: JNJ open, last 285.05 (-$12.48 unrealized); stop and target not touched. Holding; no new entry (one position at a time).
 - 13:17 check: JNJ open, last 284.49 (-$19.76 unrealized); stop 283.74 not touched. Holding.
+- 13:47 check: JNJ's 13:40 bar touched the stop → sold 13 at 283.74. Loss -$29.51 (the planned max loss). Cash $4,970.49.
+- 13:48 ORB rescan: 145 breakouts, freshest ADBE at 13:40, but by 13:53 it closed back under its level (239.97 < 240.00): failed breakout, no trade.
+- Today so far: 1 of 3 entries, $29.51 of $150 max loss used. Result -$29.51.
 
 ## Scheduled check-ins
 
