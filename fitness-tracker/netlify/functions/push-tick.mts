@@ -1,7 +1,7 @@
 // Runs every minute: sends any reminder whose time has just passed in its owner's time zone.
 import { getStore } from '@netlify/blobs';
 import type { Config } from '@netlify/functions';
-import webpush from 'web-push';
+import { sendNotification, setVapidDetails } from 'web-push';
 import { dueNow, localParts, type PushRecord } from '../../server/due';
 
 export default async () => {
@@ -10,7 +10,7 @@ export default async () => {
     console.error('push-tick: VAPID keys are not set; nothing sent');
     return;
   }
-  webpush.setVapidDetails(VAPID_SUBJECT || 'mailto:admin@example.com', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+  setVapidDetails(VAPID_SUBJECT || 'mailto:admin@example.com', VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
 
   const store = getStore('push-subscriptions');
   const now = Date.now();
@@ -24,7 +24,7 @@ export default async () => {
     let gone = false;
     for (const r of due) {
       try {
-        await webpush.sendNotification(
+        await sendNotification(
           record.subscription,
           JSON.stringify({ title: r.title, body: r.body ?? '', tag: r.id }),
           { TTL: 60 * 60 },
@@ -39,8 +39,14 @@ export default async () => {
         console.error('push-tick: send failed', err?.statusCode ?? err);
       }
     }
-    if (gone) await store.delete(key);
-    else await store.setJSON(key, record);
+    if (gone) {
+      await store.delete(key);
+      continue;
+    }
+    // Write back only what we changed. Re-read first, so a reminder edit that arrived while we
+    // were sending is not overwritten with the list we started from.
+    const latest = ((await store.get(key, { type: 'json' })) as PushRecord | null) ?? record;
+    await store.setJSON(key, { ...latest, sent: { ...latest.sent, ...record.sent } });
   }
 };
 

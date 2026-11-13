@@ -1,4 +1,5 @@
-import { getState, normalize, replaceState } from './store';
+import { getState, normalizeWithReport, replaceState } from './store';
+import type { AppState } from './types';
 import { today } from './date';
 
 export function exportData() {
@@ -14,8 +15,18 @@ export function exportData() {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** Replace everything with the contents of a backup file. Throws with a readable message if it is not one. */
-export async function importData(file: File) {
+export interface BackupPreview {
+  state: AppState;
+  /** Items in the file that could not be read and will be left out. */
+  dropped: number;
+  exportedAt: string | null;
+}
+
+/**
+ * Read and check a backup file without changing anything. Throws with a readable message if it is
+ * not a Logbook backup. The caller shows a summary and only then calls `applyBackup`.
+ */
+export async function readBackup(file: File): Promise<BackupPreview> {
   let parsed: any;
   try {
     parsed = JSON.parse(await file.text());
@@ -26,5 +37,8 @@ export async function importData(file: File) {
   if (!raw || typeof raw !== 'object' || !Array.isArray(raw.workouts) || !Array.isArray(raw.entries)) {
     throw new Error('That file is not a Logbook backup.');
   }
-  replaceState(normalize(raw));
+  const { state, dropped } = normalizeWithReport(raw);
+  return { state, dropped, exportedAt: typeof parsed?.exportedAt === 'string' ? parsed.exportedAt : null };
 }
+
+export const applyBackup = (preview: BackupPreview) => replaceState(preview.state);

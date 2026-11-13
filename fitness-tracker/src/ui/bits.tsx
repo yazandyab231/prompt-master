@@ -1,6 +1,6 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { Macros } from '../lib/types';
-import { num, parseNum } from '../lib/units';
+import { cleanDecimal, num, parseNum } from '../lib/units';
 
 /** A numeric text field that keeps what the user typed while reporting a parsed number. */
 export function NumField(props: {
@@ -13,12 +13,15 @@ export function NumField(props: {
   integer?: boolean;
   dp?: number;
   id?: string;
+  maxLength?: number;
 }) {
   const fmt = (v: number | null) => (v == null ? '' : num(v, props.dp ?? 1));
   const [text, setText] = useState(fmt(props.value));
+  const focused = useRef(false);
   useEffect(() => {
-    // Re-sync only when the outside value differs from what the text already means.
-    if (parseNum(text) !== props.value) setText(fmt(props.value));
+    // Follow outside changes (a preset chip, a unit switch), but never rewrite the text under the
+    // cursor: clearing a field must leave it empty, not snap to "0".
+    if (!focused.current && parseNum(text) !== props.value) setText(fmt(props.value));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.value]);
   const input = (
@@ -31,9 +34,17 @@ export function NumField(props: {
       placeholder={props.placeholder}
       value={text}
       aria-label={props.label ? undefined : props.placeholder}
-      onFocus={(e) => e.currentTarget.select()}
+      maxLength={props.maxLength ?? 8}
+      onFocus={(e) => {
+        focused.current = true;
+        e.currentTarget.select();
+      }}
+      onBlur={() => {
+        focused.current = false;
+        setText(fmt(props.value));
+      }}
       onChange={(e) => {
-        const t = e.target.value.replace(/[^\d.,]/g, '');
+        const t = cleanDecimal(e.target.value);
         setText(t);
         props.onChange(parseNum(t));
       }}
@@ -63,6 +74,7 @@ export function TextField(props: {
   placeholder?: string;
   autoFocus?: boolean;
   type?: string;
+  maxLength?: number;
 }) {
   return (
     <label className="field">
@@ -74,6 +86,7 @@ export function TextField(props: {
         placeholder={props.placeholder}
         autoFocus={props.autoFocus}
         autoComplete="off"
+        maxLength={props.maxLength ?? 60}
         onChange={(e) => props.onChange(e.target.value)}
       />
     </label>

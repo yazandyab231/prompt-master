@@ -103,6 +103,18 @@ function EntrySheet({ entry, onClose }: { entry: FoodEntry; onClose: () => void 
     });
     onClose();
   };
+  const valid = grams != null && grams > 0 && grams <= 5000;
+  const save = () => {
+    if (!canScale || !valid) return;
+    update((d) => {
+      const e = d.entries.find((x) => x.id === entry.id);
+      if (e) {
+        e.grams = grams!;
+        e.macros = macros;
+      }
+    });
+    onClose();
+  };
   return (
     <Sheet
       title="Edit entry"
@@ -113,35 +125,32 @@ function EntrySheet({ entry, onClose }: { entry: FoodEntry; onClose: () => void 
             Delete
           </button>
           {canScale && (
-            <button
-              className="btn"
-              disabled={grams == null || grams <= 0}
-              onClick={() => {
-                update((d) => {
-                  const e = d.entries.find((x) => x.id === entry.id);
-                  if (e && grams) {
-                    e.grams = grams;
-                    e.macros = macros;
-                  }
-                });
-                onClose();
-              }}
-            >
+            <button className="btn" disabled={!valid} onClick={save}>
               Save
             </button>
           )}
         </div>
       }
     >
-      <div className="stack">
+      <form
+        className="stack"
+        onSubmit={(e) => {
+          e.preventDefault();
+          save();
+        }}
+      >
         <h3 className="food-title">{entry.name}</h3>
         {canScale ? (
-          <NumField label="Amount" unit="g" value={grams} onChange={setGrams} dp={0} />
+          <NumField label="Amount" unit="g" value={grams} onChange={setGrams} dp={0} maxLength={5} />
         ) : (
           <p className="hint">Quick-add entry: {macroLine(entry.macros)}. Delete it and log again to change the numbers.</p>
         )}
+        {canScale && grams != null && grams > 5000 && <p className="error">Enter 5,000 g or less.</p>}
         <MacroStrip m={macros} />
-      </div>
+        <button className="sr-only" tabIndex={-1} aria-hidden="true">
+          Save
+        </button>
+      </form>
     </Sheet>
   );
 }

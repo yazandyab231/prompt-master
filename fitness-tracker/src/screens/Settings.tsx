@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Reminder, ThemeId } from '../lib/types';
 import { defaultState, replaceState, uid, update, useApp } from '../lib/store';
-import { exportData, importData } from '../lib/backup';
+import { applyBackup, exportData, readBackup, type BackupPreview } from '../lib/backup';
 import { REMINDER_PRESETS } from '../lib/reminders';
 import { disablePush, enablePush, getPushState, notificationsSupported, syncPush, type PushState } from '../lib/push';
 import { DAYS_SHORT } from '../lib/date';
@@ -17,20 +17,16 @@ const THEMES: { id: ThemeId; name: string; bg: string; ink: string; accent: stri
   { id: 'chalk', name: 'Chalk', bg: '#f2efe9', ink: '#151515', accent: '#1f3bff' },
   { id: 'clay', name: 'Clay', bg: '#ece2d5', ink: '#2a1f17', accent: '#b23f1c' },
 ];
-const THEME_COLOR: Record<ThemeId, string> = Object.fromEntries(THEMES.map((t) => [t.id, t.bg])) as Record<ThemeId, string>;
 
 export function Settings() {
   const s = useApp();
   const [editing, setEditing] = useState<Reminder | null>(null);
   const [erase, setErase] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [pending, setPending] = useState<BackupPreview | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const t = s.settings.targets;
   const implied = Math.round(kcalFromMacros(t.p, t.c, t.f));
-
-  useEffect(() => {
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[s.settings.theme]);
-  }, [s.settings.theme]);
 
   // Keep the push service in step with the reminder list.
   const remindersKey = JSON.stringify(s.reminders);
@@ -42,7 +38,7 @@ export function Settings() {
 
   const setTarget = (k: keyof typeof t, v: number | null) =>
     update((d) => {
-      d.settings.targets[k] = v ?? 0;
+      d.settings.targets[k] = Math.min(v ?? 0, k === 'kcal' ? 20000 : 2000);
     });
 
   return (
@@ -193,10 +189,10 @@ export function Settings() {
             e.target.value = '';
             if (!file) return;
             try {
-              await importData(file);
+              setPending(await readBackup(file));
               setImportError(null);
-              toast('Backup imported');
             } catch (err: any) {
+              setPending(null);
               setImportError(err?.message ?? 'Import failed.');
             }
           }}
@@ -206,7 +202,39 @@ export function Settings() {
             {importError}
           </p>
         )}
-        <p className="hint" style={{ margin: '10px 0 14px' }}>Importing replaces everything currently in the app with the backup.</p>
+        {pending ? (
+          <div className="note" style={{ margin: '12px 0 14px' }} role="status">
+            <b>Replace everything with this backup?</b>
+            <br />
+            It holds {pending.state.workouts.length} sessions, {pending.state.entries.length} food entries and {pending.state.bodyWeights.length}{' '}
+            weigh-ins{pending.exportedAt ? `, exported ${pending.exportedAt.slice(0, 10)}` : ''}. What is in the app now will be overwritten.
+            {pending.dropped > 0 && (
+              <>
+                {' '}
+                <b>
+                  {pending.dropped} {pending.dropped === 1 ? 'item' : 'items'} in the file could not be read and will be left out.
+                </b>
+              </>
+            )}
+            <div className="btn-row" style={{ marginTop: 12 }}>
+              <button className="btn ghost" onClick={() => setPending(null)}>
+                Cancel
+              </button>
+              <button
+                className="btn"
+                onClick={() => {
+                  applyBackup(pending);
+                  setPending(null);
+                  toast('Backup imported');
+                }}
+              >
+                Replace my data
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="hint" style={{ margin: '10px 0 14px' }}>Importing replaces everything currently in the app with the backup. You confirm before anything changes.</p>
+        )}
         {erase ? (
           <div className="stack tight">
             <p className="error">This deletes every workout, food entry, weigh-in and setting on this device. It cannot be undone.</p>
@@ -369,8 +397,14 @@ function ReminderSheet({ reminder, onClose }: { reminder: Reminder; onClose: () 
         </div>
       }
     >
-      <div className="stack">
-        <TextField label="What to remind you" value={r.title} onChange={(v) => setR({ ...r, title: v })} placeholder="e.g. Time to train" autoFocus={isNew} />
+      <form
+        className="stack"
+        onSubmit={(e) => {
+          e.preventDefault();
+          save();
+        }}
+      >
+        <TextField label="What to remind you" value={r.title} onChange={(v) => setR({ ...r, title: v })} placeholder="e.g. Time to train" autoFocus={isNew} maxLength={50} />
         <label className="field">
           <span className="label">Time</span>
           <input className="input" type="time" value={r.time} onChange={(e) => setR({ ...r, time: e.target.value })} />
@@ -382,6 +416,7 @@ function ReminderSheet({ reminder, onClose }: { reminder: Reminder; onClose: () 
           <div className="days" role="group" aria-label="Days">
             {DAYS_SHORT.map((d, i) => (
               <button
+                type="button"
                 key={d}
                 aria-pressed={r.days.includes(i)}
                 aria-label={d}
@@ -393,7 +428,10 @@ function ReminderSheet({ reminder, onClose }: { reminder: Reminder; onClose: () 
           </div>
           {r.days.length === 0 && <p className="error" style={{ marginTop: 8 }}>Pick at least one day.</p>}
         </div>
-      </div>
+        <button className="sr-only" tabIndex={-1} aria-hidden="true">
+          Save
+        </button>
+      </form>
     </Sheet>
   );
 }

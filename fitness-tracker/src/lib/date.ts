@@ -19,13 +19,14 @@ export const DAYS_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export const DAYS_LONG = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+const yearSuffix = (d: Date) => (d.getFullYear() === new Date().getFullYear() ? '' : ` ${d.getFullYear()}`);
 export const fmtDay = (iso: string) => {
   const d = fromISO(iso);
-  return `${DAYS_SHORT[weekdayIndex(iso)]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  return `${DAYS_SHORT[weekdayIndex(iso)]} ${d.getDate()} ${MONTHS[d.getMonth()]}${yearSuffix(d)}`;
 };
 export const fmtShort = (iso: string) => {
   const d = fromISO(iso);
-  return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}${yearSuffix(d)}`;
 };
 export const fmtRelative = (iso: string) => {
   const t = today();

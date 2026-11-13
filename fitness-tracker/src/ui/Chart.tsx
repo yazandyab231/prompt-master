@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 export interface Point {
   x: number; // days since some origin
@@ -31,6 +31,11 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
   const wrap = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(320);
   const [hover, setHover] = useState<number | null>(null);
+  const tip = useRef<HTMLDivElement>(null);
+  const [tipHalf, setTipHalf] = useState(60);
+  useLayoutEffect(() => {
+    if (tip.current) setTipHalf(tip.current.offsetWidth / 2);
+  }, [hover, points]);
 
   useEffect(() => {
     const el = wrap.current;
@@ -73,7 +78,7 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
   const last = points.length - 1;
   const fmt = (v: number) => String(Math.round(v * 10) / 10);
   const h = hover != null && hover < points.length ? hover : null;
-  const tipX = h != null ? Math.min(width - 60, Math.max(60, geo.xy[h][0])) : 0;
+  const tipX = h != null ? Math.min(Math.max(tipHalf, width - tipHalf), Math.max(tipHalf, geo.xy[h][0])) : 0;
   const endAnchor = geo.xy[last][0] > width - 60 ? 'end' : 'middle';
 
   return (
@@ -115,7 +120,7 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
         {h != null && h !== last && <circle className="dot" cx={geo.xy[h][0]} cy={geo.xy[h][1]} r={5} />}
       </svg>
       {h != null && (
-        <div className="chart-tip" style={{ left: tipX }}>
+        <div className="chart-tip" ref={tip} style={{ left: tipX }}>
           <b>
             {fmt(points[h].y)} {unit}
           </b>{' '}

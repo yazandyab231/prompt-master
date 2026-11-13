@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { SetLog, Workout } from '../lib/types';
 import { deleteWorkout, exerciseById, finishWorkout, lastSets, routineById, update, useApp } from '../lib/store';
 import { fmtDuration } from '../lib/date';
-import { displayToKg, fmtWeight, kgToDisplay, num, parseNum } from '../lib/units';
+import { cleanDecimal, displayToKg, kgToDisplay, num, parseNum } from '../lib/units';
 import { Icon } from '../ui/Icon';
 import { ExercisePicker } from '../ui/ExercisePicker';
-import { Sheet } from '../ui/Sheet';
+import { Sheet, useModal } from '../ui/Sheet';
 import { toast, useTick } from '../ui/bits';
 
 export function WorkoutLogger({ workout, onClose }: { workout: Workout; onClose: () => void }) {
@@ -14,6 +14,8 @@ export function WorkoutLogger({ workout, onClose }: { workout: Workout; onClose:
   const routine = routineById(s, workout.routineId);
   const [picking, setPicking] = useState(false);
   const [ending, setEnding] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  useModal(root, onClose);
   useTick(15_000);
 
   const edit = (fn: (w: Workout) => void) =>
@@ -26,7 +28,7 @@ export function WorkoutLogger({ workout, onClose }: { workout: Workout; onClose:
   const totalSets = workout.exercises.reduce((n, e) => n + e.sets.length, 0);
 
   return (
-    <div className="workout" role="dialog" aria-label={`Session: ${workout.name}`}>
+    <div className="workout" role="dialog" aria-modal="true" aria-label={`Session: ${workout.name}`} tabIndex={-1} ref={root}>
       <div className="workout-inner">
         <div className="workout-bar">
           <button className="icon-btn" onClick={onClose} aria-label="Minimise session">
@@ -185,6 +187,7 @@ function SetRow(props: {
   onChange: (patch: Partial<SetLog>) => void;
 }) {
   const { set, last, units } = props;
+  // Two decimals in kg so plate maths like 61.25 survives; one is enough in lb.
   const show = (kg: number | null) => (kg == null ? '' : num(kgToDisplay(kg, units), units === 'kg' ? 2 : 1));
   const [w, setW] = useState(show(set.weight));
   const [r, setR] = useState(set.reps == null ? '' : String(set.reps));
@@ -206,21 +209,23 @@ function SetRow(props: {
   return (
     <div className={'set-grid set-row' + (set.done ? ' is-done' : '')}>
       <span className="set-n">{props.n}</span>
-      <span className="set-last">{last ? `${last.weight != null ? fmtWeight(last.weight, units) : 'BW'}×${last.reps}` : '–'}</span>
+      <span className="set-last">{last ? `${last.weight != null ? show(last.weight) : 'BW'}×${last.reps}` : '–'}</span>
       <input
         className="set-input"
         inputMode="decimal"
         autoComplete="off"
         aria-label={`${props.name} set ${props.n} weight in ${units}`}
-        placeholder={last?.weight != null ? fmtWeight(last.weight, units) : '0'}
+        placeholder={last?.weight != null ? show(last.weight) : '0'}
         value={w}
+        maxLength={7}
         onFocus={(e) => e.currentTarget.select()}
         onChange={(e) => {
-          const t = e.target.value.replace(/[^\d.,]/g, '');
+          const t = cleanDecimal(e.target.value);
           setW(t);
           const v = parseNum(t);
-          props.onChange({ weight: v == null ? null : displayToKg(v, units) });
+          props.onChange({ weight: v == null ? null : displayToKg(Math.min(v, 2000), units) });
         }}
+        onBlur={() => setW(show(set.weight))}
       />
       <input
         className="set-input"

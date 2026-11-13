@@ -39,11 +39,15 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
   if (data.status !== 1 || !data.product) return { status: 'missing' };
   const p = data.product;
   const nm = p.nutriments ?? {};
-  const name = String(p.product_name || '').trim() || `Product ${code}`;
+  const name = (String(p.product_name || '').trim() || `Product ${code}`).slice(0, 60);
   const prot = n(nm.proteins_100g);
   const carb = n(nm.carbohydrates_100g);
   const fat = n(nm.fat_100g);
   if (prot == null && carb == null && fat == null) return { status: 'incomplete', name };
+  // The database is crowd-sourced. Values that cannot be true (negative, or more than 100 g per
+  // 100 g) are treated as missing, so the user reads them off the package instead.
+  const vals = [prot ?? 0, carb ?? 0, fat ?? 0];
+  if (vals.some((v) => v < 0 || v > 100) || vals[0] + vals[1] + vals[2] > 100.5) return { status: 'incomplete', name };
   let kcal = n(nm['energy-kcal_100g']);
   if (kcal == null) {
     const kj = n(nm['energy-kj_100g']) ?? n(nm.energy_100g);
@@ -55,7 +59,7 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
     food: {
       name,
       brand: String(p.brands || '').split(',')[0].trim() || undefined,
-      per100: { kcal: Math.round(kcal), p: prot ?? 0, c: carb ?? 0, f: fat ?? 0 },
+      per100: { kcal: Math.max(0, Math.round(kcal)), p: prot ?? 0, c: carb ?? 0, f: fat ?? 0 },
       servingG: serving && serving > 0 ? serving : undefined,
       source: 'barcode',
       barcode: code,

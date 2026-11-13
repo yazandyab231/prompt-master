@@ -32,6 +32,7 @@ export function ExercisePicker({ onPick, onClose }: { onPick: (id: ID) => void; 
           placeholder="Search or type a new exercise"
           aria-label="Search exercises"
           value={q}
+          maxLength={40}
           autoFocus
           onChange={(e) => setQ(e.target.value)}
         />

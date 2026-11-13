@@ -16,6 +16,7 @@ export function Train({ nav }: { nav: Nav }) {
   const s = useApp();
   const [view, setView] = useState<'split' | 'history'>('split');
   const [editing, setEditing] = useState<ID | null>(null);
+  const [editingIsNew, setEditingIsNew] = useState(false);
   const [detail, setDetail] = useState<ID | null>(null);
   const active = activeWorkout(s);
   const todays = routineForDate(s, today());
@@ -30,6 +31,7 @@ export function Train({ nav }: { nav: Nav }) {
     update((d) => {
       d.routines.push({ id, name: `Day ${d.routines.length + 1}`, exercises: [] });
     });
+    setEditingIsNew(true);
     setEditing(id);
   };
 
@@ -160,7 +162,14 @@ export function Train({ nav }: { nav: Nav }) {
                 </div>
                 <div className="rows">
                   {s.routines.map((r) => (
-                    <button key={r.id} className="row" onClick={() => setEditing(r.id)}>
+                    <button
+                      key={r.id}
+                      className="row"
+                      onClick={() => {
+                        setEditingIsNew(false);
+                        setEditing(r.id);
+                      }}
+                    >
                       <span className="row-main">
                         <span className="row-title">{r.name}</span>
                         <span className="row-sub">
@@ -206,7 +215,27 @@ export function Train({ nav }: { nav: Nav }) {
           </div>
         ))}
 
-      {editing && routineById(s, editing) && <RoutineEditor id={editing} onClose={() => setEditing(null)} />}
+      {editing && routineById(s, editing) && (
+        <RoutineEditor
+          id={editing}
+          onClose={() => {
+            const r = routineById(s, editing);
+            // A day created a moment ago and left empty was a cancelled "New day": do not keep it.
+            if (r && editingIsNew && r.exercises.length === 0) {
+              update((d) => {
+                d.routines = d.routines.filter((x) => x.id !== editing);
+              });
+              toast('Empty day discarded');
+            } else if (r && r.name.trim() === '') {
+              update((d) => {
+                const x = d.routines.find((y) => y.id === editing);
+                if (x) x.name = 'Untitled day';
+              });
+            }
+            setEditing(null);
+          }}
+        />
+      )}
       {detail && history.find((w) => w.id === detail) && (
         <WorkoutDetail workout={history.find((w) => w.id === detail)!} onClose={() => setDetail(null)} />
       )}
@@ -242,7 +271,7 @@ function RoutineEditor({ id, onClose }: { id: ID; onClose: () => void }) {
   return (
     <Sheet title="Edit training day" onClose={onClose} full foot={<button className="btn wide" onClick={onClose}>Done</button>}>
       <div className="stack">
-        <TextField label="Name" value={routine.name} onChange={(v) => edit((r) => void (r.name = v))} placeholder="e.g. Push" />
+        <TextField label="Name" value={routine.name} onChange={(v) => edit((r) => void (r.name = v))} placeholder="e.g. Push" maxLength={24} />
 
         <div>
           <div className="block-head" style={{ marginBottom: 4 }}>
@@ -283,7 +312,11 @@ function RoutineEditor({ id, onClose }: { id: ID; onClose: () => void }) {
                     unit="sets"
                     value={re.sets}
                     placeholder="Sets"
-                    onChange={(v) => edit((r) => void (r.exercises[i].sets = Math.min(12, Math.max(1, Math.round(v ?? 1)))))}
+                    maxLength={2}
+                    onChange={(v) => {
+                      // Ignore an empty field while typing; the last valid number stays until a new one is entered.
+                      if (v != null && v >= 1) edit((r) => void (r.exercises[i].sets = Math.min(12, Math.round(v))));
+                    }}
                   />
                   <span className="input-unit" style={{ display: 'block' }}>
                     <input

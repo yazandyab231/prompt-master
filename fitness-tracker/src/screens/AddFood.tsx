@@ -86,7 +86,7 @@ export function AddFood({ date, onClose }: { date: string; onClose: () => void }
   return (
     <Sheet title={`Log food · ${fmtRelative(date)}`} onClose={onClose} full>
       <div className="stack">
-        <div className="seg" role="group" aria-label="How to add">
+        <div className="seg stacked" role="group" aria-label="How to add">
           {MODES.map((m) => (
             <button key={m.id} aria-pressed={mode === m.id} onClick={() => setMode(m.id)}>
               <Icon name={m.icon} />
@@ -217,7 +217,8 @@ function Amount({ food, date, onDone, onEdit }: { food: Food; date: string; onDo
           {Math.round(food.per100.kcal)} kcal · P {num(food.per100.p, 1)} · C {num(food.per100.c, 1)} · F {num(food.per100.f, 1)} per 100 g
         </p>
       </div>
-      <NumField label="Amount" unit="g" value={grams} onChange={setGrams} autoFocus dp={0} />
+      <NumField label="Amount" unit="g" value={grams} onChange={setGrams} autoFocus dp={0} maxLength={5} />
+      {grams != null && grams > 5000 && <p className="error">Enter 5,000 g or less.</p>}
       <div className="chips">
         {food.servingG && !presets.includes(food.servingG) && (
           <button type="button" className="chip" aria-pressed={grams === food.servingG} onClick={() => setGrams(food.servingG!)}>
@@ -299,6 +300,11 @@ function FoodForm({ draft, onSaved, onDeleted }: { draft: Draft; onSaved: (f: Fo
       {mismatch && !impossible && (
         <p className="error">
           These don't add up: the macros imply about {Math.round(implied!)} kcal, not {Math.round(d.kcal!)}. Check the numbers against the package. You can still save.
+        </p>
+      )}
+      {!valid && !impossible && (
+        <p className="hint">
+          To save, fill in: {[d.name.trim() === '' && 'a name', d.p == null && 'protein', d.c == null && 'carbs', d.f == null && 'fat'].filter(Boolean).join(', ')}.
         </p>
       )}
       <button className="btn wide" disabled={!valid}>
@@ -497,14 +503,17 @@ function Label(props: {
         servingG: r.servingG,
         note:
           (missing.length
-            ? `Read ${4 - missing.length} of 4 values; could not read ${missing.map((k) => names[k]).join(', ')}. `
-            : 'Read all four values. ') +
+            ? `Found ${4 - missing.length} of 4 values; could not find ${missing.map((k) => names[k]).join(', ')}. `
+            : 'Found all four values. ') +
+          (r.adjusted.length
+            ? `${r.adjusted.map((k) => names[k]).join(' and ')} looked misread, so ${r.adjusted.length > 1 ? 'they were' : 'it was'} corrected to agree with the energy figure. `
+            : '') +
           (unconverted
             ? 'The label is per serving and the serving weight could not be read, so these are per serving, not per 100 g: correct them before saving. '
             : r.basis === 'serving'
               ? `The label is per ${num(r.servingG!, 0)} g serving; values were converted to per 100 g. `
               : '') +
-          'Text reading makes mistakes, so check every number against the package.',
+          'Text reading makes mistakes: check every number against the package before saving.',
       });
     } catch {
       if (alive.current) setError('The text reader could not start. Check your connection the first time you use it, then try again, or type the values in.');
@@ -563,7 +572,7 @@ function Quick({ date, onDone }: { date: string; onDone: () => void }) {
   const [f, setF] = useState<number | null>(null);
   const implied = kcalFromMacros(p ?? 0, c ?? 0, f ?? 0);
   const total = kcal ?? Math.round(implied);
-  const valid = total > 0;
+  const valid = total > 0 && total <= 20000 && (p ?? 0) <= 2000 && (c ?? 0) <= 2000 && (f ?? 0) <= 2000;
   return (
     <form
       className="stack"
@@ -584,6 +593,7 @@ function Quick({ date, onDone }: { date: string; onDone: () => void }) {
         <NumField label="Fat" unit="g" value={f} onChange={setF} />
       </div>
       {kcal == null && implied > 0 && <p className="hint">No energy entered: {Math.round(implied)} kcal will be used, worked out from the macros.</p>}
+      {total > 20000 && <p className="error">That is more than 20,000 kcal. Check the numbers.</p>}
       <button className="btn wide" disabled={!valid}>
         Add to log
       </button>

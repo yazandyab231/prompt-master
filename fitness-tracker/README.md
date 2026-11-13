@@ -62,5 +62,15 @@ still works; reminders then only show while it is open, and the Setup screen say
 
 - Data lives in one browser on one device. Clearing site data deletes it: export a backup.
 - The weekly split is fixed to weekdays (no rotating cycles yet).
-- Label reading makes mistakes on real packaging; the review screen exists for that.
+- Label reading is the least reliable feature. On 21 generated test labels it got all four values
+  right on 20, but only after an automatic cross-check against the energy figure, and those were
+  clean renders, not photos of real packaging. Tilted (about 8°) or blurred images were not readable
+  at all. Every result goes through a review screen before it is saved.
 - Built-in food values are typical figures, not exact for any brand.
+- Barcode lookups have only been tested against stand-in responses, not the live Open Food Facts service.
+- Camera barcode scanning has not been tested on a real device.
+- The push endpoint (`/api/push/sync`) has no authentication: anyone who finds it can register a
+  subscription of their own. It stores nothing but subscriptions and reminder times.
+- On a desktop the app is a centred phone-width column; nothing uses the extra width.
+- Offline: the app shell works offline after one online visit. The label reader (about 7 MB) is only
+  available offline after it has been used once online.

@@ -109,6 +109,41 @@ Protein 3g`);
     expect(r.per100).toEqual({ kcal: 250, p: 19.9, c: 29, f: 9 });
   });
 
+  it('repairs a lost decimal point and a stray 9 using the energy value (tester image 01 / x1)', () => {
+    const r = parseNutritionText('Per 100g\nEnergy 1590 kJ / 380 kcal\nFat 6.59\nCarbohydrate 629g\nProtein 135¢');
+    expect(r.per100).toEqual({ kcal: 380, p: 13.5, c: 62, f: 6.5 });
+    expect(r.adjusted.sort()).toEqual(['c', 'p']);
+  });
+
+  it('repairs "3.6 g" read as "369" (tester image 13)', () => {
+    const r = parseNutritionText('per 100 g\nEnergy 52 kcal\nFat 0.29\nCarbohydrate 369\nProtein 10.3 ¢g');
+    expect(r.per100).toEqual({ kcal: 52, p: 10.3, c: 3.6, f: 0.2 });
+  });
+
+  it('repairs a per-serving value with a lost decimal point (tester image x5)', () => {
+    const r = parseNutritionText('Per 30g serving\nEnergy 120 kcal\nFat 25g\nCarbohydrate 21g\nProtein 3g');
+    expect(r.basis).toBe('serving');
+    expect(r.per100.f).toBeCloseTo(8.3, 1);
+    expect(r.per100.c).toBe(70);
+  });
+
+  it('leaves values alone when they already agree with the energy figure', () => {
+    const r = parseNutritionText('per 100g\nEnergy 579 kcal\nFat 49g\nCarbohydrate 22g\nProtein 21g');
+    expect(r.per100).toEqual({ kcal: 579, p: 21, c: 22, f: 49 });
+    expect(r.adjusted).toEqual([]);
+  });
+
+  it('repairs all three values only when they are impossible as read (tester image x2)', () => {
+    const r = parseNutritionText('Per 100g\nEnergy 1590 kJ / 380 kcal\nFat 65g\nCarbohydrate 629\nProtein 1359');
+    expect(r.per100).toEqual({ kcal: 380, p: 13.5, c: 62, f: 6.5 });
+  });
+
+  it('does not invent a repair when nothing fits', () => {
+    const r = parseNutritionText('per 100g\nEnergy 50 kcal\nFat 30g\nCarbohydrate 40g\nProtein 20g');
+    expect(r.per100).toEqual({ kcal: 50, p: 20, c: 40, f: 30 });
+    expect(r.adjusted).toEqual([]);
+  });
+
   it('reports what it could not read instead of inventing it', () => {
     const r = parseNutritionText('INGREDIENTS: water, sugar\nBest before end');
     expect(r.found).toBe(0);

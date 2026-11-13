@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { activeWorkout, update, useApp } from './lib/store';
 import { dueReminders } from './lib/reminders';
-import { getPushState, notifyLocal } from './lib/push';
+import { getPushState, notifyLocal, syncPush } from './lib/push';
 import { today } from './lib/date';
 import { Icon } from './ui/Icon';
 import { Toast, useTick } from './ui/bits';
@@ -38,6 +38,11 @@ export function App() {
   const [workoutOpen, setWorkoutOpen] = useState(false);
   const [addFoodDate, setAddFoodDate] = useState<string | null>(null);
   useTick(30_000);
+
+  useEffect(() => {
+    void syncPush(s.reminders).catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const onHash = () => setTab(tabFromHash());

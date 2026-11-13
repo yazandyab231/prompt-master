@@ -15,6 +15,8 @@ export interface LabelResult {
   per100: LabelValues;
   /** How many of the four values were read (0–4). */
   found: number;
+  /** Values that looked misread and were corrected so the macros agree with the energy figure. */
+  adjusted: ('p' | 'c' | 'f')[];
 }
 
 interface Num {
@@ -26,6 +28,7 @@ interface Num {
 /** Undo the most common OCR slips inside numbers: "O"/"o" for 0, "l"/"I" for 1, "S" for 5. */
 function cleanLine(line: string) {
   return line
+    .replace(/(?<=\d)\s?¢\s?g?/g, 'g')
     .replace(/(?<=\d)[Oo](?=[\d.,]|\s?(?:g|mg|kcal|kj)\b)/g, '0')
     .replace(/(?<![A-Za-z])[Oo](?=[.,]\d)/g, '0')
     .replace(/(?<![A-Za-z])[Oo](?=\s?(?:g|mg)\b)/g, '0')
@@ -110,18 +113,68 @@ export function parseNutritionText(text: string): LabelResult {
   // The classic OCR slip on labels: the unit "g" is read as the digit 9 ("6.5g" -> "6.59", "62g" -> "629").
   // If this label prints units (some value kept its "g"), or every unit-less value ends in 9, then a
   // unit-less value ending in 9 is really "<number>g" and the 9 is dropped.
-  const picked = (['p', 'c', 'f'] as const).map((k) => gramRows[k]).filter(Boolean).flat() as Num[];
+  const keys = ['p', 'c', 'f'] as const;
+  const chosen: Partial<Record<(typeof keys)[number], Num>> = {};
+  for (const k of keys) {
+    const grams = gramRows[k];
+    if (grams) chosen[k] = grams[column] ?? grams[0];
+  }
+  const picked = keys.map((k) => gramRows[k]).filter(Boolean).flat() as Num[];
   const withUnit = picked.filter((x) => x.unit === 'g').length;
   const bare = picked.filter((x) => x.unit === '');
   const gAs9 = bare.length > 0 && (withUnit > 0 || bare.every((x) => /\d9$/.test(x.raw)));
-  const fix = (x: Num): number => {
+  const baseline = (x: Num): number => {
     const suspicious = x.unit === '' && /\d9$/.test(x.raw);
     if (suspicious && (gAs9 || (basis === 'per100' && x.value > 100))) return Number(x.raw.slice(0, -1));
     return x.value;
   };
-  for (const k of ['p', 'c', 'f'] as const) {
-    const grams = gramRows[k];
-    if (grams) raw[k] = fix(grams[column] ?? grams[0]);
+  for (const k of keys) if (chosen[k]) raw[k] = baseline(chosen[k]!);
+
+  // Second line of defence: energy is the value OCR gets right most reliably, and protein, carbs and
+  // fat must roughly add up to it (4/4/9 kcal per gram). When they do not, try the two misreadings
+  // seen in practice (a stray trailing 9, a lost decimal point) and keep the combination that fits.
+  const adjusted: (typeof keys)[number][] = [];
+  const limit = basis === 'per100' ? 100.5 : servingG ? servingG + 0.5 : Infinity;
+  if (raw.kcal != null && keys.every((k) => chosen[k])) {
+    const energy = raw.kcal;
+    const err = (p: number, c: number, f: number) => Math.abs(kcalFromMacros(p, c, f) - energy) / Math.max(energy, 20);
+    const fits = (p: number, c: number, f: number) => p + c + f <= limit;
+    const base = keys.map((k) => raw[k]!) as [number, number, number];
+    if (!fits(...base) || err(...base) > 0.15) {
+      const options = keys.map((k) => {
+        const tok = chosen[k]!;
+        const out: { v: number; cost: number }[] = [{ v: raw[k]!, cost: 0 }];
+        const add = (v: number, cost: number) => {
+          if (Number.isFinite(v) && !out.some((o) => o.v === v)) out.push({ v, cost });
+        };
+        const noPoint = (r: string) => !r.includes('.') && r.length >= 2;
+        add(tok.value, 0.02);
+        if (noPoint(tok.raw)) add(tok.value / 10, 0.05);
+        if (/\d9$/.test(tok.raw)) {
+          const stripped = tok.raw.slice(0, -1);
+          add(Number(stripped), 0.02);
+          if (noPoint(stripped)) add(Number(stripped) / 10, 0.07);
+        }
+        return out;
+      });
+      let best: { vals: [number, number, number]; score: number; e: number } | null = null;
+      for (const p of options[0]) for (const c of options[1]) for (const f of options[2]) {
+        if (!fits(p.v, c.v, f.v)) continue;
+        const e = err(p.v, c.v, f.v);
+        // If all three would need changing, the energy figure itself is the likelier misread. Only
+        // accept that when the values as read are impossible (more than 100 g per 100 g) and the fit is close.
+        const changes = [p.v, c.v, f.v].filter((v, i) => v !== base[i]).length;
+        if (changes > 2 && !(e <= 0.1 && !fits(...base))) continue;
+        const score = e + p.cost + c.cost + f.cost;
+        if (!best || score < best.score) best = { vals: [p.v, c.v, f.v], score, e };
+      }
+      if (best && best.e <= 0.2) {
+        keys.forEach((k, i) => {
+          if (best!.vals[i] !== raw[k]) adjusted.push(k);
+          raw[k] = best!.vals[i];
+        });
+      }
+    }
   }
 
   const found = (['kcal', 'p', 'c', 'f'] as const).filter((k) => raw[k] != null).length;
@@ -134,7 +187,7 @@ export function parseNutritionText(text: string): LabelResult {
   if (per100.kcal == null && per100.p != null && per100.c != null && per100.f != null) {
     per100 = { ...per100, kcal: Math.round(kcalFromMacros(per100.p, per100.c, per100.f)) };
   }
-  return { basis, servingG, per100, found };
+  return { basis, servingG, per100, found, adjusted };
 }
 
 /** Shrink big phone photos so OCR is fast, and return a canvas the engine can read. */

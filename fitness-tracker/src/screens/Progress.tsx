@@ -20,6 +20,7 @@ export function Progress() {
   const [weighDate, setWeighDate] = useState<string | null>(null);
   const [metric, setMetric] = useState<'top' | 'e1rm'>('top');
   const [showAll, setShowAll] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const from = RANGES.find((r) => r.id === range)!.days === Infinity ? '0000-00-00' : addDays(today(), -RANGES.find((r) => r.id === range)!.days);
 
   /* body weight */
@@ -118,35 +119,38 @@ export function Progress() {
           <>
             <div className="rows" style={{ marginTop: 16 }}>
               {(showAll ? listed : listed.slice(0, 5)).map((b) => (
-                <button key={b.date} className="row" style={{ minHeight: 48, padding: '8px 0' }} onClick={() => setWeighDate(b.date)}>
-                  <span className="row-main">
-                    <span className="row-title" style={{ fontWeight: 500 }}>
-                      {fmtDay(b.date)}
+                <div key={b.date} className="row" style={{ minHeight: 48, padding: '2px 0' }}>
+                  <button className="row-btn" onClick={() => setWeighDate(b.date)} aria-label={`Edit weigh-in for ${fmtDay(b.date)}`}>
+                    <span className="row-main">
+                      <span className="row-title" style={{ fontWeight: 500 }}>
+                        {fmtDay(b.date)}
+                      </span>
                     </span>
-                  </span>
-                  <span className="row-end" style={{ fontSize: 20 }}>
-                    {fmtWeight(b.kg, units)}
-                  </span>
-                  <span
-                    className="icon-btn"
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`Delete weigh-in for ${fmtDay(b.date)}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setBodyWeight(b.date, null);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setBodyWeight(b.date, null);
-                      }
-                    }}
-                  >
-                    <Icon name="trash" />
-                  </span>
-                </button>
+                    <span className="row-end" style={{ fontSize: 20 }}>
+                      {fmtWeight(b.kg, units)}
+                    </span>
+                  </button>
+                  {confirmDelete === b.date ? (
+                    <span className="confirm">
+                      <button
+                        className="btn danger small"
+                        onClick={() => {
+                          setBodyWeight(b.date, null);
+                          setConfirmDelete(null);
+                        }}
+                      >
+                        Delete
+                      </button>
+                      <button className="icon-btn" onClick={() => setConfirmDelete(null)} aria-label="Keep this weigh-in">
+                        <Icon name="x" />
+                      </button>
+                    </span>
+                  ) : (
+                    <button className="icon-btn" aria-label={`Delete weigh-in for ${fmtDay(b.date)}`} onClick={() => setConfirmDelete(b.date)}>
+                      <Icon name="trash" />
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
             {listed.length > 5 && (

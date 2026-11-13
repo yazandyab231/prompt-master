@@ -24,32 +24,155 @@ export const defaultState = (): AppState => ({
   reminderSeen: {},
 });
 
-/** Fill in anything missing so older or hand-edited backups still load. */
-export function normalize(raw: unknown): AppState {
+const THEME_IDS = ['iron', 'ember', 'tide', 'chalk', 'clay'];
+export const THEME_BG: Record<string, string> = {
+  iron: '#0b0b0c', ember: '#100d0b', tide: '#081018', chalk: '#f2efe9', clay: '#ece2d5',
+};
+const isObj = (v: unknown): v is Record<string, any> => !!v && typeof v === 'object' && !Array.isArray(v);
+const isStr = (v: unknown): v is string => typeof v === 'string';
+const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+const isDate = (v: unknown): v is string => isStr(v) && /^\d{4}-\d{2}-\d{2}$/.test(v);
+const numOr = (v: unknown, fallback: number) => (isNum(v) && v >= 0 ? v : fallback);
+const macros = (v: unknown): Macros | null =>
+  isObj(v) ? { kcal: numOr(v.kcal, 0), p: numOr(v.p, 0), c: numOr(v.c, 0), f: numOr(v.f, 0) } : null;
+
+/**
+ * Turn anything (an old backup, a hand-edited file, corrupted storage) into a state the app can
+ * always render. Unreadable items are dropped and counted rather than trusted.
+ */
+export function normalizeWithReport(raw: unknown): { state: AppState; dropped: number } {
   const d = defaultState();
-  if (!raw || typeof raw !== 'object') return d;
-  const r = raw as Partial<AppState>;
-  const arr = <T,>(v: unknown, fallback: T[]): T[] => (Array.isArray(v) ? (v as T[]) : fallback);
-  const week = arr<ID | null>(r.week, d.week).slice(0, 7);
-  while (week.length < 7) week.push(null);
+  if (!isObj(raw)) return { state: d, dropped: 0 };
+  let dropped = 0;
+  const list = <T,>(v: unknown, read: (x: any) => T | null): T[] => {
+    if (!Array.isArray(v)) return [];
+    const out: T[] = [];
+    for (const x of v) {
+      const item = isObj(x) ? read(x) : null;
+      if (item) out.push(item);
+      else dropped++;
+    }
+    return out;
+  };
+
+  const settings: AppState['settings'] = {
+    theme: isObj(raw.settings) && THEME_IDS.includes(raw.settings.theme) ? raw.settings.theme : d.settings.theme,
+    units: isObj(raw.settings) && raw.settings.units === 'lb' ? 'lb' : 'kg',
+    targets: { ...d.settings.targets, ...(isObj(raw.settings) ? macros(raw.settings.targets) ?? {} : {}) },
+  };
+  if (isObj(raw.settings) && isObj(raw.settings.targets)) {
+    for (const k of ['kcal', 'p', 'c', 'f'] as const) {
+      if (!isNum(raw.settings.targets[k])) settings.targets[k] = d.settings.targets[k];
+    }
+  }
+
+  const exercises = list<Exercise>(raw.exercises, (x) =>
+    isStr(x.id) && isStr(x.name) ? { id: x.id, name: x.name, group: isStr(x.group) ? x.group : 'Other', custom: true } : null,
+  );
+  const routines = list<Routine>(raw.routines, (x) =>
+    isStr(x.id) && isStr(x.name)
+      ? {
+          id: x.id,
+          name: x.name,
+          exercises: list(x.exercises, (e) =>
+            isStr(e.exerciseId)
+              ? { exerciseId: e.exerciseId, sets: Math.min(12, Math.max(1, Math.round(numOr(e.sets, 3)))), reps: isStr(e.reps) ? e.reps : '' }
+              : null,
+          ),
+        }
+      : null,
+  );
+  const routineIds = new Set(routines.map((r) => r.id));
+  const week: (ID | null)[] = Array.from({ length: 7 }, (_, i) => {
+    const v = Array.isArray(raw.week) ? raw.week[i] : null;
+    return isStr(v) && routineIds.has(v) ? v : null;
+  });
+
+  let sawActive = false;
+  const workouts = list<Workout>(raw.workouts, (x) => {
+    if (!isStr(x.id) || !isDate(x.date) || !isNum(x.startedAt)) return null;
+    const finishedAt = isNum(x.finishedAt) ? x.finishedAt : null;
+    if (finishedAt == null) {
+      if (sawActive) return null; // only one session can be in progress
+      sawActive = true;
+    }
+    return {
+      id: x.id,
+      routineId: isStr(x.routineId) ? x.routineId : null,
+      name: isStr(x.name) ? x.name : 'Session',
+      date: x.date,
+      startedAt: x.startedAt,
+      finishedAt,
+      exercises: list(x.exercises, (e) =>
+        isStr(e.exerciseId)
+          ? {
+              exerciseId: e.exerciseId,
+              sets: list<SetLog>(e.sets, (st) => ({
+                weight: isNum(st.weight) && st.weight >= 0 ? st.weight : null,
+                reps: isNum(st.reps) && st.reps >= 0 ? Math.round(st.reps) : null,
+                done: st.done === true,
+              })),
+            }
+          : null,
+      ),
+    };
+  });
+
+  const seenDates = new Set<string>();
+  const bodyWeights = list<AppState['bodyWeights'][number]>(raw.bodyWeights, (x) => {
+    if (!isDate(x.date) || !isNum(x.kg) || x.kg <= 0 || seenDates.has(x.date)) return null;
+    seenDates.add(x.date);
+    return { date: x.date, kg: x.kg };
+  }).sort((a, b) => a.date.localeCompare(b.date));
+
+  const foods = list<Food>(raw.foods, (x) => {
+    const per100 = macros(x.per100);
+    if (!isStr(x.id) || !isStr(x.name) || !per100) return null;
+    return {
+      id: x.id,
+      name: x.name,
+      brand: isStr(x.brand) ? x.brand : undefined,
+      per100,
+      servingG: isNum(x.servingG) && x.servingG > 0 ? x.servingG : undefined,
+      source: ['custom', 'barcode', 'label'].includes(x.source) ? x.source : 'custom',
+      barcode: isStr(x.barcode) ? x.barcode : undefined,
+    };
+  });
+  const entries = list<AppState['entries'][number]>(raw.entries, (x) => {
+    const m = macros(x.macros);
+    if (!isStr(x.id) || !isDate(x.date) || !isStr(x.name) || !m) return null;
+    return {
+      id: x.id,
+      date: x.date,
+      time: numOr(x.time, 0),
+      foodId: isStr(x.foodId) ? x.foodId : undefined,
+      name: x.name,
+      grams: isNum(x.grams) && x.grams > 0 ? x.grams : null,
+      macros: m,
+    };
+  });
+  const reminders = list<AppState['reminders'][number]>(raw.reminders, (x) =>
+    isStr(x.id) && isStr(x.title) && isStr(x.time) && /^\d{2}:\d{2}$/.test(x.time) && Array.isArray(x.days)
+      ? {
+          id: x.id,
+          kind: ['workout', 'meal', 'weigh', 'custom'].includes(x.kind) ? x.kind : 'custom',
+          title: x.title,
+          time: x.time,
+          days: x.days.filter((n: unknown) => Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 6),
+          enabled: x.enabled !== false,
+        }
+      : null,
+  );
+  const reminderSeen: Record<ID, string> = {};
+  if (isObj(raw.reminderSeen)) for (const [k, v] of Object.entries(raw.reminderSeen)) if (isStr(v)) reminderSeen[k] = v;
+
   return {
-    version: 1,
-    settings: {
-      ...d.settings,
-      ...(r.settings ?? {}),
-      targets: { ...d.settings.targets, ...(r.settings?.targets ?? {}) },
-    },
-    exercises: arr(r.exercises, []),
-    routines: arr(r.routines, []),
-    week,
-    workouts: arr(r.workouts, []),
-    bodyWeights: arr(r.bodyWeights, []),
-    foods: arr(r.foods, []),
-    entries: arr(r.entries, []),
-    reminders: arr(r.reminders, []),
-    reminderSeen: r.reminderSeen && typeof r.reminderSeen === 'object' ? r.reminderSeen : {},
+    state: { version: 1, settings, exercises, routines, week, workouts, bodyWeights, foods, entries, reminders, reminderSeen },
+    dropped,
   };
 }
+
+export const normalize = (raw: unknown): AppState => normalizeWithReport(raw).state;
 
 let state: AppState = defaultState();
 let loaded = false;
@@ -76,14 +199,20 @@ export function flush() {
   }
 }
 
-function emit() {
-  for (const l of listeners) l();
+function applyTheme() {
+  const theme = state.settings.theme;
+  document.documentElement.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_BG[theme] ?? THEME_BG.iron);
   try {
-    localStorage.setItem('logbook.theme', state.settings.theme);
+    localStorage.setItem('logbook.theme', theme);
   } catch {
     /* ignore */
   }
-  document.documentElement.dataset.theme = state.settings.theme;
+}
+
+function emit() {
+  for (const l of listeners) l();
+  applyTheme();
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(persist, 120);
 }
@@ -106,7 +235,7 @@ export async function loadState() {
   }
   state = normalize(raw);
   loaded = true;
-  document.documentElement.dataset.theme = state.settings.theme;
+  applyTheme();
   for (const l of listeners) l();
   // Ask the browser not to evict our data under storage pressure.
   void navigator.storage?.persist?.().catch(() => undefined);

@@ -39,3 +39,10 @@ export const parseNum = (s: string): number | null => {
   const v = Number(t);
   return Number.isFinite(v) && v >= 0 ? v : null;
 };
+
+/** Keep only digits and a single decimal separator, so "1.2.3" or "1e3" can never be typed. */
+export const cleanDecimal = (raw: string): string => {
+  const t = raw.replace(/[^\d.,]/g, '');
+  const i = t.search(/[.,]/);
+  return i < 0 ? t : t.slice(0, i + 1) + t.slice(i + 1).replace(/[.,]/g, '');
+};

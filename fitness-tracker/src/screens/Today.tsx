@@ -191,22 +191,30 @@ export function Today({ nav, due, onDismiss }: { nav: Nav; due: Reminder[]; onDi
 export function WeighSheet({ date, onClose }: { date: string; onClose: () => void }) {
   const s = useApp();
   const units = s.settings.units;
-  const existing = s.bodyWeights.find((b) => b.date === date);
+  const shown = (kg: number) => Number(num(kgToDisplay(kg, units), 1));
+  /** The weigh-in this sheet was opened on, if there was one: saving edits or moves it. */
+  const original = s.bodyWeights.find((b) => b.date === date);
   const previous = s.bodyWeights[s.bodyWeights.length - 1];
-  const [value, setValue] = useState<number | null>(
-    existing ? Number(num(kgToDisplay(existing.kg, units), 1)) : null,
-  );
   const [day, setDay] = useState(date);
-  const valid = value != null && value > 0 && value < 1000;
+  const [value, setValue] = useState<number | null>(original ? shown(original.kg) : null);
+  const [dirty, setDirty] = useState(false);
+  const onDay = s.bodyWeights.find((b) => b.date === day);
+  const clash = onDay && day !== original?.date ? onDay : null;
+  const future = day > today();
+  const valid = value != null && value > 0 && value < 1000 && !future;
+
   const save = () => {
     if (!valid) return;
-    setBodyWeight(day, displayToKg(value!, units));
+    // Untouched number: keep the stored value exactly, so re-saving never drifts through rounding.
+    const kg = !dirty && original ? original.kg : displayToKg(value!, units);
+    if (original && day !== original.date) setBodyWeight(original.date, null); // moved to another day
+    setBodyWeight(day, kg);
     toast('Weight logged');
     onClose();
   };
   return (
     <Sheet
-      title="Log body weight"
+      title={original ? 'Edit weigh-in' : 'Log body weight'}
       onClose={onClose}
       foot={
         <button className="btn wide" disabled={!valid} onClick={save}>
@@ -225,7 +233,10 @@ export function WeighSheet({ date, onClose }: { date: string; onClose: () => voi
           label="Weight"
           unit={units}
           value={value}
-          onChange={setValue}
+          onChange={(v) => {
+            setValue(v);
+            setDirty(true);
+          }}
           autoFocus
           placeholder={previous ? fmtWeight(previous.kg, units) : units === 'kg' ? '80.0' : '176.0'}
         />
@@ -233,7 +244,16 @@ export function WeighSheet({ date, onClose }: { date: string; onClose: () => voi
           <span className="label">Date</span>
           <input className="input" type="date" value={day} max={today()} onChange={(e) => e.target.value && setDay(e.target.value)} />
         </label>
-        {existing && day === date && <p className="hint">You already logged this day. Saving replaces it.</p>}
+        {future && <p className="error">That date is in the future. Pick today or earlier.</p>}
+        {clash && !future && (
+          <p className="hint">
+            {fmtDay(day)} already has a weigh-in of {fmtWeight(clash.kg, units)} {units}. Saving replaces it.
+          </p>
+        )}
+        {original && day !== original.date && !future && <p className="hint">This moves the weigh-in from {fmtDay(original.date)}.</p>}
+        <button className="sr-only" tabIndex={-1} aria-hidden="true">
+          Save
+        </button>
       </form>
     </Sheet>
   );

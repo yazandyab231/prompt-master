@@ -1,5 +1,5 @@
 /* Logbook service worker: offline cache + push notifications. */
-const CACHE = 'logbook-v1';
+const CACHE = 'logbook-v2';
 const SHELL = ['/', '/manifest.webmanifest', '/icon.svg', '/icon-192.png'];
 
 self.addEventListener('install', (event) => {
@@ -26,18 +26,23 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put('/', copy));
+          // Only a good page may become the offline shell (never a 404 or error page).
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put('/', copy));
+          }
           return res;
         })
-        .catch(() => caches.match('/').then((r) => r || Response.error())),
+        .catch(() => caches.match('/', { ignoreVary: true }).then((r) => r || Response.error())),
     );
     return;
   }
 
   // Everything else (hashed assets, fonts, the OCR engine): cache first, fill the cache on a miss.
+  // ignoreVary: a file cached by the precache step must also answer the page's own request for it,
+  // even when the server sends a Vary header and the two requests differ (e.g. module scripts).
   event.respondWith(
-    caches.match(req).then(
+    caches.match(req, { ignoreVary: true }).then(
       (hit) =>
         hit ||
         fetch(req).then((res) => {
@@ -48,6 +53,33 @@ self.addEventListener('fetch', (event) => {
           return res;
         }),
     ),
+  );
+});
+
+// The page tells us which files it loaded. Cache any we are missing, and drop hashed assets
+// from older builds that the current page no longer uses.
+self.addEventListener('message', (event) => {
+  const data = event.data;
+  if (!data || data.type !== 'precache' || !Array.isArray(data.urls)) return;
+  const wanted = data.urls.filter((u) => typeof u === 'string' && u.startsWith(self.location.origin));
+  event.waitUntil(
+    caches.open(CACHE).then(async (cache) => {
+      await Promise.all(
+        wanted.map(async (url) => {
+          if (await cache.match(url, { ignoreVary: true })) return;
+          try {
+            const res = await fetch(url, { cache: 'reload' });
+            if (res.ok) await cache.put(url, res);
+          } catch (e) {
+            /* offline or blocked: it will be cached on a later visit */
+          }
+        }),
+      );
+      const keep = new Set(wanted);
+      for (const req of await cache.keys()) {
+        if (new URL(req.url).pathname.startsWith('/assets/') && !keep.has(req.url)) await cache.delete(req);
+      }
+    }),
   );
 });
 
