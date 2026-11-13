@@ -86,10 +86,16 @@ cd paper-week   # every skill reads and writes ./trader/
 1. Setup above. Read the bottom of LOG.md: open position? entries and max loss used today?
 2. **Open position:** `python3 -I bracket_check.py SYM HH:MM STOP TARGET`.
    FILLED → `ticket.py fill --symbol SYM --side sell --qty Q --price P`, log it, note to the chat.
-3. **Pre-market (~08:45):** `scan.py universe`, `scan.py daily --show 40` (copy
-   trader/watchlist.json to trader/premarket.json), `swing_backtest.py` on the top 10 to 15 hits,
-   `news.py --tickers <best ones> --no-sec --hours 18`, `ptr.py` (Congress trades) as background.
-   Write the ranked swing shortlist (setup, n, avg R, edge, plan) in LOG.md.
+3. **Pre-market (~08:45), EVERY market day:** `scan.py universe`, then `python3 -I deep_scan.py` (every liquid
+   US stock, ~1,350: 2 years of daily bars each, which setups fired yesterday, each one replayed on that stock's
+   own history vs its baseline, plus trend, strength vs SPY, distance from the high, and the SPY/QQQ regime;
+   ~3 minutes). Pick from its ranked list with the selection rules below, then `news.py --tickers <top 8>
+   --no-sec --hours 96` and drop any stock with a pending merger or buyout, earnings inside the 5-day hold,
+   a halt, or a legal shock. Also `ptr.py` (Congress trades) and the watch items (NVDA, TTWO). Write the ranked
+   shortlist (top 3 to buy plus 2 alternates, and why others were dropped) in LOG.md.
+   **Selection rules:** passes the v2 proof (n >= 15, avg R > 0, beats baseline) AND t-score >= 2.0 AND
+   edge >= +0.10 AND ATR >= 1% of the price (a stock that barely moves is usually pinned by a deal). When SPY is
+   below its 50-day average, also require the stock to be above its own 200-day average.
 3b. **First check after 09:52:** for the best shortlist names that pass the v2 proof, buy at the live
    price if it is within 2% of the last close (`ticket.py fill --side buy`), add to positions.json.
 4. **During 09:52 to 15:30, flat, under the day's limits:** `scan.py orb --show 40`,

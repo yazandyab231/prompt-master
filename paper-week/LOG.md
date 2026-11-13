@@ -56,6 +56,18 @@ See README. Day trades keep the v1 rules.
 Friday from 11-20. NVDA put on watch (CEO resigned 11-12, earnings due): no entry before earnings; see README.
 TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup that passes the v2 proof; see README.
 
+**Deep scan for Fri 11-13** (run 02:00 NY on Thursday's closes; owner asked to cover thousands of stocks every morning):
+- Market: SPY 757.12 and QQQ 688.17 both BELOW their 50-day averages (QQQ -5.6% in a month): weak tape, stricter rules.
+- 1,342 liquid stocks analyzed in 164 s; a setup fired on 162; 44 passed the v2 proof.
+- BUY at 09:52 if within 2% of the last close: **PCOR** bull_flag (n=24, win 75%, avg R +0.56, edge +0.55, t 3.29;
+  close 77.23, stop 70.89, 15 shares), **AMD** breakout_20d (n=85, avg R +0.44, edge +0.26, t 3.13; close 585.30,
+  stop 496.07, 1 share; +5.9% on 11-12), **LTH** bull_flag (n=31, win 74%, avg R +0.21, edge +0.13, t 2.90; close 45.54,
+  stop 41.19, 22 shares).
+- Alternates: **YOU** bull_flag (t 2.72, edge +0.26, close 56.79, stop 50.01, 14 shares), then VIRT, PTRN.
+- Dropped: CART (pending merger with DoorDash: trades on the deal, not the chart), APP and TTI and LVS (below their
+  200-day average in a weak market), OGN (ATR 0.3%: price pinned, likely a deal), LQDA/ATI/CAH (edge under +0.10),
+  COST (t 1.27, too little evidence). News on PCOR, LTH, YOU: nothing material in 96 h.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
