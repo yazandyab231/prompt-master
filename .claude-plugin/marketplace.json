@@ -22,6 +22,10 @@
       "source": "./plugins/model-router"
     },
     {
+      "name": "agent-team",
+      "source": "./plugins/agent-team"
+    },
+    {
       "name": "day-trader-skill",
       "description": "Third-party: Jake Schincariol's 11 day-trading skills (MIT), pinned to the reviewed commit 3d0f4ef.",
       "source": {

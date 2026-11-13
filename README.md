@@ -80,6 +80,16 @@ A **Dashboard** panel beside the chat: the agents running right now and what eac
 - It refreshes after every turn, checks agents every few seconds, and has a **Refresh** button.
 - Tasks are Markdown checkboxes in `TASKS.md` in the project folder: `- [ ] open`, `- [x] done`.
 
+### Agent team
+
+`/team <task>` runs a **planner**, a **builder** and a **tester** as separate agents. The planner and tester can't edit files; only the builder does. If the tester's first line is FAIL, the failures go back to the builder, up to 2 fix rounds, then you get a plain status.
+
+```
+/plugin install agent-team --marketplace yazandyab231/prompt-master
+```
+
+Good to know: this is three agents' worth of usage per task, so it costs more than a normal turn. Use it for tasks big enough to need a plan and a real test run. The main Claude runs the loop by following a brief, so it is a strong nudge, not a hard guarantee.
+
 ### Model router
 
 Sends easy prompts to Haiku so your more expensive model's limits last longer.
@@ -130,6 +140,11 @@ claude plugin test plugins/session-relay
 ```bash
 claude plugin validate plugins/agent-dashboard
 claude plugin test plugins/agent-dashboard
+```
+
+```bash
+claude plugin validate plugins/agent-team
+claude plugin test plugins/agent-team
 ```
 
 ```bash
