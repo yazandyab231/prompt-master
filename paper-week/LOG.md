@@ -103,6 +103,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 
 - Invested $4,045.40, cash $925.09. Account $4,970.49 at entry. SPY 753.80 (benchmark 6.6040 sh = $4,978.10).
 - The 08:44 pre-market run fired 79 minutes late (10:03). The 10:00 news check already covered it; stop check: all six open.
+- 15:33 Fri 11-13 summary: account $4999.36 (-0.64 vs $5,000): positions $4074.27 + cash $925.09. MRNA -3.4%, ERAS +6.8%, ECO +2.1%, VSXY -0.8%, AMD -1.2%, RXO -0.0%.
+  SPY 752.58 vs 200-day 731.91 → crash guard off (SPY above its 200-day). Benchmark (6.6040 SPY) $4970.04 (-29.96): account ahead by $29.32.
 
 ## Scheduled check-ins
 
