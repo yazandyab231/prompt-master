@@ -54,6 +54,7 @@ See README. Day trades keep the v1 rules.
 
 **Test extended to one month** (owner, 11-12 evening): ends at the close on Fri 2026-12-11, weekly report every
 Friday from 11-20. NVDA put on watch (CEO resigned 11-12, earnings due): no entry before earnings; see README.
+TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup that passes the v2 proof; see README.
 
 ## Scheduled check-ins
 

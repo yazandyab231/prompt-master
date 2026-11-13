@@ -36,6 +36,14 @@ median -4.9%, up 44% of the time, n=9; random day +4.5%). No NVDA entry before i
 out. After that, it is treated like any other candidate: it needs a daily setup that passes the v2
 proof. Log its status in the pre-market review.
 
+**Watch item: TTWO** (owner's idea, added 2026-11-13). GTA VI launches Thu 2026-11-19. TTWO closed 226.95 on 11-12,
++12.8% in a month (194.99 on 11-03), 12% under its 07-06 high. BofA: GTA VI needs a $1.9bn opening weekend to meet
+expectations. Daily data around past launches: GTA V (2013-09-17) -5.5% in the 20 days before, +6.1% in the 5 days
+after, -0.4% 20 days after; RDR2 (2018-10-26) -13.0% before, +6.9% 5 days after, -8.0% 20 days after (n=2: anecdote,
+not proof). This time the run-up already happened before launch. TTWO's only setup with an edge on 2 years of data is
+reclaim_ma20 (n=30, avg R +0.18, edge +0.20); breakout_20d and bull_flag LOST money on TTWO. Rule: buy TTWO only when a
+setup that passes the v2 proof fires (in practice reclaim_ma20), never on launch hype alone. Check it every pre-market.
+
 **Day trades (opening-range breakouts) still allowed** with the v1 rules below, only with cash left
 over and never more than 3 positions in total.
 
