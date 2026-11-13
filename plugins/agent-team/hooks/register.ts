@@ -1,9 +1,12 @@
-import type { Register } from 'claude-code'
+import type { AgentSpec, Register } from 'claude-code'
 
 export const MAX_FIX_ROUNDS = 2
 
+const TRIGGER = /^\s*team\s*:\s*([\s\S]+)$/i
+const TYPED = new Set(['composer', 'bridge', 'sdk', 'unclassified'])
+
 /** The three roles. The planner and tester cannot edit files, so only the builder changes code. */
-export const ROLES = [
+export const ROLES: readonly AgentSpec[] = [
   {
     name: 'planner',
     description: 'Reads the code and writes a short numbered plan with acceptance checks. Never edits files.',
@@ -29,7 +32,7 @@ export const ROLES = [
     disallowedTools: ['Edit', 'Write', 'NotebookEdit'],
     model: 'sonnet',
   },
-] as const
+]
 
 /** The hidden instruction the main model follows when the person runs /team. */
 export function teamBrief(task: string): string {
@@ -47,7 +50,7 @@ export function teamBrief(task: string): string {
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     for (const role of ROLES) {
-      await $.agent.register({ ...role, tools: role.tools ? [...role.tools] : undefined, disallowedTools: 'disallowedTools' in role ? [...role.disallowedTools] : undefined })
+      await $.agent.register(role)
     }
 
     await $.command.register({
@@ -59,16 +62,36 @@ export const register: Register = on => {
     return next(e)
   })
 
-  on('command.run', { command: 'team' }, async (_$, e) => {
+  // "team: <task>" typed as a normal message: the proven route, as Prompt Master's "pm:" does it.
+  on('prompt.submit', async ($, e, next) => {
+    const task = TRIGGER.exec(e.text)?.[1]?.trim()
+    const isTyped = TYPED.has(e.origin.kind) && !e.command && !e.isMeta
+
+    if (!task || !isTyped) {
+      return next(e)
+    }
+
+    return next({ ...e, context: [...(e.context ?? []), teamBrief(task)] })
+  })
+
+  // /team <task>: the engine refuses a submit from inside a command hook, so submit from a later timer event.
+  on('command.run', { command: 'team' }, async ($, e) => {
     const task = e.args.trim()
 
     if (task === '') {
-      return { text: 'Say what the team should do: /team <task>' }
+      return { text: 'Say what the team should do: /team <task>  (or type: team: <task>)' }
     }
 
-    return {
-      text: `Team started: planner → builder → tester (up to ${MAX_FIX_ROUNDS} fix rounds).`,
-      context: [teamBrief(task)],
+    try {
+      await $.clock.after(50, () => {
+        void $.prompt.submit({ text: teamBrief(task), asUser: true }).catch(() => {
+          $.ui.toast('Team could not start. Type: team: <task>')
+        })
+      })
+    } catch {
+      return { text: 'Team could not start from /team here. Type your task as: team: <task>' }
     }
+
+    return { text: `Team started: planner → builder → tester (up to ${MAX_FIX_ROUNDS} fix rounds).` }
   })
 }

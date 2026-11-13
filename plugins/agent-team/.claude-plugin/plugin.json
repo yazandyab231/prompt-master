@@ -1,6 +1,6 @@
 {
   "name": "agent-team",
-  "version": "0.1.0",
-  "description": "/team <task> runs a planner, a builder and a tester as separate agents, and loops the builder on test failures (max 2 fix rounds).",
+  "version": "0.2.0",
+  "description": "team: <task> (or /team) runs a planner, a builder and a tester as separate agents, and loops the builder on test failures (max 2 fix rounds).",
   "author": { "name": "yazandyab231" }
 }

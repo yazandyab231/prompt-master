@@ -2,23 +2,23 @@ import type { On } from 'claude-code'
 import { expect, test } from 'claude-code/testing'
 import type { Engine } from 'claude-code/testing'
 
-function run($: Engine, args: string) {
-  return $.command.run({
-    command: 'team',
-    args,
-    origin: { kind: 'composer' },
-    presentation: { isFullscreen: false, columns: 80 },
-  })
-}
+function engine(on: On, types: string[], seen: { text: string; context: readonly string[] }[] = []) {
+  on('prompt.submit', (_, e) => {
+    seen.push({ text: e.text, context: e.context ?? [] })
 
-function engine(on: On, types: string[]) {
+    return { text: e.text }
+  })
   on('command.register', (_, e) => ({ value: { command: e.name } }))
   on('agent.register', (_, e) => {
     types.push(e.name)
 
-    return { value: { type: `agent-team:${e.name}` } }
+    return { value: { agent: `agent-team:${e.name}` } }
   })
   on('session.start', (_, e) => ({ cwd: e.cwd }))
+}
+
+function team($: Engine, args: string) {
+  return $.command.run({ command: 'team', args, origin: { kind: 'composer' }, presentation: { isFullscreen: false, columns: 80 } })
 }
 
 test('registers planner, builder and tester at session start', async ($, on) => {
@@ -33,21 +33,31 @@ test('/team without a task asks for one', async ($, on) => {
   engine(on, [])
   await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
 
-  const ran = await run($, '  ')
-
-  expect(ran.text).toContain('Say what the team should do')
+  expect((await team($, '  ')).text).toContain('Say what the team should do')
 })
 
-test('/team hands the model the three-step brief with a fix-round cap', async ($, on) => {
+test('/team does not fail loudly or hang (the submit is deferred to a timer)', async ($, on) => {
   engine(on, [])
   await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
 
-  const ran = await run($, 'add a login form')
-  const brief = (ran.context ?? []).join('\n')
+  expect((await team($, 'add a login form')).text).not.toContain("couldn't")
+})
 
+test('"team: <task>" gets the planner/builder/tester brief as context, text untouched', async ($, on) => {
+  const seen: { text: string; context: readonly string[] }[] = []
+  engine(on, [], seen)
+  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+
+  await $.prompt.submit({ text: 'team: add a login form', origin: { kind: 'composer' }, wait: false })
+  await $.prompt.submit({ text: 'what is a team?', origin: { kind: 'composer' }, wait: false })
+
+  const brief = (seen[0]?.context ?? []).join('\n')
+
+  expect(seen[0]?.text).toBe('team: add a login form')
   expect(brief).toContain('add a login form')
   expect(brief).toContain('agent-team:planner')
   expect(brief).toContain('agent-team:builder')
   expect(brief).toContain('agent-team:tester')
   expect(brief).toContain('At most 2 fix rounds')
+  expect(seen[1]?.context).toEqual([])
 })

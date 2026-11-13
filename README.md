@@ -82,13 +82,13 @@ A **Dashboard** panel beside the chat: the agents running right now and what eac
 
 ### Agent team
 
-`/team <task>` runs a **planner**, a **builder** and a **tester** as separate agents. The planner and tester can't edit files; only the builder does. If the tester's first line is FAIL, the failures go back to the builder, up to 2 fix rounds, then you get a plain status.
+Type **`team: <task>`** (or `/team <task>`) to run a **planner**, a **builder** and a **tester** as separate agents. The planner and tester can't edit files; only the builder does. If the tester's first line is FAIL, the failures go back to the builder, up to 2 fix rounds, then you get a plain status.
 
 ```
 /plugin install agent-team --marketplace yazandyab231/prompt-master
 ```
 
-Good to know: this is three agents' worth of usage per task, so it costs more than a normal turn. Use it for tasks big enough to need a plan and a real test run. The main Claude runs the loop by following a brief, so it is a strong nudge, not a hard guarantee.
+Good to know: this is three agents' worth of usage per task, so it costs more than a normal turn. `team:` is the reliable route; `/team` submits from a timer and is less proven. Use it for tasks big enough to need a plan and a real test run. The main Claude runs the loop by following a brief, so it is a strong nudge, not a hard guarantee.
 
 ### Model router
 
