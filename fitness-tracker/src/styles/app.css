@@ -679,6 +679,14 @@ p {
   color: var(--ink-3);
 }
 
+/* Any icon sitting directly in a row (chevron, plus) is icon-sized and never squeezes the text. */
+.row > svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: var(--ink-2);
+}
+
 .row > svg.chev {
   width: 16px;
   height: 16px;

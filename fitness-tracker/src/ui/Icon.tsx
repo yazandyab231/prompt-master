@@ -22,7 +22,7 @@ const PATHS: Record<string, string> = {
 
 export function Icon({ name }: { name: keyof typeof PATHS | string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="square" strokeLinejoin="miter" aria-hidden="true">
       <path d={PATHS[name] ?? ''} />
     </svg>
   );
