@@ -1,12 +1,19 @@
+# Static site only. The push-notification service lives in push-service/ and is NOT deployed.
+# To enable push later: add
+#   [functions]
+#     directory = "push-service"
+# and set the VAPID_* / VITE_VAPID_PUBLIC_KEY environment variables (see README).
+
 [build]
-  base = "fitness-tracker"
   command = "npm run build"
   publish = "dist"
-
-[functions]
-  directory = "netlify/functions"
 
 [[headers]]
   for = "/sw.js"
   [headers.values]
     Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

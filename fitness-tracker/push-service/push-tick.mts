@@ -2,7 +2,7 @@
 import { getStore } from '@netlify/blobs';
 import type { Config } from '@netlify/functions';
 import { sendNotification, setVapidDetails } from 'web-push';
-import { dueNow, localParts, type PushRecord } from '../../server/due';
+import { dueNow, localParts, type PushRecord } from '../server/due';
 
 export default async () => {
   const { VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT } = process.env;

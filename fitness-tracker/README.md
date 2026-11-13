@@ -39,7 +39,7 @@ The camera (barcode scanning) only works on `https://` or `localhost`. To try it
 | `src/ui/` | Sheet, fields, chart, barcode scanner, icons |
 | `src/styles/app.css` | The whole visual system and the five themes |
 | `public/sw.js` | Service worker: offline cache and push display |
-| `netlify/functions/`, `server/due.ts` | The push service (subscription store + every-minute sender) |
+| `push-service/`, `server/due.ts` | The push service (subscription store + every-minute sender), not deployed by default |
 | `scripts/copy-ocr.mjs` | Copies the on-device text reader into `public/ocr` at dev/build time |
 
 ## Push notifications (not deployed yet)
@@ -53,7 +53,7 @@ To turn it on when deploying:
 1. Generate keys: `npx web-push generate-vapid-keys`
 2. Set environment variables on the site: `VITE_VAPID_PUBLIC_KEY` and `VAPID_PUBLIC_KEY` (the public key),
    `VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT` (a `mailto:` address).
-3. Deploy. In the app: Setup → Reminders → Turn push on.
+3. In `netlify.toml` add `[functions]` with `directory = "push-service"`, then deploy. In the app: Setup → Reminders → Turn push on.
 
 On iPhone and iPad, push only works after the site is added to the home screen. Without these keys the app
 still works; reminders then only show while it is open, and the Setup screen says so.

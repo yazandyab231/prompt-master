@@ -3,7 +3,7 @@
 import { createHash } from 'node:crypto';
 import { getStore } from '@netlify/blobs';
 import type { Config } from '@netlify/functions';
-import { sanitizeRecord, type PushRecord } from '../../server/due';
+import { sanitizeRecord, type PushRecord } from '../server/due';
 
 const keyFor = (endpoint: string) => createHash('sha256').update(endpoint).digest('hex');
 
