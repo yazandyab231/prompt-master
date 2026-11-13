@@ -81,6 +81,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   News: MRNA raised its 2026 revenue outlook and targets a 2027 cancer-therapy launch (11-12); nothing material
   found for the others. VSXY usually reports quarterly results in early December, inside the hold.
 - **Benchmark:** $5,000 in SPY at the 11-12 close = 6.6040 shares at 757.12.
+- Crash guard added (owner asked for the fix): SPY below its 200-day average → sell the 3 worst, hold cash; back above
+  2 days in a row → refill. SPY 757.12 vs 200-day 731.62 on 11-12 (guard not active).
 
 ## Scheduled check-ins
 

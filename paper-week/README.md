@@ -24,6 +24,12 @@ in both halves was 12-1 momentum, also the best-documented anomaly in the resear
 - **Hold:** to the close on Fri 2026-12-11 (about 20 market days, the tested holding period).
 - **Disaster stop:** -20% from the entry (`bracket_check.py SYM HH:MM STOP 999999 DATE`). A stopped slot is
   refilled at the next 09:52 check with the best untaken pick from a fresh `momentum_pick.py`.
+- **Crash guard** (momentum crashes cluster after market declines, Daniel & Moskowitz 2016): at the 15:33 check,
+  if SPY closes below its 200-day average, the 15:51 check sells the 3 positions with the worst return since
+  entry and keeps that money in cash. When SPY has closed back above its 200-day average 2 days in a row, the
+  next 09:52 check refills those slots from a fresh `momentum_pick.py`. (SPY on 11-12: 757.12; 200-day 731.62.)
+- **Judging it:** one month is mostly luck. The fair test is many months against SPY (MTUM, a real momentum
+  fund, beat SPY over 3 years but lost to it over 5 because of the 2022 momentum crash).
 - **No other trades:** no setup swings, no opening-range day trades (no edge found).
 - **Benchmark:** $5,000 in SPY at the Thu 2026-11-12 close (757.12 → 6.6040 shares). Every report compares.
 
@@ -113,7 +119,8 @@ cd paper-week   # every skill reads and writes ./trader/
    run `momentum_pick.py` and choose the refill (diversification rules).
 4. **09:52:** buy any planned entries or refills at the live price (`alerts.py quote SYM`, then
    `ticket.py fill --side buy`), add to positions.json (symbol, qty, entry, date, time, stop, kind "momentum").
-5. **15:51 on Fri 2026-12-11:** sell everything at the live price. No other scheduled sales.
+5. **15:51:** if the 15:33 check found SPY below its 200-day average, sell the 3 worst positions (crash guard).
+   On Fri 2026-12-11, sell everything at the live price.
 6. Commit and push after every change. One-line chat note after every buy or sell.
 7. **After the close on 2026-12-11:** final report in the chat and in LOG.md; delete
    every scheduled task listed in LOG.md.
