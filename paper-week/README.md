@@ -8,7 +8,28 @@ so it survives machine restarts; it is not meant for `main`.
 
 Trade-by-trade results: [LOG.md](LOG.md).
 
-## Rules v2 (from Fri 2026-11-13; the owner said "hold stocks if you want, any rule, just make money")
+## Rules v3 (from Fri 2026-11-13): momentum portfolio. These replace v2 and v1.
+
+Why: the 5-year study (research/, 1,293 stocks, ~1 million stock-days, discovery and validation halves)
+found that NONE of the chart setups beat SPY, and that the v2 per-stock "proof" did not predict anything
+(setups that passed it did no better afterwards than ones that failed it). The only strategy that beat SPY
+in both halves was 12-1 momentum, also the best-documented anomaly in the research literature
+(+0.6% and +1.5% a month over SPY; not statistically proven on 4 years of data). Findings: research/FINDINGS.md.
+
+- **Pick:** `python3 -I momentum_pick.py` ranks every liquid stock by its return from 12 months ago to 1 month
+  ago; keep the top 10% that are above their 50-day average, ATR >= 1%, a share <= $750. Then diversify:
+  the strongest name per industry, at most 2 biotech/pharma, dollar volume >= $50M a day; news check each
+  (drop pending mergers or buyouts, halts, legal shocks).
+- **Size:** 6 positions, equal dollars: (cash - $500 buffer) / 6, whole shares.
+- **Hold:** to the close on Fri 2026-12-11 (about 20 market days, the tested holding period).
+- **Disaster stop:** -20% from the entry (`bracket_check.py SYM HH:MM STOP 999999 DATE`). A stopped slot is
+  refilled at the next 09:52 check with the best untaken pick from a fresh `momentum_pick.py`.
+- **No other trades:** no setup swings, no opening-range day trades (no edge found).
+- **Benchmark:** $5,000 in SPY at the Thu 2026-11-12 close (757.12 → 6.6040 shares). Every report compares.
+
+## Older rules (history)
+
+### Rules v2 (from Fri 2026-11-13; the owner said "hold stocks if you want, any rule, just make money")
 
 Pretend money only, as before. Everything still sold by the close on Fri 2026-12-11.
 
@@ -47,7 +68,7 @@ setup that passes the v2 proof fires (in practice reclaim_ma20), never on launch
 **Day trades (opening-range breakouts) still allowed** with the v1 rules below, only with cash left
 over and never more than 3 positions in total.
 
-## Rules v1 (Thu 2026-11-12, still used for day trades)
+### Rules v1 (Thu 2026-11-12, still used for day trades)
 
 - Day trades only, long only, flat by 15:55 New York. One open position at a time.
 - Max loss per trade $50. The skill's own limits also apply: $150 max loss a day
@@ -81,31 +102,18 @@ P=/root/.claude/plugins/cache/prompt-master/day-trader-skill/2.0.0
 cd paper-week   # every skill reads and writes ./trader/
 ```
 
-## Each check-in
+## Each check-in (rules v3)
 
-1. Setup above. Read the bottom of LOG.md: open position? entries and max loss used today?
-2. **Open position:** `python3 -I bracket_check.py SYM HH:MM STOP TARGET`.
-   FILLED → `ticket.py fill --symbol SYM --side sell --qty Q --price P`, log it, note to the chat.
-3. **Pre-market (~08:45), EVERY market day:** `scan.py universe`, then `python3 -I deep_scan.py` (every liquid
-   US stock, ~1,350: 2 years of daily bars each, which setups fired yesterday, each one replayed on that stock's
-   own history vs its baseline, plus trend, strength vs SPY, distance from the high, and the SPY/QQQ regime;
-   ~3 minutes). Pick from its ranked list with the selection rules below, then `news.py --tickers <top 8>
-   --no-sec --hours 96` and drop any stock with a pending merger or buyout, earnings inside the 5-day hold,
-   a halt, or a legal shock. Also `ptr.py` (Congress trades) and the watch items (NVDA, TTWO). Write the ranked
-   shortlist (top 3 to buy plus 2 alternates, and why others were dropped) in LOG.md.
-   **Selection rules:** passes the v2 proof (n >= 15, avg R > 0, beats baseline) AND t-score >= 2.0 AND
-   edge >= +0.10 AND ATR >= 1% of the price (a stock that barely moves is usually pinned by a deal). When SPY is
-   below its 50-day average, also require the stock to be above its own 200-day average.
-3b. **First check after 09:52:** for the best shortlist names that pass the v2 proof, buy at the live
-   price if it is within 2% of the last close (`ticket.py fill --side buy`), add to positions.json.
-4. **During 09:52 to 15:30, flat, under the day's limits:** `scan.py orb --show 40`,
-   pick FRESH triggers, then for the best one: news.py → `entry.py check SYM --write`
-   → `alerts.py quote SYM --write` → `exit.py plan --entry PX --time "HH:MM AM/PM" --write`
-   → `timemachine.py run --until 15:55 --write` → (both averages > 0?) → `size.py --write`
-   → `check.py` (PASS?) → live quote → `ticket.py fill ... --side buy` → `alerts.py add --from-plan`.
-   Log every decision, including "no trade, because ...".
-5. **~15:51:** sell day trades, swing positions on their day 5, and EVERYTHING on Fri 2026-12-11,
-   at the live price (`ticket.py fill --side sell`). Other swing positions stay open overnight.
-6. Commit and push after every change. Short note in the chat after every buy or sell.
+1. Setup above. Read positions.json and the bottom of LOG.md.
+2. **Every position:** `python3 -I bracket_check.py SYM HH:MM STOP 999999 YYYY-MM-DD` (stop = entry x 0.80).
+   FILLED → `ticket.py fill --symbol SYM --side sell --qty Q --price P`, remove it from positions.json,
+   log it, one-line note in the chat.
+3. **Pre-market (~08:45):** news on every holding (`news.py --tickers ... --no-sec --hours 24`): log anything
+   material (deal, halt, guidance, legal). Watch items (NVDA, TTWO) as background only. If a slot is empty,
+   run `momentum_pick.py` and choose the refill (diversification rules).
+4. **09:52:** buy any planned entries or refills at the live price (`alerts.py quote SYM`, then
+   `ticket.py fill --side buy`), add to positions.json (symbol, qty, entry, date, time, stop, kind "momentum").
+5. **15:51 on Fri 2026-12-11:** sell everything at the live price. No other scheduled sales.
+6. Commit and push after every change. One-line chat note after every buy or sell.
 7. **After the close on 2026-12-11:** final report in the chat and in LOG.md; delete
    every scheduled task listed in LOG.md.

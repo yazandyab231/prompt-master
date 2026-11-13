@@ -1,0 +1,2265 @@
+{
+ "base": {
+  "discovery": 0.04009765221258908,
+  "validation": 0.02033055880202775
+ },
+ "split": "2024-11-08",
+ "rows": [
+  {
+   "name": "breakout_20d",
+   "discovery": {
+    "n": 58419,
+    "days": 498,
+    "avg_R": 0.04,
+    "edge_R": -0.0,
+    "t_R": 2.61,
+    "excess_pct": -0.07,
+    "t_excess": -1.04,
+    "win_pct": 50.6
+   },
+   "validation": {
+    "n": 71252,
+    "days": 497,
+    "avg_R": 0.003,
+    "edge_R": -0.017,
+    "t_R": 0.26,
+    "excess_pct": -0.02,
+    "t_excess": -0.27,
+    "win_pct": 48.9
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "breakout_20d + above 200d",
+   "discovery": {
+    "n": 46378,
+    "days": 498,
+    "avg_R": 0.048,
+    "edge_R": 0.008,
+    "t_R": 3.06,
+    "excess_pct": -0.04,
+    "t_excess": -0.53,
+    "win_pct": 50.4
+   },
+   "validation": {
+    "n": 55752,
+    "days": 497,
+    "avg_R": 0.008,
+    "edge_R": -0.013,
+    "t_R": 0.59,
+    "excess_pct": 0.01,
+    "t_excess": 0.09,
+    "win_pct": 49.0
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "breakout_20d + below 200d",
+   "discovery": {
+    "n": 12041,
+    "days": 485,
+    "avg_R": 0.005,
+    "edge_R": -0.036,
+    "t_R": 0.23,
+    "excess_pct": -0.25,
+    "t_excess": -2.05,
+    "win_pct": 51.3
+   },
+   "validation": {
+    "n": 15500,
+    "days": 495,
+    "avg_R": 0.003,
+    "edge_R": -0.017,
+    "t_R": 0.19,
+    "excess_pct": -0.08,
+    "t_excess": -0.62,
+    "win_pct": 48.4
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "breakout_20d + SPY above 50d",
+   "discovery": {
+    "n": 52771,
+    "days": 383,
+    "avg_R": 0.029,
+    "edge_R": -0.011,
+    "t_R": 1.75,
+    "excess_pct": -0.01,
+    "t_excess": -0.18,
+    "win_pct": 50.3
+   },
+   "validation": {
+    "n": 59450,
+    "days": 372,
+    "avg_R": 0.004,
+    "edge_R": -0.017,
+    "t_R": 0.28,
+    "excess_pct": -0.02,
+    "t_excess": -0.18,
+    "win_pct": 48.7
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "breakout_20d + SPY below 50d",
+   "discovery": {
+    "n": 5648,
+    "days": 115,
+    "avg_R": 0.075,
+    "edge_R": 0.035,
+    "t_R": 2.11,
+    "excess_pct": -0.25,
+    "t_excess": -1.46,
+    "win_pct": 52.7
+   },
+   "validation": {
+    "n": 11802,
+    "days": 125,
+    "avg_R": 0.002,
+    "edge_R": -0.018,
+    "t_R": 0.08,
+    "excess_pct": -0.05,
+    "t_excess": -0.21,
+    "win_pct": 49.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "breakout_20d + volume >= 1.5x",
+   "discovery": {
+    "n": 11104,
+    "days": 496,
+    "avg_R": 0.047,
+    "edge_R": 0.007,
+    "t_R": 2.61,
+    "excess_pct": 0.01,
+    "t_excess": 0.1,
+    "win_pct": 49.5
+   },
+   "validation": {
+    "n": 14498,
+    "days": 496,
+    "avg_R": 0.023,
+    "edge_R": 0.003,
+    "t_R": 1.43,
+    "excess_pct": 0.2,
+    "t_excess": 1.26,
+    "win_pct": 48.6
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "breakout_20d + volume < 1x",
+   "discovery": {
+    "n": 28638,
+    "days": 487,
+    "avg_R": 0.027,
+    "edge_R": -0.013,
+    "t_R": 1.53,
+    "excess_pct": -0.17,
+    "t_excess": -2.15,
+    "win_pct": 51.3
+   },
+   "validation": {
+    "n": 32245,
+    "days": 492,
+    "avg_R": -0.002,
+    "edge_R": -0.022,
+    "t_R": -0.15,
+    "excess_pct": -0.1,
+    "t_excess": -1.06,
+    "win_pct": 48.7
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "breakout_20d + closed in top 25% of range",
+   "discovery": {
+    "n": 32421,
+    "days": 494,
+    "avg_R": 0.04,
+    "edge_R": 0.0,
+    "t_R": 2.48,
+    "excess_pct": -0.07,
+    "t_excess": -0.89,
+    "win_pct": 50.3
+   },
+   "validation": {
+    "n": 38325,
+    "days": 496,
+    "avg_R": -0.001,
+    "edge_R": -0.021,
+    "t_R": -0.05,
+    "excess_pct": -0.14,
+    "t_excess": -1.35,
+    "win_pct": 48.6
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "breakout_20d + closed in bottom 25%",
+   "discovery": {
+    "n": 2645,
+    "days": 415,
+    "avg_R": 0.035,
+    "edge_R": -0.005,
+    "t_R": 1.16,
+    "excess_pct": -0.17,
+    "t_excess": -1.0,
+    "win_pct": 50.7
+   },
+   "validation": {
+    "n": 3572,
+    "days": 456,
+    "avg_R": -0.016,
+    "edge_R": -0.036,
+    "t_R": -0.67,
+    "excess_pct": -0.25,
+    "t_excess": -1.31,
+    "win_pct": 47.5
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "breakout_20d + within 5% of 52w high",
+   "discovery": {
+    "n": 27503,
+    "days": 495,
+    "avg_R": 0.046,
+    "edge_R": 0.006,
+    "t_R": 2.9,
+    "excess_pct": -0.13,
+    "t_excess": -1.65,
+    "win_pct": 50.8
+   },
+   "validation": {
+    "n": 34079,
+    "days": 496,
+    "avg_R": 0.008,
+    "edge_R": -0.012,
+    "t_R": 0.58,
+    "excess_pct": -0.0,
+    "t_excess": -0.01,
+    "win_pct": 48.8
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "breakout_20d + 25%+ under 52w high",
+   "discovery": {
+    "n": 10062,
+    "days": 485,
+    "avg_R": 0.008,
+    "edge_R": -0.032,
+    "t_R": 0.38,
+    "excess_pct": -0.28,
+    "t_excess": -1.76,
+    "win_pct": 50.8
+   },
+   "validation": {
+    "n": 13367,
+    "days": 496,
+    "avg_R": 0.019,
+    "edge_R": -0.002,
+    "t_R": 1.04,
+    "excess_pct": 0.16,
+    "t_excess": 0.98,
+    "win_pct": 47.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "bull_flag",
+   "discovery": {
+    "n": 18855,
+    "days": 497,
+    "avg_R": 0.048,
+    "edge_R": 0.008,
+    "t_R": 2.81,
+    "excess_pct": 0.02,
+    "t_excess": 0.16,
+    "win_pct": 52.1
+   },
+   "validation": {
+    "n": 24423,
+    "days": 497,
+    "avg_R": 0.024,
+    "edge_R": 0.003,
+    "t_R": 1.65,
+    "excess_pct": 0.01,
+    "t_excess": 0.09,
+    "win_pct": 51.2
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "bull_flag + above 200d",
+   "discovery": {
+    "n": 14597,
+    "days": 495,
+    "avg_R": 0.055,
+    "edge_R": 0.015,
+    "t_R": 3.13,
+    "excess_pct": 0.06,
+    "t_excess": 0.61,
+    "win_pct": 51.8
+   },
+   "validation": {
+    "n": 18839,
+    "days": 496,
+    "avg_R": 0.021,
+    "edge_R": 0.0,
+    "t_R": 1.43,
+    "excess_pct": 0.03,
+    "t_excess": 0.24,
+    "win_pct": 51.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "bull_flag + below 200d",
+   "discovery": {
+    "n": 4258,
+    "days": 454,
+    "avg_R": 0.014,
+    "edge_R": -0.026,
+    "t_R": 0.61,
+    "excess_pct": -0.26,
+    "t_excess": -1.47,
+    "win_pct": 53.4
+   },
+   "validation": {
+    "n": 5584,
+    "days": 477,
+    "avg_R": 0.059,
+    "edge_R": 0.038,
+    "t_R": 2.51,
+    "excess_pct": 0.19,
+    "t_excess": 0.95,
+    "win_pct": 50.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "bull_flag + SPY above 50d",
+   "discovery": {
+    "n": 17022,
+    "days": 383,
+    "avg_R": 0.039,
+    "edge_R": -0.001,
+    "t_R": 2.14,
+    "excess_pct": 0.02,
+    "t_excess": 0.18,
+    "win_pct": 52.2
+   },
+   "validation": {
+    "n": 20110,
+    "days": 372,
+    "avg_R": 0.046,
+    "edge_R": 0.026,
+    "t_R": 2.99,
+    "excess_pct": 0.25,
+    "t_excess": 2.34,
+    "win_pct": 52.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "bull_flag + SPY below 50d",
+   "discovery": {
+    "n": 1833,
+    "days": 114,
+    "avg_R": 0.079,
+    "edge_R": 0.039,
+    "t_R": 1.84,
+    "excess_pct": 0.01,
+    "t_excess": 0.02,
+    "win_pct": 51.7
+   },
+   "validation": {
+    "n": 4313,
+    "days": 125,
+    "avg_R": -0.044,
+    "edge_R": -0.064,
+    "t_R": -1.31,
+    "excess_pct": -0.7,
+    "t_excess": -2.45,
+    "win_pct": 46.8
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "bull_flag + volume >= 1.5x",
+   "discovery": {
+    "n": 834,
+    "days": 301,
+    "avg_R": -0.015,
+    "edge_R": -0.055,
+    "t_R": -0.4,
+    "excess_pct": 0.17,
+    "t_excess": 0.48,
+    "win_pct": 49.0
+   },
+   "validation": {
+    "n": 1111,
+    "days": 342,
+    "avg_R": -0.006,
+    "edge_R": -0.026,
+    "t_R": -0.18,
+    "excess_pct": 0.09,
+    "t_excess": 0.33,
+    "win_pct": 50.3
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "bull_flag + volume < 1x",
+   "discovery": {
+    "n": 14948,
+    "days": 495,
+    "avg_R": 0.048,
+    "edge_R": 0.008,
+    "t_R": 2.72,
+    "excess_pct": -0.03,
+    "t_excess": -0.28,
+    "win_pct": 52.2
+   },
+   "validation": {
+    "n": 18719,
+    "days": 495,
+    "avg_R": 0.019,
+    "edge_R": -0.002,
+    "t_R": 1.26,
+    "excess_pct": -0.04,
+    "t_excess": -0.38,
+    "win_pct": 51.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "bull_flag + closed in top 25% of range",
+   "discovery": {
+    "n": 4974,
+    "days": 447,
+    "avg_R": 0.063,
+    "edge_R": 0.023,
+    "t_R": 2.96,
+    "excess_pct": 0.11,
+    "t_excess": 0.83,
+    "win_pct": 53.5
+   },
+   "validation": {
+    "n": 6291,
+    "days": 479,
+    "avg_R": 0.042,
+    "edge_R": 0.022,
+    "t_R": 2.24,
+    "excess_pct": 0.23,
+    "t_excess": 1.53,
+    "win_pct": 51.7
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "bull_flag + closed in bottom 25%",
+   "discovery": {
+    "n": 4631,
+    "days": 440,
+    "avg_R": 0.069,
+    "edge_R": 0.028,
+    "t_R": 3.23,
+    "excess_pct": 0.1,
+    "t_excess": 0.79,
+    "win_pct": 53.1
+   },
+   "validation": {
+    "n": 6014,
+    "days": 482,
+    "avg_R": 0.027,
+    "edge_R": 0.006,
+    "t_R": 1.44,
+    "excess_pct": 0.04,
+    "t_excess": 0.25,
+    "win_pct": 50.2
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "bull_flag + within 5% of 52w high",
+   "discovery": {
+    "n": 7067,
+    "days": 488,
+    "avg_R": 0.065,
+    "edge_R": 0.025,
+    "t_R": 3.39,
+    "excess_pct": 0.03,
+    "t_excess": 0.35,
+    "win_pct": 52.3
+   },
+   "validation": {
+    "n": 9923,
+    "days": 492,
+    "avg_R": 0.016,
+    "edge_R": -0.004,
+    "t_R": 0.98,
+    "excess_pct": 0.03,
+    "t_excess": 0.27,
+    "win_pct": 52.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "bull_flag + 25%+ under 52w high",
+   "discovery": {
+    "n": 4696,
+    "days": 466,
+    "avg_R": 0.042,
+    "edge_R": 0.002,
+    "t_R": 1.86,
+    "excess_pct": -0.01,
+    "t_excess": -0.06,
+    "win_pct": 53.6
+   },
+   "validation": {
+    "n": 5695,
+    "days": 487,
+    "avg_R": 0.072,
+    "edge_R": 0.052,
+    "t_R": 3.33,
+    "excess_pct": 0.49,
+    "t_excess": 2.46,
+    "win_pct": 50.7
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "reclaim_ma20",
+   "discovery": {
+    "n": 24431,
+    "days": 497,
+    "avg_R": 0.036,
+    "edge_R": -0.004,
+    "t_R": 2.09,
+    "excess_pct": -0.18,
+    "t_excess": -2.07,
+    "win_pct": 49.7
+   },
+   "validation": {
+    "n": 32302,
+    "days": 499,
+    "avg_R": 0.026,
+    "edge_R": 0.005,
+    "t_R": 1.83,
+    "excess_pct": 0.02,
+    "t_excess": 0.27,
+    "win_pct": 50.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "reclaim_ma20 + above 200d",
+   "discovery": {
+    "n": 14031,
+    "days": 494,
+    "avg_R": 0.038,
+    "edge_R": -0.002,
+    "t_R": 2.09,
+    "excess_pct": -0.18,
+    "t_excess": -1.95,
+    "win_pct": 50.0
+   },
+   "validation": {
+    "n": 17803,
+    "days": 498,
+    "avg_R": 0.019,
+    "edge_R": -0.001,
+    "t_R": 1.24,
+    "excess_pct": -0.04,
+    "t_excess": -0.34,
+    "win_pct": 49.8
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "reclaim_ma20 + below 200d",
+   "discovery": {
+    "n": 10400,
+    "days": 492,
+    "avg_R": 0.023,
+    "edge_R": -0.017,
+    "t_R": 1.14,
+    "excess_pct": -0.24,
+    "t_excess": -2.11,
+    "win_pct": 49.4
+   },
+   "validation": {
+    "n": 14499,
+    "days": 499,
+    "avg_R": 0.025,
+    "edge_R": 0.004,
+    "t_R": 1.39,
+    "excess_pct": -0.02,
+    "t_excess": -0.13,
+    "win_pct": 51.4
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "reclaim_ma20 + SPY above 50d",
+   "discovery": {
+    "n": 19026,
+    "days": 382,
+    "avg_R": 0.016,
+    "edge_R": -0.024,
+    "t_R": 0.87,
+    "excess_pct": -0.17,
+    "t_excess": -1.92,
+    "win_pct": 47.9
+   },
+   "validation": {
+    "n": 24302,
+    "days": 372,
+    "avg_R": 0.025,
+    "edge_R": 0.005,
+    "t_R": 1.69,
+    "excess_pct": 0.06,
+    "t_excess": 0.54,
+    "win_pct": 50.0
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "reclaim_ma20 + SPY below 50d",
+   "discovery": {
+    "n": 5405,
+    "days": 115,
+    "avg_R": 0.101,
+    "edge_R": 0.061,
+    "t_R": 2.48,
+    "excess_pct": -0.2,
+    "t_excess": -0.89,
+    "win_pct": 56.2
+   },
+   "validation": {
+    "n": 8000,
+    "days": 127,
+    "avg_R": 0.027,
+    "edge_R": 0.006,
+    "t_R": 0.8,
+    "excess_pct": -0.07,
+    "t_excess": -0.35,
+    "win_pct": 52.3
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "reclaim_ma20 + volume >= 1.5x",
+   "discovery": {
+    "n": 3749,
+    "days": 474,
+    "avg_R": 0.057,
+    "edge_R": 0.017,
+    "t_R": 2.46,
+    "excess_pct": -0.13,
+    "t_excess": -0.79,
+    "win_pct": 50.8
+   },
+   "validation": {
+    "n": 4729,
+    "days": 489,
+    "avg_R": 0.042,
+    "edge_R": 0.021,
+    "t_R": 1.77,
+    "excess_pct": 0.24,
+    "t_excess": 1.04,
+    "win_pct": 49.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "reclaim_ma20 + volume < 1x",
+   "discovery": {
+    "n": 13691,
+    "days": 488,
+    "avg_R": 0.035,
+    "edge_R": -0.006,
+    "t_R": 1.76,
+    "excess_pct": -0.18,
+    "t_excess": -1.83,
+    "win_pct": 50.0
+   },
+   "validation": {
+    "n": 17954,
+    "days": 494,
+    "avg_R": 0.025,
+    "edge_R": 0.005,
+    "t_R": 1.65,
+    "excess_pct": 0.11,
+    "t_excess": 0.99,
+    "win_pct": 50.6
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "reclaim_ma20 + closed in top 25% of range",
+   "discovery": {
+    "n": 15162,
+    "days": 490,
+    "avg_R": 0.037,
+    "edge_R": -0.003,
+    "t_R": 1.92,
+    "excess_pct": -0.16,
+    "t_excess": -1.45,
+    "win_pct": 49.3
+   },
+   "validation": {
+    "n": 19433,
+    "days": 496,
+    "avg_R": 0.021,
+    "edge_R": 0.001,
+    "t_R": 1.49,
+    "excess_pct": -0.01,
+    "t_excess": -0.07,
+    "win_pct": 50.4
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "reclaim_ma20 + closed in bottom 25%",
+   "discovery": {
+    "n": 844,
+    "days": 304,
+    "avg_R": -0.023,
+    "edge_R": -0.063,
+    "t_R": -0.62,
+    "excess_pct": -0.48,
+    "t_excess": -1.85,
+    "win_pct": 48.5
+   },
+   "validation": {
+    "n": 1277,
+    "days": 358,
+    "avg_R": 0.046,
+    "edge_R": 0.026,
+    "t_R": 1.3,
+    "excess_pct": 0.3,
+    "t_excess": 1.06,
+    "win_pct": 55.0
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "reclaim_ma20 + within 5% of 52w high",
+   "discovery": {
+    "n": 5263,
+    "days": 481,
+    "avg_R": 0.033,
+    "edge_R": -0.007,
+    "t_R": 1.49,
+    "excess_pct": -0.28,
+    "t_excess": -2.46,
+    "win_pct": 52.7
+   },
+   "validation": {
+    "n": 5474,
+    "days": 487,
+    "avg_R": 0.004,
+    "edge_R": -0.016,
+    "t_R": 0.2,
+    "excess_pct": -0.17,
+    "t_excess": -1.26,
+    "win_pct": 48.8
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "reclaim_ma20 + 25%+ under 52w high",
+   "discovery": {
+    "n": 7113,
+    "days": 487,
+    "avg_R": 0.033,
+    "edge_R": -0.007,
+    "t_R": 1.54,
+    "excess_pct": -0.16,
+    "t_excess": -0.95,
+    "win_pct": 48.4
+   },
+   "validation": {
+    "n": 10813,
+    "days": 499,
+    "avg_R": 0.038,
+    "edge_R": 0.018,
+    "t_R": 2.01,
+    "excess_pct": 0.13,
+    "t_excess": 0.76,
+    "win_pct": 51.0
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "oversold_bounce",
+   "discovery": {
+    "n": 8347,
+    "days": 469,
+    "avg_R": 0.058,
+    "edge_R": 0.018,
+    "t_R": 2.83,
+    "excess_pct": 0.05,
+    "t_excess": 0.3,
+    "win_pct": 53.0
+   },
+   "validation": {
+    "n": 12259,
+    "days": 490,
+    "avg_R": 0.001,
+    "edge_R": -0.019,
+    "t_R": 0.05,
+    "excess_pct": -0.07,
+    "t_excess": -0.44,
+    "win_pct": 50.6
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "oversold_bounce + above 200d",
+   "discovery": {
+    "n": 826,
+    "days": 261,
+    "avg_R": 0.074,
+    "edge_R": 0.034,
+    "t_R": 1.96,
+    "excess_pct": -0.0,
+    "t_excess": -0.0,
+    "win_pct": 53.4
+   },
+   "validation": {
+    "n": 1123,
+    "days": 297,
+    "avg_R": 0.008,
+    "edge_R": -0.012,
+    "t_R": 0.23,
+    "excess_pct": -0.07,
+    "t_excess": -0.27,
+    "win_pct": 50.8
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "oversold_bounce + below 200d",
+   "discovery": {
+    "n": 7521,
+    "days": 465,
+    "avg_R": 0.057,
+    "edge_R": 0.017,
+    "t_R": 2.7,
+    "excess_pct": 0.02,
+    "t_excess": 0.14,
+    "win_pct": 52.9
+   },
+   "validation": {
+    "n": 11136,
+    "days": 487,
+    "avg_R": 0.001,
+    "edge_R": -0.019,
+    "t_R": 0.06,
+    "excess_pct": -0.07,
+    "t_excess": -0.43,
+    "win_pct": 50.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "oversold_bounce + SPY above 50d",
+   "discovery": {
+    "n": 3891,
+    "days": 354,
+    "avg_R": 0.039,
+    "edge_R": -0.001,
+    "t_R": 1.63,
+    "excess_pct": -0.0,
+    "t_excess": -0.02,
+    "win_pct": 48.5
+   },
+   "validation": {
+    "n": 6847,
+    "days": 365,
+    "avg_R": -0.018,
+    "edge_R": -0.038,
+    "t_R": -0.9,
+    "excess_pct": -0.18,
+    "t_excess": -1.06,
+    "win_pct": 49.8
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "oversold_bounce + SPY below 50d",
+   "discovery": {
+    "n": 4456,
+    "days": 115,
+    "avg_R": 0.115,
+    "edge_R": 0.075,
+    "t_R": 3.03,
+    "excess_pct": 0.21,
+    "t_excess": 0.8,
+    "win_pct": 56.9
+   },
+   "validation": {
+    "n": 5412,
+    "days": 125,
+    "avg_R": 0.055,
+    "edge_R": 0.035,
+    "t_R": 1.41,
+    "excess_pct": 0.27,
+    "t_excess": 0.74,
+    "win_pct": 51.5
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "oversold_bounce + volume >= 1.5x",
+   "discovery": {
+    "n": 1524,
+    "days": 355,
+    "avg_R": 0.024,
+    "edge_R": -0.016,
+    "t_R": 0.88,
+    "excess_pct": -0.26,
+    "t_excess": -1.09,
+    "win_pct": 49.0
+   },
+   "validation": {
+    "n": 2726,
+    "days": 406,
+    "avg_R": 0.018,
+    "edge_R": -0.002,
+    "t_R": 0.7,
+    "excess_pct": 0.18,
+    "t_excess": 0.6,
+    "win_pct": 46.4
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "oversold_bounce + volume < 1x",
+   "discovery": {
+    "n": 3921,
+    "days": 413,
+    "avg_R": 0.09,
+    "edge_R": 0.05,
+    "t_R": 3.48,
+    "excess_pct": 0.25,
+    "t_excess": 1.22,
+    "win_pct": 54.1
+   },
+   "validation": {
+    "n": 5207,
+    "days": 453,
+    "avg_R": 0.034,
+    "edge_R": 0.014,
+    "t_R": 1.62,
+    "excess_pct": 0.27,
+    "t_excess": 1.65,
+    "win_pct": 53.3
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "oversold_bounce + closed in top 25% of range",
+   "discovery": {
+    "n": 3871,
+    "days": 405,
+    "avg_R": 0.017,
+    "edge_R": -0.023,
+    "t_R": 0.72,
+    "excess_pct": -0.12,
+    "t_excess": -0.62,
+    "win_pct": 53.7
+   },
+   "validation": {
+    "n": 5919,
+    "days": 449,
+    "avg_R": -0.022,
+    "edge_R": -0.042,
+    "t_R": -1.03,
+    "excess_pct": -0.13,
+    "t_excess": -0.42,
+    "win_pct": 50.0
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "oversold_bounce + closed in bottom 25%",
+   "discovery": {
+    "n": 626,
+    "days": 205,
+    "avg_R": 0.053,
+    "edge_R": 0.013,
+    "t_R": 1.31,
+    "excess_pct": 0.06,
+    "t_excess": 0.19,
+    "win_pct": 52.7
+   },
+   "validation": {
+    "n": 795,
+    "days": 256,
+    "avg_R": 0.072,
+    "edge_R": 0.051,
+    "t_R": 2.0,
+    "excess_pct": 1.13,
+    "t_excess": 2.32,
+    "win_pct": 48.9
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "oversold_bounce + within 5% of 52w high",
+   "discovery": {
+    "n": 9,
+    "days": 9,
+    "avg_R": -0.234,
+    "edge_R": -0.274,
+    "t_R": -0.7,
+    "excess_pct": 1.01,
+    "t_excess": 0.35,
+    "win_pct": 33.3
+   },
+   "validation": {
+    "n": 3,
+    "days": 3,
+    "avg_R": 0.291,
+    "edge_R": 0.271,
+    "t_R": 1.74,
+    "excess_pct": 2.02,
+    "t_excess": 0.9,
+    "win_pct": 66.7
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "oversold_bounce + 25%+ under 52w high",
+   "discovery": {
+    "n": 5468,
+    "days": 446,
+    "avg_R": 0.076,
+    "edge_R": 0.036,
+    "t_R": 3.35,
+    "excess_pct": 0.22,
+    "t_excess": 1.09,
+    "win_pct": 52.7
+   },
+   "validation": {
+    "n": 8246,
+    "days": 482,
+    "avg_R": 0.003,
+    "edge_R": -0.017,
+    "t_R": 0.19,
+    "excess_pct": -0.01,
+    "t_excess": -0.07,
+    "win_pct": 50.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "ANY setup",
+   "discovery": {
+    "n": 105213,
+    "days": 498,
+    "avg_R": 0.038,
+    "edge_R": -0.002,
+    "t_R": 2.6,
+    "excess_pct": -0.09,
+    "t_excess": -1.7,
+    "win_pct": 50.8
+   },
+   "validation": {
+    "n": 134092,
+    "days": 499,
+    "avg_R": 0.015,
+    "edge_R": -0.005,
+    "t_R": 1.28,
+    "excess_pct": 0.02,
+    "t_excess": 0.23,
+    "win_pct": 49.7
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "QUALITY breakout: 20d breakout + vol>=1.5x + top-25% close + above 200d",
+   "discovery": {
+    "n": 4962,
+    "days": 480,
+    "avg_R": 0.044,
+    "edge_R": 0.004,
+    "t_R": 1.98,
+    "excess_pct": 0.03,
+    "t_excess": 0.15,
+    "win_pct": 48.6
+   },
+   "validation": {
+    "n": 6372,
+    "days": 483,
+    "avg_R": 0.02,
+    "edge_R": -0.0,
+    "t_R": 1.0,
+    "excess_pct": 0.12,
+    "t_excess": 0.54,
+    "win_pct": 48.8
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "QUALITY flag: bull flag + above 50d and 200d + vol < 1x (quiet pause)",
+   "discovery": {
+    "n": 11113,
+    "days": 491,
+    "avg_R": 0.052,
+    "edge_R": 0.012,
+    "t_R": 3.02,
+    "excess_pct": 0.02,
+    "t_excess": 0.24,
+    "win_pct": 51.9
+   },
+   "validation": {
+    "n": 13839,
+    "days": 493,
+    "avg_R": 0.012,
+    "edge_R": -0.009,
+    "t_R": 0.78,
+    "excess_pct": -0.04,
+    "t_excess": -0.33,
+    "win_pct": 51.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rsi <30",
+   "discovery": {
+    "n": 15835,
+    "days": 493,
+    "avg_R": 0.045,
+    "edge_R": 0.005,
+    "t_R": 2.66,
+    "excess_pct": -0.15,
+    "t_excess": -1.23,
+    "win_pct": 53.5
+   },
+   "validation": {
+    "n": 23639,
+    "days": 499,
+    "avg_R": 0.012,
+    "edge_R": -0.008,
+    "t_R": 0.81,
+    "excess_pct": 0.08,
+    "t_excess": 0.71,
+    "win_pct": 52.4
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rsi 30-45",
+   "discovery": {
+    "n": 112970,
+    "days": 498,
+    "avg_R": 0.033,
+    "edge_R": -0.007,
+    "t_R": 2.06,
+    "excess_pct": -0.13,
+    "t_excess": -1.75,
+    "win_pct": 52.0
+   },
+   "validation": {
+    "n": 157409,
+    "days": 499,
+    "avg_R": 0.019,
+    "edge_R": -0.001,
+    "t_R": 1.45,
+    "excess_pct": 0.09,
+    "t_excess": 1.24,
+    "win_pct": 50.4
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rsi 45-55",
+   "discovery": {
+    "n": 122679,
+    "days": 498,
+    "avg_R": 0.04,
+    "edge_R": -0.0,
+    "t_R": 2.46,
+    "excess_pct": -0.12,
+    "t_excess": -2.06,
+    "win_pct": 50.8
+   },
+   "validation": {
+    "n": 162840,
+    "days": 499,
+    "avg_R": 0.026,
+    "edge_R": 0.005,
+    "t_R": 2.03,
+    "excess_pct": 0.05,
+    "t_excess": 0.95,
+    "win_pct": 50.3
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rsi 55-70",
+   "discovery": {
+    "n": 138339,
+    "days": 498,
+    "avg_R": 0.037,
+    "edge_R": -0.003,
+    "t_R": 2.43,
+    "excess_pct": -0.11,
+    "t_excess": -2.09,
+    "win_pct": 51.3
+   },
+   "validation": {
+    "n": 165467,
+    "days": 499,
+    "avg_R": 0.018,
+    "edge_R": -0.002,
+    "t_R": 1.54,
+    "excess_pct": 0.06,
+    "t_excess": 0.88,
+    "win_pct": 49.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rsi >70",
+   "discovery": {
+    "n": 30791,
+    "days": 495,
+    "avg_R": 0.041,
+    "edge_R": 0.001,
+    "t_R": 2.7,
+    "excess_pct": -0.04,
+    "t_excess": -0.48,
+    "win_pct": 51.2
+   },
+   "validation": {
+    "n": 36071,
+    "days": 496,
+    "avg_R": 0.001,
+    "edge_R": -0.019,
+    "t_R": 0.06,
+    "excess_pct": -0.01,
+    "t_excess": -0.04,
+    "win_pct": 48.7
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "off_high < -50%",
+   "discovery": {
+    "n": 27205,
+    "days": 498,
+    "avg_R": 0.048,
+    "edge_R": 0.008,
+    "t_R": 2.76,
+    "excess_pct": 0.22,
+    "t_excess": 1.36,
+    "win_pct": 50.9
+   },
+   "validation": {
+    "n": 43481,
+    "days": 499,
+    "avg_R": 0.041,
+    "edge_R": 0.02,
+    "t_R": 2.72,
+    "excess_pct": 0.46,
+    "t_excess": 2.96,
+    "win_pct": 51.1
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "off_high -50..-25%",
+   "discovery": {
+    "n": 99447,
+    "days": 498,
+    "avg_R": 0.032,
+    "edge_R": -0.009,
+    "t_R": 1.9,
+    "excess_pct": -0.14,
+    "t_excess": -1.65,
+    "win_pct": 51.1
+   },
+   "validation": {
+    "n": 143816,
+    "days": 499,
+    "avg_R": 0.015,
+    "edge_R": -0.005,
+    "t_R": 1.12,
+    "excess_pct": 0.0,
+    "t_excess": 0.03,
+    "win_pct": 50.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "off_high -25..-10%",
+   "discovery": {
+    "n": 138678,
+    "days": 498,
+    "avg_R": 0.03,
+    "edge_R": -0.01,
+    "t_R": 1.87,
+    "excess_pct": -0.17,
+    "t_excess": -3.3,
+    "win_pct": 51.1
+   },
+   "validation": {
+    "n": 175186,
+    "days": 499,
+    "avg_R": 0.021,
+    "edge_R": 0.0,
+    "t_R": 1.6,
+    "excess_pct": 0.05,
+    "t_excess": 0.95,
+    "win_pct": 50.3
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "off_high -10..-2%",
+   "discovery": {
+    "n": 103601,
+    "days": 498,
+    "avg_R": 0.044,
+    "edge_R": 0.004,
+    "t_R": 2.84,
+    "excess_pct": -0.14,
+    "t_excess": -3.37,
+    "win_pct": 52.1
+   },
+   "validation": {
+    "n": 124932,
+    "days": 499,
+    "avg_R": 0.02,
+    "edge_R": -0.0,
+    "t_R": 1.59,
+    "excess_pct": -0.01,
+    "t_excess": -0.08,
+    "win_pct": 50.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "off_high within 2% of high",
+   "discovery": {
+    "n": 51683,
+    "days": 498,
+    "avg_R": 0.026,
+    "edge_R": -0.014,
+    "t_R": 1.72,
+    "excess_pct": -0.19,
+    "t_excess": -3.35,
+    "win_pct": 51.3
+   },
+   "validation": {
+    "n": 58011,
+    "days": 498,
+    "avg_R": 0.005,
+    "edge_R": -0.016,
+    "t_R": 0.36,
+    "excess_pct": -0.01,
+    "t_excess": -0.12,
+    "win_pct": 48.7
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "ret1 day < -5%",
+   "discovery": {
+    "n": 9743,
+    "days": 493,
+    "avg_R": 0.014,
+    "edge_R": -0.026,
+    "t_R": 0.84,
+    "excess_pct": 0.02,
+    "t_excess": 0.09,
+    "win_pct": 50.0
+   },
+   "validation": {
+    "n": 22699,
+    "days": 498,
+    "avg_R": 0.038,
+    "edge_R": 0.018,
+    "t_R": 2.49,
+    "excess_pct": 0.57,
+    "t_excess": 2.56,
+    "win_pct": 52.8
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "ret1 -5..-2%",
+   "discovery": {
+    "n": 47156,
+    "days": 498,
+    "avg_R": 0.045,
+    "edge_R": 0.005,
+    "t_R": 2.7,
+    "excess_pct": 0.06,
+    "t_excess": 0.55,
+    "win_pct": 52.2
+   },
+   "validation": {
+    "n": 70381,
+    "days": 499,
+    "avg_R": 0.03,
+    "edge_R": 0.009,
+    "t_R": 2.18,
+    "excess_pct": 0.21,
+    "t_excess": 2.12,
+    "win_pct": 51.1
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "ret1 -2..+2%",
+   "discovery": {
+    "n": 303709,
+    "days": 498,
+    "avg_R": 0.041,
+    "edge_R": 0.0,
+    "t_R": 2.66,
+    "excess_pct": -0.12,
+    "t_excess": -2.46,
+    "win_pct": 51.7
+   },
+   "validation": {
+    "n": 354886,
+    "days": 499,
+    "avg_R": 0.014,
+    "edge_R": -0.006,
+    "t_R": 1.17,
+    "excess_pct": -0.01,
+    "t_excess": -0.24,
+    "win_pct": 49.7
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "ret1 +2..+5%",
+   "discovery": {
+    "n": 47954,
+    "days": 497,
+    "avg_R": 0.041,
+    "edge_R": 0.001,
+    "t_R": 2.54,
+    "excess_pct": -0.02,
+    "t_excess": -0.25,
+    "win_pct": 49.9
+   },
+   "validation": {
+    "n": 72273,
+    "days": 499,
+    "avg_R": 0.025,
+    "edge_R": 0.005,
+    "t_R": 1.92,
+    "excess_pct": 0.12,
+    "t_excess": 1.33,
+    "win_pct": 50.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "ret1 day > +5%",
+   "discovery": {
+    "n": 12052,
+    "days": 495,
+    "avg_R": 0.038,
+    "edge_R": -0.002,
+    "t_R": 2.15,
+    "excess_pct": 0.01,
+    "t_excess": 0.03,
+    "win_pct": 48.2
+   },
+   "validation": {
+    "n": 25187,
+    "days": 499,
+    "avg_R": 0.033,
+    "edge_R": 0.012,
+    "t_R": 2.02,
+    "excess_pct": 0.44,
+    "t_excess": 2.19,
+    "win_pct": 48.8
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "gap gap < -3%",
+   "discovery": {
+    "n": 7084,
+    "days": 491,
+    "avg_R": 0.015,
+    "edge_R": -0.025,
+    "t_R": 0.76,
+    "excess_pct": -0.05,
+    "t_excess": -0.23,
+    "win_pct": 48.5
+   },
+   "validation": {
+    "n": 16731,
+    "days": 495,
+    "avg_R": 0.033,
+    "edge_R": 0.013,
+    "t_R": 1.85,
+    "excess_pct": 0.48,
+    "t_excess": 2.0,
+    "win_pct": 51.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "gap -3..-1%",
+   "discovery": {
+    "n": 44140,
+    "days": 498,
+    "avg_R": 0.034,
+    "edge_R": -0.006,
+    "t_R": 1.99,
+    "excess_pct": -0.04,
+    "t_excess": -0.4,
+    "win_pct": 50.8
+   },
+   "validation": {
+    "n": 67209,
+    "days": 499,
+    "avg_R": 0.03,
+    "edge_R": 0.009,
+    "t_R": 2.05,
+    "excess_pct": 0.16,
+    "t_excess": 1.47,
+    "win_pct": 50.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "gap -1..+1%",
+   "discovery": {
+    "n": 312574,
+    "days": 498,
+    "avg_R": 0.045,
+    "edge_R": 0.005,
+    "t_R": 2.96,
+    "excess_pct": -0.08,
+    "t_excess": -1.67,
+    "win_pct": 51.8
+   },
+   "validation": {
+    "n": 369758,
+    "days": 499,
+    "avg_R": 0.013,
+    "edge_R": -0.007,
+    "t_R": 1.09,
+    "excess_pct": -0.02,
+    "t_excess": -0.28,
+    "win_pct": 49.8
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "gap +1..+3%",
+   "discovery": {
+    "n": 48059,
+    "days": 498,
+    "avg_R": 0.043,
+    "edge_R": 0.003,
+    "t_R": 2.55,
+    "excess_pct": 0.02,
+    "t_excess": 0.21,
+    "win_pct": 50.2
+   },
+   "validation": {
+    "n": 73535,
+    "days": 499,
+    "avg_R": 0.038,
+    "edge_R": 0.017,
+    "t_R": 2.64,
+    "excess_pct": 0.22,
+    "t_excess": 1.99,
+    "win_pct": 51.0
+   },
+   "verdict": "leans good"
+  },
+  {
+   "name": "gap gap > +3%",
+   "discovery": {
+    "n": 8757,
+    "days": 494,
+    "avg_R": 0.033,
+    "edge_R": -0.007,
+    "t_R": 1.67,
+    "excess_pct": -0.06,
+    "t_excess": -0.28,
+    "win_pct": 47.1
+   },
+   "validation": {
+    "n": 18193,
+    "days": 498,
+    "avg_R": 0.026,
+    "edge_R": 0.005,
+    "t_R": 1.55,
+    "excess_pct": 0.32,
+    "t_excess": 1.58,
+    "win_pct": 50.9
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "vol_ratio <0.7x",
+   "discovery": {
+    "n": 108747,
+    "days": 498,
+    "avg_R": 0.041,
+    "edge_R": 0.001,
+    "t_R": 2.64,
+    "excess_pct": -0.07,
+    "t_excess": -1.02,
+    "win_pct": 52.2
+   },
+   "validation": {
+    "n": 129888,
+    "days": 499,
+    "avg_R": 0.021,
+    "edge_R": 0.001,
+    "t_R": 1.73,
+    "excess_pct": 0.12,
+    "t_excess": 1.9,
+    "win_pct": 50.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "vol_ratio 0.7-1x",
+   "discovery": {
+    "n": 155076,
+    "days": 498,
+    "avg_R": 0.041,
+    "edge_R": 0.001,
+    "t_R": 2.6,
+    "excess_pct": -0.09,
+    "t_excess": -1.58,
+    "win_pct": 51.4
+   },
+   "validation": {
+    "n": 202592,
+    "days": 499,
+    "avg_R": 0.02,
+    "edge_R": -0.001,
+    "t_R": 1.61,
+    "excess_pct": 0.09,
+    "t_excess": 1.56,
+    "win_pct": 50.0
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "vol_ratio 1-1.5x",
+   "discovery": {
+    "n": 110040,
+    "days": 498,
+    "avg_R": 0.039,
+    "edge_R": -0.001,
+    "t_R": 2.55,
+    "excess_pct": -0.05,
+    "t_excess": -0.83,
+    "win_pct": 51.0
+   },
+   "validation": {
+    "n": 150168,
+    "days": 499,
+    "avg_R": 0.026,
+    "edge_R": 0.006,
+    "t_R": 2.17,
+    "excess_pct": 0.15,
+    "t_excess": 2.17,
+    "win_pct": 50.3
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "vol_ratio 1.5-3x",
+   "discovery": {
+    "n": 40412,
+    "days": 497,
+    "avg_R": 0.039,
+    "edge_R": -0.001,
+    "t_R": 2.54,
+    "excess_pct": -0.1,
+    "t_excess": -1.26,
+    "win_pct": 50.4
+   },
+   "validation": {
+    "n": 55278,
+    "days": 499,
+    "avg_R": 0.027,
+    "edge_R": 0.007,
+    "t_R": 2.22,
+    "excess_pct": 0.19,
+    "t_excess": 2.34,
+    "win_pct": 50.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "vol_ratio >3x",
+   "discovery": {
+    "n": 6339,
+    "days": 494,
+    "avg_R": 0.027,
+    "edge_R": -0.013,
+    "t_R": 1.45,
+    "excess_pct": -0.08,
+    "t_excess": -0.43,
+    "win_pct": 48.5
+   },
+   "validation": {
+    "n": 7500,
+    "days": 493,
+    "avg_R": 0.034,
+    "edge_R": 0.014,
+    "t_R": 1.95,
+    "excess_pct": 0.47,
+    "t_excess": 1.98,
+    "win_pct": 48.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "close_loc bottom 25%",
+   "discovery": {
+    "n": 110554,
+    "days": 498,
+    "avg_R": 0.04,
+    "edge_R": -0.0,
+    "t_R": 2.52,
+    "excess_pct": -0.08,
+    "t_excess": -1.2,
+    "win_pct": 51.3
+   },
+   "validation": {
+    "n": 147846,
+    "days": 499,
+    "avg_R": 0.021,
+    "edge_R": 0.001,
+    "t_R": 1.65,
+    "excess_pct": 0.13,
+    "t_excess": 1.74,
+    "win_pct": 50.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "close_loc middle",
+   "discovery": {
+    "n": 190638,
+    "days": 498,
+    "avg_R": 0.039,
+    "edge_R": -0.001,
+    "t_R": 2.57,
+    "excess_pct": -0.1,
+    "t_excess": -1.74,
+    "win_pct": 51.6
+   },
+   "validation": {
+    "n": 251568,
+    "days": 499,
+    "avg_R": 0.02,
+    "edge_R": -0.001,
+    "t_R": 1.63,
+    "excess_pct": 0.08,
+    "t_excess": 1.43,
+    "win_pct": 50.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "close_loc top 25%",
+   "discovery": {
+    "n": 119418,
+    "days": 498,
+    "avg_R": 0.05,
+    "edge_R": 0.01,
+    "t_R": 3.18,
+    "excess_pct": -0.02,
+    "t_excess": -0.27,
+    "win_pct": 51.2
+   },
+   "validation": {
+    "n": 146009,
+    "days": 498,
+    "avg_R": 0.016,
+    "edge_R": -0.005,
+    "t_R": 1.32,
+    "excess_pct": 0.03,
+    "t_excess": 0.43,
+    "win_pct": 49.6
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "atr_pct <2%",
+   "discovery": {
+    "n": 101792,
+    "days": 498,
+    "avg_R": 0.036,
+    "edge_R": -0.004,
+    "t_R": 2.19,
+    "excess_pct": -0.26,
+    "t_excess": -4.68,
+    "win_pct": 50.6
+   },
+   "validation": {
+    "n": 76920,
+    "days": 494,
+    "avg_R": -0.002,
+    "edge_R": -0.023,
+    "t_R": -0.14,
+    "excess_pct": -0.19,
+    "t_excess": -2.31,
+    "win_pct": 48.3
+   },
+   "verdict": "BAD sign"
+  },
+  {
+   "name": "atr_pct 2-3.5%",
+   "discovery": {
+    "n": 187665,
+    "days": 498,
+    "avg_R": 0.051,
+    "edge_R": 0.01,
+    "t_R": 3.06,
+    "excess_pct": -0.1,
+    "t_excess": -2.06,
+    "win_pct": 52.5
+   },
+   "validation": {
+    "n": 212355,
+    "days": 499,
+    "avg_R": 0.014,
+    "edge_R": -0.007,
+    "t_R": 1.04,
+    "excess_pct": -0.11,
+    "t_excess": -1.56,
+    "win_pct": 50.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "atr_pct 3.5-6%",
+   "discovery": {
+    "n": 101052,
+    "days": 498,
+    "avg_R": 0.032,
+    "edge_R": -0.008,
+    "t_R": 2.06,
+    "excess_pct": -0.05,
+    "t_excess": -0.47,
+    "win_pct": 50.7
+   },
+   "validation": {
+    "n": 174755,
+    "days": 499,
+    "avg_R": 0.033,
+    "edge_R": 0.012,
+    "t_R": 2.58,
+    "excess_pct": 0.15,
+    "t_excess": 2.0,
+    "win_pct": 50.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "atr_pct >6%",
+   "discovery": {
+    "n": 30078,
+    "days": 498,
+    "avg_R": 0.035,
+    "edge_R": -0.005,
+    "t_R": 2.34,
+    "excess_pct": 0.26,
+    "t_excess": 1.28,
+    "win_pct": 49.4
+   },
+   "validation": {
+    "n": 81388,
+    "days": 499,
+    "avg_R": 0.046,
+    "edge_R": 0.025,
+    "t_R": 3.08,
+    "excess_pct": 0.73,
+    "t_excess": 3.59,
+    "win_pct": 50.6
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rs63 laggard < -20pts",
+   "discovery": {
+    "n": 40446,
+    "days": 498,
+    "avg_R": 0.042,
+    "edge_R": 0.002,
+    "t_R": 2.52,
+    "excess_pct": 0.09,
+    "t_excess": 0.75,
+    "win_pct": 50.9
+   },
+   "validation": {
+    "n": 65580,
+    "days": 499,
+    "avg_R": 0.018,
+    "edge_R": -0.002,
+    "t_R": 1.25,
+    "excess_pct": 0.18,
+    "t_excess": 1.57,
+    "win_pct": 50.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rs63 -20..-5",
+   "discovery": {
+    "n": 112168,
+    "days": 498,
+    "avg_R": 0.037,
+    "edge_R": -0.003,
+    "t_R": 2.27,
+    "excess_pct": -0.12,
+    "t_excess": -1.84,
+    "win_pct": 50.9
+   },
+   "validation": {
+    "n": 143755,
+    "days": 499,
+    "avg_R": 0.015,
+    "edge_R": -0.006,
+    "t_R": 1.1,
+    "excess_pct": -0.01,
+    "t_excess": -0.2,
+    "win_pct": 49.9
+   },
+   "verdict": "leans bad"
+  },
+  {
+   "name": "rs63 -5..+5",
+   "discovery": {
+    "n": 113674,
+    "days": 498,
+    "avg_R": 0.043,
+    "edge_R": 0.003,
+    "t_R": 2.66,
+    "excess_pct": -0.14,
+    "t_excess": -2.9,
+    "win_pct": 52.1
+   },
+   "validation": {
+    "n": 121216,
+    "days": 499,
+    "avg_R": 0.017,
+    "edge_R": -0.004,
+    "t_R": 1.26,
+    "excess_pct": -0.03,
+    "t_excess": -0.48,
+    "win_pct": 50.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rs63 +5..+20",
+   "discovery": {
+    "n": 102355,
+    "days": 498,
+    "avg_R": 0.045,
+    "edge_R": 0.005,
+    "t_R": 2.85,
+    "excess_pct": -0.09,
+    "t_excess": -1.88,
+    "win_pct": 52.4
+   },
+   "validation": {
+    "n": 116161,
+    "days": 499,
+    "avg_R": 0.018,
+    "edge_R": -0.002,
+    "t_R": 1.41,
+    "excess_pct": 0.02,
+    "t_excess": 0.32,
+    "win_pct": 50.3
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "rs63 leader > +20pts",
+   "discovery": {
+    "n": 51970,
+    "days": 498,
+    "avg_R": 0.027,
+    "edge_R": -0.013,
+    "t_R": 1.78,
+    "excess_pct": -0.02,
+    "t_excess": -0.25,
+    "win_pct": 49.1
+   },
+   "validation": {
+    "n": 98622,
+    "days": 499,
+    "avg_R": 0.03,
+    "edge_R": 0.01,
+    "t_R": 2.33,
+    "excess_pct": 0.28,
+    "t_excess": 2.72,
+    "win_pct": 50.0
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "trend: above 50d and 200d",
+   "discovery": {
+    "n": 185057,
+    "days": 498,
+    "avg_R": 0.041,
+    "edge_R": 0.001,
+    "t_R": 2.73,
+    "excess_pct": -0.11,
+    "t_excess": -2.19,
+    "win_pct": 50.9
+   },
+   "validation": {
+    "n": 223567,
+    "days": 499,
+    "avg_R": 0.02,
+    "edge_R": -0.0,
+    "t_R": 1.72,
+    "excess_pct": 0.1,
+    "t_excess": 1.44,
+    "win_pct": 49.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "trend: below 50d and 200d",
+   "discovery": {
+    "n": 127281,
+    "days": 498,
+    "avg_R": 0.031,
+    "edge_R": -0.009,
+    "t_R": 1.9,
+    "excess_pct": -0.14,
+    "t_excess": -1.81,
+    "win_pct": 51.7
+   },
+   "validation": {
+    "n": 181088,
+    "days": 499,
+    "avg_R": 0.014,
+    "edge_R": -0.006,
+    "t_R": 1.04,
+    "excess_pct": 0.02,
+    "t_excess": 0.29,
+    "win_pct": 51.1
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "market: SPY above 50d",
+   "discovery": {
+    "n": 325115,
+    "days": 383,
+    "avg_R": 0.025,
+    "edge_R": -0.015,
+    "t_R": 1.48,
+    "excess_pct": -0.08,
+    "t_excess": -1.29,
+    "win_pct": 50.0
+   },
+   "validation": {
+    "n": 406676,
+    "days": 372,
+    "avg_R": 0.02,
+    "edge_R": -0.0,
+    "t_R": 1.66,
+    "excess_pct": 0.07,
+    "t_excess": 1.13,
+    "win_pct": 49.4
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "market: SPY below 50d",
+   "discovery": {
+    "n": 95499,
+    "days": 115,
+    "avg_R": 0.091,
+    "edge_R": 0.051,
+    "t_R": 2.62,
+    "excess_pct": -0.09,
+    "t_excess": -0.87,
+    "win_pct": 56.0
+   },
+   "validation": {
+    "n": 138750,
+    "days": 127,
+    "avg_R": 0.021,
+    "edge_R": 0.0,
+    "t_R": 0.7,
+    "excess_pct": 0.12,
+    "t_excess": 1.21,
+    "win_pct": 52.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "market: QQQ below 50d",
+   "discovery": {
+    "n": 86665,
+    "days": 104,
+    "avg_R": 0.064,
+    "edge_R": 0.024,
+    "t_R": 1.65,
+    "excess_pct": -0.1,
+    "t_excess": -0.92,
+    "win_pct": 54.0
+   },
+   "validation": {
+    "n": 170590,
+    "days": 153,
+    "avg_R": 0.014,
+    "edge_R": -0.006,
+    "t_R": 0.55,
+    "excess_pct": 0.13,
+    "t_excess": 1.43,
+    "win_pct": 51.2
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "day: Mon",
+   "discovery": {
+    "n": 76123,
+    "days": 90,
+    "avg_R": 0.057,
+    "edge_R": 0.017,
+    "t_R": 1.6,
+    "excess_pct": -0.02,
+    "t_excess": -0.16,
+    "win_pct": 52.8
+   },
+   "validation": {
+    "n": 104932,
+    "days": 96,
+    "avg_R": 0.03,
+    "edge_R": 0.009,
+    "t_R": 1.07,
+    "excess_pct": 0.14,
+    "t_excess": 1.13,
+    "win_pct": 50.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "day: Tue",
+   "discovery": {
+    "n": 86976,
+    "days": 103,
+    "avg_R": 0.032,
+    "edge_R": -0.008,
+    "t_R": 0.96,
+    "excess_pct": -0.11,
+    "t_excess": -0.94,
+    "win_pct": 51.0
+   },
+   "validation": {
+    "n": 113542,
+    "days": 104,
+    "avg_R": 0.01,
+    "edge_R": -0.01,
+    "t_R": 0.39,
+    "excess_pct": 0.03,
+    "t_excess": 0.32,
+    "win_pct": 49.5
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "day: Wed",
+   "discovery": {
+    "n": 86960,
+    "days": 103,
+    "avg_R": 0.033,
+    "edge_R": -0.007,
+    "t_R": 0.99,
+    "excess_pct": -0.08,
+    "t_excess": -0.67,
+    "win_pct": 51.1
+   },
+   "validation": {
+    "n": 111769,
+    "days": 102,
+    "avg_R": 0.035,
+    "edge_R": 0.015,
+    "t_R": 1.34,
+    "excess_pct": 0.16,
+    "t_excess": 1.34,
+    "win_pct": 50.9
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "day: Thu",
+   "discovery": {
+    "n": 85239,
+    "days": 101,
+    "avg_R": 0.032,
+    "edge_R": -0.008,
+    "t_R": 0.89,
+    "excess_pct": -0.17,
+    "t_excess": -1.47,
+    "win_pct": 50.3
+   },
+   "validation": {
+    "n": 107385,
+    "days": 98,
+    "avg_R": 0.016,
+    "edge_R": -0.004,
+    "t_R": 0.63,
+    "excess_pct": 0.03,
+    "t_excess": 0.29,
+    "win_pct": 50.4
+   },
+   "verdict": "no stable signal"
+  },
+  {
+   "name": "day: Fri",
+   "discovery": {
+    "n": 85316,
+    "days": 101,
+    "avg_R": 0.048,
+    "edge_R": 0.008,
+    "t_R": 1.48,
+    "excess_pct": -0.02,
+    "t_excess": -0.18,
+    "win_pct": 51.9
+   },
+   "validation": {
+    "n": 107798,
+    "days": 99,
+    "avg_R": 0.011,
+    "edge_R": -0.009,
+    "t_R": 0.4,
+    "excess_pct": 0.04,
+    "t_excess": 0.37,
+    "win_pct": 49.2
+   },
+   "verdict": "no stable signal"
+  }
+ ]
+}

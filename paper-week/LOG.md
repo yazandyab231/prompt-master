@@ -68,6 +68,20 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   200-day average in a weak market), OGN (ATR 0.3%: price pinned, likely a deal), LQDA/ATI/CAH (edge under +0.10),
   COST (t 1.27, too little evidence). News on PCOR, LTH, YOU: nothing material in 96 h.
 
+**Overnight research (11-13, 02:00 to 03:30 NY) → rules v3.** Full write-up: research/FINDINGS.md.
+- 5-year study of 1,293 stocks (~966k stock-days): none of the chart setups beat SPY in both halves.
+- The v2 per-stock proof did not predict anything (passed +0.08% vs failed -0.02%, both noise). v2 retired;
+  the PCOR / AMD / LTH plan above is CANCELLED.
+- Of four published strategies, only 12-1 momentum beat SPY in both halves (+0.60% / +1.52% a month).
+- **v3 plan for Fri 11-13 09:52** (6 equal slots of ~$745, whole shares, hold to 12-11, -20% disaster stop):
+  MRNA 3 sh (Moderna, biotech, 12-1 mom +757%, close 231.35), ERAS 47 sh (Erasca, biotech, +523%, 15.78),
+  ECO 8 sh (Okeanis Eco Tankers, shipping, +171%, 87.67), VSXY 7 sh (Victoria's Secret, retail, +153%, 104.63),
+  AMD 1 sh (chips, +140%, 585.30), RXO 26 sh (trucking, +136%, 28.30). Alternates: GEO, SN, CNC.
+  Skipped: FOSL and EVC (under $50M a day), ETON / ORKA / TNGX / AMLX (a third biotech).
+  News: MRNA raised its 2026 revenue outlook and targets a 2027 cancer-therapy launch (11-12); nothing material
+  found for the others. VSXY usually reports quarterly results in early December, inside the hold.
+- **Benchmark:** $5,000 in SPY at the 11-12 close = 6.6040 shares at 757.12.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
