@@ -102,6 +102,7 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 | RXO (trucking) | 26 | 28.40 | 738.40 | 22.72 |
 
 - Invested $4,045.40, cash $925.09. Account $4,970.49 at entry. SPY 753.80 (benchmark 6.6040 sh = $4,978.10).
+- The 08:44 pre-market run fired 79 minutes late (10:03). The 10:00 news check already covered it; stop check: all six open.
 
 ## Scheduled check-ins
 
