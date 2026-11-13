@@ -1,4 +1,77 @@
 {
-  "cash": 4970.49,
-  "positions": []
+  "cash": 925.09,
+  "positions": [
+    {
+      "ticker": "MRNA",
+      "shares": 3.0,
+      "lots": [
+        {
+          "id": "MRNA-1",
+          "date": "2026-11-13",
+          "shares": 3.0,
+          "cost": 692.16
+        }
+      ]
+    },
+    {
+      "ticker": "ERAS",
+      "shares": 50.0,
+      "lots": [
+        {
+          "id": "ERAS-1",
+          "date": "2026-11-13",
+          "shares": 50.0,
+          "cost": 740.5
+        }
+      ]
+    },
+    {
+      "ticker": "ECO",
+      "shares": 8.0,
+      "lots": [
+        {
+          "id": "ECO-1",
+          "date": "2026-11-13",
+          "shares": 8.0,
+          "cost": 695.92
+        }
+      ]
+    },
+    {
+      "ticker": "VSXY",
+      "shares": 6.0,
+      "lots": [
+        {
+          "id": "VSXY-1",
+          "date": "2026-11-13",
+          "shares": 6.0,
+          "cost": 641.16
+        }
+      ]
+    },
+    {
+      "ticker": "AMD",
+      "shares": 1.0,
+      "lots": [
+        {
+          "id": "AMD-1",
+          "date": "2026-11-13",
+          "shares": 1.0,
+          "cost": 537.26
+        }
+      ]
+    },
+    {
+      "ticker": "RXO",
+      "shares": 26.0,
+      "lots": [
+        {
+          "id": "RXO-1",
+          "date": "2026-11-13",
+          "shares": 26.0,
+          "cost": 738.4
+        }
+      ]
+    }
+  ]
 }

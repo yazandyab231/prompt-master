@@ -1,10 +1,16 @@
 {
-  "as_of": "2026-11-12T20:23:54Z",
+  "as_of": "2026-11-13T15:00:42Z",
   "source": "yahoo",
   "note": "Delayed quotes for alerts and sizing checks. Your broker's price is the one that fills. detail.fetched is when each price was read.",
   "prices": {
     "JNJ": 286.009,
-    "UNH": 405.915
+    "UNH": 405.915,
+    "MRNA": 230.716,
+    "ERAS": 14.809,
+    "ECO": 86.99,
+    "VSXY": 106.86,
+    "AMD": 537.26,
+    "RXO": 28.4
   },
   "detail": {
     "JNJ": {
@@ -18,6 +24,42 @@
       "time": "2026-11-12T20:23:46Z",
       "source": "yahoo",
       "fetched": "2026-11-12T20:23:54Z"
+    },
+    "MRNA": {
+      "prev_close": 231.35,
+      "time": "2026-11-13T15:00:40Z",
+      "source": "yahoo",
+      "fetched": "2026-11-13T15:00:42Z"
+    },
+    "ERAS": {
+      "prev_close": 15.78,
+      "time": "2026-11-13T15:00:36Z",
+      "source": "yahoo",
+      "fetched": "2026-11-13T15:00:42Z"
+    },
+    "ECO": {
+      "prev_close": 87.67,
+      "time": "2026-11-13T15:00:25Z",
+      "source": "yahoo",
+      "fetched": "2026-11-13T15:00:42Z"
+    },
+    "VSXY": {
+      "prev_close": 104.63,
+      "time": "2026-11-13T15:00:06Z",
+      "source": "yahoo",
+      "fetched": "2026-11-13T15:00:42Z"
+    },
+    "AMD": {
+      "prev_close": 585.3,
+      "time": "2026-11-13T15:00:45Z",
+      "source": "yahoo",
+      "fetched": "2026-11-13T15:00:42Z"
+    },
+    "RXO": {
+      "prev_close": 28.3,
+      "time": "2026-11-13T15:00:25Z",
+      "source": "yahoo",
+      "fetched": "2026-11-13T15:00:42Z"
     }
   }
 }

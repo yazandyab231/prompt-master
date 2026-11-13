@@ -19,6 +19,66 @@
       "qty": "13",
       "price": 283.74,
       "plain": "SELL 13 JNJ at 283.74"
+    },
+    {
+      "at": "2026-11-13T10:00:46-05:00",
+      "date": "2026-11-13",
+      "status": "filled",
+      "symbol": "MRNA",
+      "side": "buy",
+      "qty": "3",
+      "price": 230.72,
+      "plain": "BUY 3 MRNA at 230.72"
+    },
+    {
+      "at": "2026-11-13T10:00:46-05:00",
+      "date": "2026-11-13",
+      "status": "filled",
+      "symbol": "ERAS",
+      "side": "buy",
+      "qty": "50",
+      "price": 14.81,
+      "plain": "BUY 50 ERAS at 14.81"
+    },
+    {
+      "at": "2026-11-13T10:00:46-05:00",
+      "date": "2026-11-13",
+      "status": "filled",
+      "symbol": "ECO",
+      "side": "buy",
+      "qty": "8",
+      "price": 86.99,
+      "plain": "BUY 8 ECO at 86.99"
+    },
+    {
+      "at": "2026-11-13T10:00:47-05:00",
+      "date": "2026-11-13",
+      "status": "filled",
+      "symbol": "VSXY",
+      "side": "buy",
+      "qty": "6",
+      "price": 106.86,
+      "plain": "BUY 6 VSXY at 106.86"
+    },
+    {
+      "at": "2026-11-13T10:00:47-05:00",
+      "date": "2026-11-13",
+      "status": "filled",
+      "symbol": "AMD",
+      "side": "buy",
+      "qty": "1",
+      "price": 537.26,
+      "plain": "BUY 1 AMD at 537.26"
+    },
+    {
+      "at": "2026-11-13T10:00:47-05:00",
+      "date": "2026-11-13",
+      "status": "filled",
+      "symbol": "RXO",
+      "side": "buy",
+      "qty": "26",
+      "price": 28.4,
+      "plain": "BUY 26 RXO at 28.40"
     }
   ]
 }

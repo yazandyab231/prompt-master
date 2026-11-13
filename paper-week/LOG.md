@@ -84,6 +84,25 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - Crash guard added (owner asked for the fix): SPY below its 200-day average → sell the 3 worst, hold cash; back above
   2 days in a row → refill. SPY 757.12 vs 200-day 731.62 on 11-12 (guard not active).
 
+## Fri 2026-11-13
+
+- 08:44 pre-market check left no trace (the scheduled run did not reach this chat); news check done at 10:00 instead.
+- News before buying: AMD -8% and ERAS -6% this morning. AMD falls with the whole chip sector after Nvidia's CEO
+  exit (no company-specific event); ERAS has no news (volatile small biotech); MRNA issued a cost outlook (-0.3%).
+  No merger, halt or legal shock → all six bought under v3.
+- **Bought 10:00 (v3 momentum portfolio), stop = entry x 0.80, hold to 12-11:**
+
+| stock | shares | entry | cost | stop |
+|-------|--------|-------|------|------|
+| MRNA (Moderna, biotech) | 3 | 230.72 | 692.16 | 184.57 |
+| ERAS (Erasca, biotech) | 50 | 14.81 | 740.50 | 11.84 |
+| ECO (Okeanis Eco Tankers, shipping) | 8 | 86.99 | 695.92 | 69.59 |
+| VSXY (Victoria's Secret, retail) | 6 | 106.86 | 641.16 | 85.48 |
+| AMD (chips) | 1 | 537.26 | 537.26 | 429.80 |
+| RXO (trucking) | 26 | 28.40 | 738.40 | 22.72 |
+
+- Invested $4,045.40, cash $925.09. Account $4,970.49 at entry. SPY 753.80 (benchmark 6.6040 sh = $4,978.10).
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.

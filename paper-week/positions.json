@@ -1,3 +1,70 @@
 {
- "positions": []
+ "positions": [
+  {
+   "symbol": "MRNA",
+   "name": "Moderna (biotech)",
+   "qty": 3,
+   "entry": 230.72,
+   "date": "2026-11-13",
+   "time": "10:00",
+   "stop": 184.57,
+   "kind": "momentum",
+   "exit_by": "2026-12-11"
+  },
+  {
+   "symbol": "ERAS",
+   "name": "Erasca (biotech)",
+   "qty": 50,
+   "entry": 14.81,
+   "date": "2026-11-13",
+   "time": "10:00",
+   "stop": 11.84,
+   "kind": "momentum",
+   "exit_by": "2026-12-11"
+  },
+  {
+   "symbol": "ECO",
+   "name": "Okeanis Eco Tankers (shipping)",
+   "qty": 8,
+   "entry": 86.99,
+   "date": "2026-11-13",
+   "time": "10:00",
+   "stop": 69.59,
+   "kind": "momentum",
+   "exit_by": "2026-12-11"
+  },
+  {
+   "symbol": "VSXY",
+   "name": "Victoria's Secret (retail)",
+   "qty": 6,
+   "entry": 106.86,
+   "date": "2026-11-13",
+   "time": "10:00",
+   "stop": 85.48,
+   "kind": "momentum",
+   "exit_by": "2026-12-11"
+  },
+  {
+   "symbol": "AMD",
+   "name": "AMD (chips)",
+   "qty": 1,
+   "entry": 537.26,
+   "date": "2026-11-13",
+   "time": "10:00",
+   "stop": 429.8,
+   "kind": "momentum",
+   "exit_by": "2026-12-11"
+  },
+  {
+   "symbol": "RXO",
+   "name": "RXO (trucking)",
+   "qty": 26,
+   "entry": 28.4,
+   "date": "2026-11-13",
+   "time": "10:00",
+   "stop": 22.72,
+   "kind": "momentum",
+   "exit_by": "2026-12-11"
+  }
+ ]
 }
