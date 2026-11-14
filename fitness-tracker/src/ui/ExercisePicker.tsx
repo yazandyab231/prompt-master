@@ -22,10 +22,18 @@ const matches = (name: string, query: string) => {
     .every((q) => words.some((w) => w.startsWith(q)));
 };
 
+/** The tab last used, so the picker reopens where you were (e.g. on Triceps mid-workout). */
+let lastTab = 'Chest';
+
 export function ExercisePicker({ onPick, onClose }: { onPick: (id: ID) => void; onClose: () => void }) {
   const s = useApp();
   const [q, setQ] = useState('');
-  const [group, setGroup] = useState('Other');
+  const [tab, setTabState] = useState(lastTab);
+  const setTab = (t: string) => {
+    lastTab = t;
+    setTabState(t);
+  };
+  const [group, setGroup] = useState(lastTab === 'Other' ? 'Other' : lastTab);
   const [managing, setManaging] = useState<Exercise | null>(null);
   const query = q.trim();
   const list = useMemo(() => {
@@ -72,14 +80,25 @@ export function ExercisePicker({ onPick, onClose }: { onPick: (id: ID) => void; 
             <p className="hint">“{query}” is not in the list. Create it as your own exercise.</p>
           </div>
         )}
-        {EXERCISE_GROUPS.map((g) => {
-          const items = list.filter((e) => e.group === g);
-          if (!items.length) return null;
-          return (
-            <div key={g}>
-              <h3 className="label" style={{ marginBottom: 8 }}>
+        {!query && (
+          <div className="tabs" role="tablist" aria-label="Muscle group">
+            {EXERCISE_GROUPS.filter((g) => g !== 'Other' || allExercises(s).some((e) => e.group === 'Other')).map((g) => (
+              <button key={g} role="tab" aria-selected={tab === g} className="tab-chip" onClick={() => setTab(g)}>
                 {g}
-              </h3>
+              </button>
+            ))}
+          </div>
+        )}
+        {(query ? EXERCISE_GROUPS : [tab]).map((g) => {
+          const items = list.filter((e) => e.group === g);
+          if (!items.length) return query ? null : <p key={g} className="hint">Nothing here yet.</p>;
+          return (
+            <div key={g} role={query ? undefined : 'tabpanel'}>
+              {query && (
+                <h3 className="label" style={{ marginBottom: 8 }}>
+                  {g}
+                </h3>
+              )}
               <div className="rows">
                 {items.map((e) => (
                   <div key={e.id} className="row" style={{ minHeight: 50, padding: 0 }}>

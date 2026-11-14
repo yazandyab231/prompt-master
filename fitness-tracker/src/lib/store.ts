@@ -2,7 +2,7 @@ import { produce } from 'immer';
 import { getMany, setMany } from 'idb-keyval';
 import { useSyncExternalStore } from 'react';
 import type { AppState, Exercise, Food, ID, Macros, Routine, SetLog, ThemeChoice, ThemeId, Workout } from './types';
-import { BUILTIN_EXERCISES } from './exercises';
+import { BUILTIN_EXERCISES, EXERCISE_GROUPS, groupForOldArms } from './exercises';
 import { BUILTIN_FOODS } from './foods';
 import { setDayStartHour, today, weekdayIndex } from './date';
 
@@ -107,7 +107,14 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
   }
 
   const exercises = list<Exercise>(raw.exercises, (x) =>
-    isStr(x.id) && isStr(x.name) ? { id: x.id, name: x.name, group: isStr(x.group) ? x.group : 'Other', custom: true } : null,
+    isStr(x.id) && isStr(x.name)
+      ? {
+          id: x.id,
+          name: x.name,
+          group: !isStr(x.group) ? 'Other' : x.group === 'Arms' ? groupForOldArms(x.name) : EXERCISE_GROUPS.includes(x.group) ? x.group : 'Other',
+          custom: true,
+        }
+      : null,
   );
   const routines = list<Routine>(raw.routines, (x) =>
     isStr(x.id) && isStr(x.name)

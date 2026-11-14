@@ -5,6 +5,8 @@ import { dueReminders } from '../src/lib/reminders';
 import { e1rm, kcalFromMacros, parseNum, scale, sum } from '../src/lib/units';
 import { BUILTIN_FOODS, searchFoods } from '../src/lib/foods';
 import { addDays, startOfWeek, weekdayIndex } from '../src/lib/date';
+import { BUILTIN_EXERCISES, EXERCISE_GROUPS, groupForOldArms } from '../src/lib/exercises';
+import { normalize, TEMPLATES } from '../src/lib/store';
 
 describe('nutrition label parsing', () => {
   it('reads an EU table with per-100g and per-serving columns', () => {
@@ -244,3 +246,31 @@ describe('maths', () => {
     expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
   });
 });
+
+describe('exercises', () => {
+  it('has no duplicate ids and every exercise is in a picker tab', () => {
+    const ids = BUILTIN_EXERCISES.map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(BUILTIN_EXERCISES.every((e) => EXERCISE_GROUPS.includes(e.group))).toBe(true);
+  });
+  it('keeps every id that existing logs and templates point at', () => {
+    for (const id of ['x-barbell-curl', 'x-triceps-pushdown', 'x-skull-crusher', 'x-close-grip-bench-press', 'x-hammer-curl', 'x-bench-press', 'x-squat']) {
+      expect(ids()).toContain(id);
+    }
+    const known = new Set(ids());
+    for (const tpl of TEMPLATES) for (const d of tpl.days) for (const [name] of d.ex) expect(known.has('x-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-'))).toBe(true);
+  });
+  it('splits arms into biceps, triceps and forearms', () => {
+    const g = (n: string) => BUILTIN_EXERCISES.find((e) => e.name === n)!.group;
+    expect([g('Barbell Curl'), g('Triceps Pushdown'), g('Wrist Curl')]).toEqual(['Biceps', 'Triceps', 'Forearms']);
+    expect(EXERCISE_GROUPS).not.toContain('Arms');
+  });
+  it('moves old custom "Arms" exercises into the right new group', () => {
+    expect(groupForOldArms('Cable rope pushdown')).toBe('Triceps');
+    expect(groupForOldArms('Zottman curl')).toBe('Biceps');
+    expect(groupForOldArms('Grip trainer')).toBe('Forearms');
+    const st = normalize({ workouts: [], entries: [], exercises: [{ id: 'c-1', name: 'Zottman curl', group: 'Arms', custom: true }] });
+    expect(st.exercises[0].group).toBe('Biceps');
+  });
+});
+const ids = () => BUILTIN_EXERCISES.map((e) => e.id);
