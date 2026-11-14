@@ -1,7 +1,15 @@
 const pad = (n: number) => String(n).padStart(2, '0');
 
 export const toISO = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-export const today = () => toISO(new Date());
+/**
+ * Hour (0-6) at which a new day starts. Night-shift workers and people eating late in Ramadan
+ * can set this so a 01:00 meal still counts toward the evening before.
+ */
+let dayStartHour = 0;
+export const setDayStartHour = (h: number) => {
+  dayStartHour = Math.min(6, Math.max(0, Math.round(h) || 0));
+};
+export const today = () => toISO(new Date(Date.now() - dayStartHour * 3600_000));
 export const fromISO = (s: string) => {
   const [y, m, d] = s.split('-').map(Number);
   return new Date(y, m - 1, d);

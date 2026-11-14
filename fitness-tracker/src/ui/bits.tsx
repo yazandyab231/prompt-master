@@ -86,6 +86,7 @@ export function TextField(props: {
         placeholder={props.placeholder}
         autoFocus={props.autoFocus}
         autoComplete="off"
+        dir="auto"
         maxLength={props.maxLength ?? 60}
         onChange={(e) => props.onChange(e.target.value)}
       />
@@ -106,7 +107,10 @@ export function MacroRails({ eaten, targets }: { eaten: Macros; targets: Macros 
       {MACRO_ROWS.map((m) => {
         const v = eaten[m.key];
         const t = targets[m.key];
-        const pct = t > 0 ? Math.min(100, (v / t) * 100) : 0;
+        const over = t > 0 && Math.round(v) > Math.round(t);
+        // Past the target the bar keeps growing and a notch marks where the target was.
+        const scale = Math.max(v, t, 1e-9);
+        const pct = t > 0 || v > 0 ? (v / scale) * 100 : 0;
         return (
           <div key={m.key}>
             <div className="rail-top">
@@ -115,11 +119,17 @@ export function MacroRails({ eaten, targets }: { eaten: Macros; targets: Macros 
                 {m.name}
               </span>
               <span className="rail-val">
+                {over && <span className="over-tag">{Math.round(v - t)} g over · </span>}
                 <b>{Math.round(v)}</b> / {Math.round(t)} g
               </span>
             </div>
-            <div className="rail-track" role="img" aria-label={`${m.name}: ${Math.round(v)} of ${Math.round(t)} grams`}>
+            <div
+              className="rail-track"
+              role="img"
+              aria-label={`${m.name}: ${Math.round(v)} of ${Math.round(t)} grams${over ? `, ${Math.round(v - t)} over` : ''}`}
+            >
               <div className="rail-fill" style={{ width: pct + '%', background: m.color }} />
+              {over && <div className="rail-target" style={{ left: `${(t / scale) * 100}%` }} />}
             </div>
           </div>
         );
@@ -154,18 +164,27 @@ export const macroLine = (m: Macros) =>
 
 /* ---------- toast ---------- */
 
-let toastMsg: string | null = null;
+interface ToastMsg {
+  text: string;
+  action?: { label: string; run: () => void };
+  id: number;
+}
+let toastMsg: ToastMsg | null = null;
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 const toastSubs = new Set<() => void>();
-export function toast(msg: string) {
-  toastMsg = msg;
-  toastSubs.forEach((f) => f());
+const emitToast = () => toastSubs.forEach((f) => f());
+
+/** Show a short message; with an action (e.g. Undo) it stays a little longer. */
+export function toast(text: string, action?: ToastMsg['action']) {
+  toastMsg = { text, action, id: Date.now() };
+  emitToast();
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     toastMsg = null;
-    toastSubs.forEach((f) => f());
-  }, 2600);
+    emitToast();
+  }, action ? 6000 : 2600);
 }
+
 export function Toast() {
   const msg = useSyncExternalStore(
     (f) => {
@@ -174,11 +193,28 @@ export function Toast() {
     },
     () => toastMsg,
   );
-  return msg ? (
-    <div className="toast" role="status">
-      {msg}
+  // The live region always exists, so screen readers announce text put into it.
+  return (
+    <div className="toast-region" role="status" aria-live="polite">
+      {msg && (
+        <div className="toast" key={msg.id}>
+          <span>{msg.text}</span>
+          {msg.action && (
+            <button
+              className="toast-action"
+              onClick={() => {
+                msg.action!.run();
+                toastMsg = null;
+                emitToast();
+              }}
+            >
+              {msg.action.label}
+            </button>
+          )}
+        </div>
+      )}
     </div>
-  ) : null;
+  );
 }
 
 /** Re-render every `ms` (used for clocks and due-reminder checks). */

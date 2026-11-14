@@ -11,8 +11,12 @@ export const num = (v: number, dp = 1) => {
   return String(Math.round(v * f) / f);
 };
 
-export const fmtWeight = (kg: number | null, units: Units, dp = 1) =>
+/** Two decimals in kg (61.25 kg micro-plates), one in lb. Trailing zeros are dropped. */
+export const fmtWeight = (kg: number | null, units: Units, dp = units === 'kg' ? 2 : 1) =>
   kg == null ? '–' : num(kgToDisplay(kg, units), dp);
+
+/** "1 set", "3 sets". */
+export const plural = (n: number, one: string, many = one + 's') => `${n} ${n === 1 ? one : many}`;
 
 export const ZERO: Macros = { kcal: 0, p: 0, c: 0, f: 0 };
 
@@ -34,15 +38,17 @@ export const e1rm = (weight: number, reps: number) => (reps <= 1 ? weight : weig
 
 /** Parse user-typed decimals, accepting a comma as the decimal separator. */
 export const parseNum = (s: string): number | null => {
-  const t = s.trim().replace(',', '.');
+  const t = toLatinDigits(s).trim().replace(',', '.');
   if (t === '') return null;
   const v = Number(t);
   return Number.isFinite(v) && v >= 0 ? v : null;
 };
 
 /** Keep only digits and a single decimal separator, so "1.2.3" or "1e3" can never be typed. */
+export const toLatinDigits = (s: string) =>
+  s.replace(/[\u0660-\u0669]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[\u06f0-\u06f9]/g, (d) => String(d.charCodeAt(0) - 0x06f0)).replace(/\u066b/g, '.');
 export const cleanDecimal = (raw: string): string => {
-  const t = raw.replace(/[^\d.,]/g, '');
+  const t = toLatinDigits(raw).replace(/[^\d.,]/g, '');
   const i = t.search(/[.,]/);
   return i < 0 ? t : t.slice(0, i + 1) + t.slice(i + 1).replace(/[.,]/g, '');
 };

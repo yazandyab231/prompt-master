@@ -34,7 +34,9 @@ export async function readBackup(file: File): Promise<BackupPreview> {
     throw new Error('That file is not valid JSON.');
   }
   const raw = parsed?.app === 'logbook' ? parsed.state : parsed;
-  if (!raw || typeof raw !== 'object' || !Array.isArray(raw.workouts) || !Array.isArray(raw.entries)) {
+  const looksLikeLogbook =
+    raw && typeof raw === 'object' && ['workouts', 'entries', 'bodyWeights', 'routines'].some((k) => Array.isArray(raw[k]));
+  if (!looksLikeLogbook) {
     throw new Error('That file is not a Logbook backup.');
   }
   const { state, dropped } = normalizeWithReport(raw);

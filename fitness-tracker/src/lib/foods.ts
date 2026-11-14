@@ -104,35 +104,94 @@ const ROWS: Row[] = [
   ['Milk chocolate', 535, 7.7, 59.4, 29.7, 25],
   ['Orange juice', 45, 0.7, 10.4, 0.2, 250],
   ['Cola', 42, 0, 10.6, 0, 330],
+  // Added after user feedback: plant-based, South Asian and Middle Eastern staples, drinks
+  ['Tempeh', 192, 20.3, 7.6, 10.8, 100],
+  ['Oat milk', 46, 1, 6.7, 1.5, 250],
+  ['Soy milk, unsweetened', 33, 3.3, 1.8, 1.8, 250],
+  ['Paneer', 265, 18.3, 1.2, 20.8, 50],
+  ['Ghee', 900, 0, 0, 99.5, 10],
+  ['Chapati / roti', 297, 9.8, 46, 7.5, 40],
+  ['Naan', 291, 9.6, 50.4, 5.7, 90],
+  ['Falafel', 333, 13.3, 31.8, 17.8, 17],
+  ['Foul (fava beans), cooked', 110, 7.6, 19.7, 0.4, 150],
+  ['Beer, lager', 43, 0.5, 3.6, 0, 330],
+  ['Wine, red', 85, 0.1, 2.6, 0, 150],
 ];
+
+/** Drinks: amounts are shown in ml (values are per 100 ml). */
+const LIQUIDS = /milk|juice|cola|beer|wine/i;
 
 export const BUILTIN_FOODS: Food[] = ROWS.map(([name, kcal, p, c, f, servingG]) => ({
   id: 'b-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
   name,
   per100: { kcal, p, c, f },
   servingG,
+  ...(LIQUIDS.test(name) && !/powder|chocolate/i.test(name) ? { liquid: true } : {}),
   source: 'builtin',
 }));
 
-/** Rank foods against a typed query: every word must appear; earlier matches rank higher. */
+const STOP = new Set(['of', 'a', 'an', 'the', 'with', 'and', 'cup', 'cups', 'slice', 'slices', 'piece', 'pieces', 'g', 'gram', 'grams']);
+
+/** Words of a query, lower-case, without numbers, filler words or a plural "s". */
+export function queryWords(query: string): string[] {
+  return query
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}%]+/u)
+    .filter((w) => w && !/^\d+([.,]\d+)?$/.test(w) && !STOP.has(w))
+    .map((w) => (w.length > 3 && w.endsWith('es') && !w.endsWith('ses') ? w.slice(0, -2) : w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w));
+}
+
+/** Edit distance, stopping early once it is clearly too far. */
+function distance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let best = i;
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      best = Math.min(best, cur[j]);
+    }
+    if (best > max) return max + 1;
+    prev = cur;
+  }
+  return prev[b.length];
+}
+
+/**
+ * Rank foods against a typed query. Every word must appear, either exactly or with a small
+ * spelling slip ("chiken", "brocoli", "yoghurt", "humus"); plurals and amounts are ignored
+ * ("2 eggs"). Cooked foods rank above raw/dry ones unless the query asks for raw or dry.
+ */
 export function searchFoods(foods: Food[], query: string): Food[] {
-  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
-  if (!words.length) return foods;
+  const words = queryWords(query);
+  if (!words.length) return query.trim() ? [] : foods;
+  const wantsRaw = words.some((w) => w === 'raw' || w === 'dry' || w === 'uncooked');
   const scored: [number, Food][] = [];
   for (const food of foods) {
     const hay = (food.name + ' ' + (food.brand ?? '')).toLowerCase();
+    const hayWords = hay.split(/[^\p{L}\p{N}%]+/u).filter(Boolean);
     let score = 0;
     let ok = true;
     for (const w of words) {
       const i = hay.indexOf(w);
-      if (i < 0) {
+      if (i >= 0) {
+        score += i === 0 ? 0 : /[^\p{L}\p{N}]/u.test(hay[i - 1]) ? 1 : 3;
+        score += i / 50;
+        continue;
+      }
+      // Allow one slip in words of 4+ letters, two in words of 8+.
+      const tol = w.length >= 8 ? 2 : w.length >= 4 ? 1 : 0;
+      const near = tol > 0 && hayWords.some((h) => distance(w, h, tol) <= tol || (h.length > w.length && distance(w, h.slice(0, w.length), tol) <= tol));
+      if (!near) {
         ok = false;
         break;
       }
-      score += i === 0 ? 0 : hay[i - 1] === ' ' ? 1 : 3;
-      score += i / 50;
+      score += 4;
     }
-    if (ok) scored.push([score + hay.length / 200, food]);
+    if (!ok) continue;
+    if (!wantsRaw && /,\s*(raw|dry)\b/.test(food.name.toLowerCase())) score += 2;
+    scored.push([score + hay.length / 200, food]);
   }
   return scored.sort((a, b) => a[0] - b[0]).map((s) => s[1]);
 }

@@ -3,10 +3,10 @@ import type { Nav } from '../App';
 import type { ID, Workout } from '../lib/types';
 import {
   activeWorkout, applyTemplate, deleteWorkout, exerciseById, finishedWorkouts, routineById, routineForDate,
-  startWorkout, TEMPLATES, uid, update, useApp,
+  startWorkout, TEMPLATES, uid, update, useApp, createPastWorkout, durationUnknown,
 } from '../lib/store';
-import { DAYS_LONG, fmtDay, fmtDuration, today, weekdayIndex } from '../lib/date';
-import { fmtWeight, kgToDisplay } from '../lib/units';
+import { addDays, DAYS_LONG, fmtDay, fmtDuration, today, weekdayIndex } from '../lib/date';
+import { fmtWeight, kgToDisplay, plural } from '../lib/units';
 import { Icon } from '../ui/Icon';
 import { Sheet } from '../ui/Sheet';
 import { ExercisePicker } from '../ui/ExercisePicker';
@@ -18,6 +18,7 @@ export function Train({ nav }: { nav: Nav }) {
   const [editing, setEditing] = useState<ID | null>(null);
   const [editingIsNew, setEditingIsNew] = useState(false);
   const [detail, setDetail] = useState<ID | null>(null);
+  const [pastOpen, setPastOpen] = useState(false);
   const active = activeWorkout(s);
   const todays = routineForDate(s, today());
   const history = finishedWorkouts(s);
@@ -58,8 +59,9 @@ export function Train({ nav }: { nav: Nav }) {
           {s.routines.length === 0 ? (
             <section className="block">
               <div className="empty" style={{ paddingTop: 0 }}>
-                <strong>Build your split</strong>
-                Start from a common layout and change anything, or build your own days from nothing.
+                <strong>Plan your week</strong>
+                A <b>split</b> is your weekly plan: which days you train and which exercises you do on each. Start from a common one and change
+                anything, build your own, or skip planning and just log.
               </div>
               <div className="rows" style={{ marginTop: 16 }}>
                 {TEMPLATES.map((tpl, i) => (
@@ -84,6 +86,9 @@ export function Train({ nav }: { nav: Nav }) {
               <button className="btn ghost wide" style={{ marginTop: 16 }} onClick={newDay}>
                 <Icon name="plus" /> Build my own day
               </button>
+              <button className="btn quiet" style={{ marginTop: 8, marginLeft: -10 }} onClick={() => begin(null)}>
+                Just log a workout without a plan
+              </button>
             </section>
           ) : (
             <>
@@ -92,7 +97,7 @@ export function Train({ nav }: { nav: Nav }) {
                   <span className="label">{active ? 'In progress' : 'Start a session'}</span>
                 </div>
                 {active ? (
-                  <button className="btn wide" onClick={nav.openWorkout}>
+                  <button className="btn wide" onClick={() => nav.openWorkout()}>
                     Resume {active.name}
                   </button>
                 ) : (
@@ -190,6 +195,14 @@ export function Train({ nav }: { nav: Nav }) {
         </>
       )}
 
+      {view === 'history' && (
+        <div className="block-head" style={{ marginBottom: 6 }}>
+          <span className="hint">Forgot to log one?</span>
+          <button className="link" onClick={() => setPastOpen(true)}>
+            <Icon name="plus" /> Log a past session
+          </button>
+        </div>
+      )}
       {view === 'history' &&
         (history.length === 0 ? (
           <div className="empty">
@@ -203,12 +216,13 @@ export function Train({ nav }: { nav: Nav }) {
                 <span className="row-main">
                   <span className="row-title">{w.name}</span>
                   <span className="row-sub">
-                    {fmtDay(w.date)} · {fmtDuration((w.finishedAt ?? w.startedAt) - w.startedAt)} · {w.exercises.length} exercises
+                    {fmtDay(w.date)}
+                    {durationUnknown(w) ? '' : ` · ${fmtDuration((w.finishedAt ?? w.startedAt) - w.startedAt)}`} · {plural(w.exercises.length, 'exercise')}
                   </span>
                 </span>
                 <span className="row-end">
                   {w.exercises.reduce((n, e) => n + e.sets.length, 0)}
-                  <small>sets</small>
+                  <small>{w.exercises.reduce((n, e) => n + e.sets.length, 0) === 1 ? 'set' : 'sets'}</small>
                 </span>
               </button>
             ))}
@@ -237,7 +251,24 @@ export function Train({ nav }: { nav: Nav }) {
         />
       )}
       {detail && history.find((w) => w.id === detail) && (
-        <WorkoutDetail workout={history.find((w) => w.id === detail)!} onClose={() => setDetail(null)} />
+        <WorkoutDetail
+          workout={history.find((w) => w.id === detail)!}
+          onClose={() => setDetail(null)}
+          onEdit={() => {
+            const id = detail;
+            setDetail(null);
+            setTimeout(() => nav.openWorkout(id), 0);
+          }}
+        />
+      )}
+      {pastOpen && (
+        <PastSessionSheet
+          onClose={() => setPastOpen(false)}
+          onCreated={(id) => {
+            setPastOpen(false);
+            setTimeout(() => nav.openWorkout(id), 0);
+          }}
+        />
       )}
     </>
   );
@@ -368,7 +399,7 @@ function RoutineEditor({ id, onClose }: { id: ID; onClose: () => void }) {
   );
 }
 
-export function WorkoutDetail({ workout, onClose }: { workout: Workout; onClose: () => void }) {
+export function WorkoutDetail({ workout, onClose, onEdit }: { workout: Workout; onClose: () => void; onEdit: () => void }) {
   const s = useApp();
   const units = s.settings.units;
   const [confirm, setConfirm] = useState(false);
@@ -382,8 +413,8 @@ export function WorkoutDetail({ workout, onClose }: { workout: Workout; onClose:
         <div>
           <h3 className="food-title">{workout.name}</h3>
           <p className="session-meta" style={{ marginBottom: 0 }}>
-            {fmtDuration((workout.finishedAt ?? workout.startedAt) - workout.startedAt)} ·{' '}
-            {workout.exercises.reduce((n, e) => n + e.sets.length, 0)} sets ·{' '}
+            {durationUnknown(workout) ? 'Logged afterwards' : fmtDuration((workout.finishedAt ?? workout.startedAt) - workout.startedAt)} ·{' '}
+            {plural(workout.exercises.reduce((n, e) => n + e.sets.length, 0), 'set')} ·{' '}
             {Math.round(kgToDisplay(volume, units)).toLocaleString('en-US')} {units} lifted
           </p>
         </div>
@@ -406,6 +437,9 @@ export function WorkoutDetail({ workout, onClose }: { workout: Workout; onClose:
             </div>
           </div>
         ))}
+        <button className="btn ghost wide" onClick={onEdit}>
+          <Icon name="edit" /> Edit this session
+        </button>
         {confirm ? (
           <div className="btn-row">
             <button className="btn ghost" onClick={() => setConfirm(false)}>
@@ -426,6 +460,44 @@ export function WorkoutDetail({ workout, onClose }: { workout: Workout; onClose:
             <Icon name="trash" /> Delete this session
           </button>
         )}
+      </div>
+    </Sheet>
+  );
+}
+
+/** Pick a date (and optionally a training day) for a session that was not logged at the time. */
+function PastSessionSheet({ onClose, onCreated }: { onClose: () => void; onCreated: (id: ID) => void }) {
+  const s = useApp();
+  const [date, setDate] = useState(addDays(today(), -1));
+  const [routineId, setRoutineId] = useState<string>('');
+  const valid = !!date && date <= today();
+  return (
+    <Sheet
+      title="Log a past session"
+      onClose={onClose}
+      foot={
+        <button className="btn wide" disabled={!valid} onClick={() => onCreated(createPastWorkout(date, routineById(s, routineId || null)))}>
+          Continue
+        </button>
+      }
+    >
+      <div className="stack">
+        <label className="field">
+          <span className="label">Date</span>
+          <input className="input" type="date" value={date} max={today()} onChange={(e) => setDate(e.target.value)} />
+        </label>
+        <label className="field">
+          <span className="label">Training day</span>
+          <select className="select" value={routineId} onChange={(e) => setRoutineId(e.target.value)}>
+            <option value="">None (add exercises yourself)</option>
+            {s.routines.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <p className="hint">Next you fill in the sets you did. Sets you add are counted as done.</p>
       </div>
     </Sheet>
   );

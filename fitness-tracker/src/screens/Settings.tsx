@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Reminder, ThemeId } from '../lib/types';
-import { defaultState, replaceState, uid, update, useApp } from '../lib/store';
+import type { Reminder, ThemeChoice } from '../lib/types';
+import { defaultState, replaceState, uid, update, useApp, setTargets } from '../lib/store';
 import { applyBackup, exportData, readBackup, type BackupPreview } from '../lib/backup';
-import { REMINDER_PRESETS } from '../lib/reminders';
+import { alreadyPassedToday, clockDate, REMINDER_PRESETS } from '../lib/reminders';
 import { disablePush, enablePush, getPushState, notificationsSupported, syncPush, type PushState } from '../lib/push';
-import { DAYS_SHORT } from '../lib/date';
+import { DAYS_SHORT, today } from '../lib/date';
 import { kcalFromMacros } from '../lib/units';
 import { Icon } from '../ui/Icon';
 import { Sheet } from '../ui/Sheet';
+import { TargetsSheet } from './Today';
 import { NumField, TextField, toast } from '../ui/bits';
 
-const THEMES: { id: ThemeId; name: string; bg: string; ink: string; accent: string }[] = [
+const THEMES: { id: ThemeChoice; name: string; bg: string; ink: string; accent: string }[] = [
+  { id: 'auto', name: 'Auto', bg: 'linear-gradient(135deg, #0b0b0c 50%, #f2efe9 50%)', ink: '#7d7a74', accent: '#d7ff3e' },
   { id: 'iron', name: 'Iron', bg: '#0b0b0c', ink: '#edeae4', accent: '#d7ff3e' },
   { id: 'ember', name: 'Ember', bg: '#100d0b', ink: '#f1e9e0', accent: '#ff5a2b' },
   { id: 'tide', name: 'Tide', bg: '#081018', ink: '#e4edf5', accent: '#3ee0cf' },
@@ -36,10 +38,16 @@ export function Settings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remindersKey]);
 
-  const setTarget = (k: keyof typeof t, v: number | null) =>
-    update((d) => {
-      d.settings.targets[k] = Math.min(v ?? 0, k === 'kcal' ? 20000 : 2000);
-    });
+  const [capNote, setCapNote] = useState<string | null>(null);
+  /** An emptied field keeps the old target (a target of 0 makes no sense); far-off values are capped and said so. */
+  const setTarget = (k: keyof typeof t, v: number | null) => {
+    if (v == null || v <= 0) return;
+    const max = k === 'kcal' ? 20000 : 2000;
+    setCapNote(v > max ? `The most this field takes is ${max.toLocaleString('en-US')}.` : null);
+    setTargets({ ...s.settings.targets, [k]: Math.min(v, max) });
+    if (!s.settings.targetsReviewed) update((d) => void (d.settings.targetsReviewed = true));
+  };
+  const [targetsOpen, setTargetsOpen] = useState(false);
 
   return (
     <>
@@ -73,6 +81,22 @@ export function Settings() {
       </section>
 
       <section className="block">
+        <div className="row" style={{ borderBottom: 0, padding: 0 }}>
+          <span className="row-main">
+            <span className="row-title" style={{ whiteSpace: 'normal' }}>Easier-to-read text</span>
+            <span className="row-sub" style={{ whiteSpace: 'normal' }}>No spaced capitals or narrow type. Helps with dyslexia and low vision.</span>
+          </span>
+          <button
+            className="switch"
+            role="switch"
+            aria-checked={s.settings.readableText}
+            aria-label="Easier-to-read text"
+            onClick={() => update((d) => void (d.settings.readableText = !d.settings.readableText))}
+          />
+        </div>
+      </section>
+
+      <section className="block">
         <div className="block-head">
           <span className="label">Units</span>
         </div>
@@ -99,14 +123,45 @@ export function Settings() {
           <NumField label="Carbs" unit="g" value={t.c} onChange={(v) => setTarget('c', v)} dp={0} />
           <NumField label="Fat" unit="g" value={t.f} onChange={(v) => setTarget('f', v)} dp={0} />
         </div>
+        {capNote && <p className="error" style={{ marginTop: 10 }}>{capNote}</p>}
         <p className="hint" style={{ marginTop: 10 }}>
           Those macros add up to {implied.toLocaleString('en-US')} kcal
-          {Math.abs(implied - t.kcal) > 60 ? `, which is ${Math.abs(implied - t.kcal)} ${implied > t.kcal ? 'more' : 'less'} than your energy target. ` : ', in line with your energy target. '}
+          {Math.abs(implied - t.kcal) > 60
+            ? `, which is ${Math.abs(implied - t.kcal).toLocaleString('en-US')} ${implied > t.kcal ? 'more' : 'less'} than your energy target. `
+            : ', in line with your energy target. '}
           {Math.abs(implied - t.kcal) > 60 && (
             <button className="link accent" style={{ padding: 0 }} onClick={() => setTarget('kcal', implied)}>
               Use {implied.toLocaleString('en-US')}
             </button>
           )}
+        </p>
+        <p className="hint" style={{ marginTop: 6 }}>
+          Changing targets applies from today on; past days keep the targets they had.{' '}
+          <button className="link accent" style={{ padding: 0 }} onClick={() => setTargetsOpen(true)}>
+            Work them out for me
+          </button>
+        </p>
+      </section>
+
+      <section className="block">
+        <div className="block-head">
+          <h2 className="label">When your day starts</h2>
+        </div>
+        <select
+          className="select"
+          aria-label="When your day starts"
+          value={s.settings.dayStart}
+          onChange={(e) => update((d) => void (d.settings.dayStart = Number(e.target.value)))}
+        >
+          <option value={0}>Midnight (default)</option>
+          {[1, 2, 3, 4, 5, 6].map((h) => (
+            <option key={h} value={h}>
+              {`0${h}:00`}
+            </option>
+          ))}
+        </select>
+        <p className="hint" style={{ marginTop: 10 }}>
+          For night shifts or late meals (suhoor in Ramadan, say): with 04:00, anything you log before 4 am still counts toward the day before.
         </p>
       </section>
 
@@ -127,7 +182,13 @@ export function Settings() {
               <button
                 key={p.kind}
                 className="chip"
-                onClick={() => update((d) => void d.reminders.push({ id: uid(), enabled: true, ...p }))}
+                onClick={() =>
+                  update((d) => {
+                    const id = uid();
+                    d.reminders.push({ id, enabled: true, ...p });
+                    if (alreadyPassedToday(p.time)) d.reminderSeen[id] = clockDate();
+                  })
+                }
               >
                 + {p.title} · {p.time}
               </button>
@@ -135,7 +196,7 @@ export function Settings() {
           </div>
         ) : (
           <div className="rows" style={{ marginTop: 14 }}>
-            {s.reminders.map((r) => (
+            {[...s.reminders].sort((a, b) => a.time.localeCompare(b.time)).map((r) => (
               <div key={r.id} className="row">
                 <button className="row-main" style={{ textAlign: 'left' }} onClick={() => setEditing(r)}>
                   <span className="row-title" style={{ display: 'block' }}>
@@ -169,9 +230,17 @@ export function Settings() {
         </div>
         <p className="hint" style={{ marginBottom: 14 }}>
           Everything is stored in this browser on this device, with no account. Clearing the browser's site data deletes it, so export a backup now and then.
+          {' '}
+          {s.settings.lastExport ? `Last backup: ${s.settings.lastExport}.` : 'You have not exported a backup yet.'}
         </p>
         <div className="btn-row">
-          <button className="btn ghost" onClick={exportData}>
+          <button
+            className="btn ghost"
+            onClick={() => {
+              exportData();
+              update((d) => void (d.settings.lastExport = today()));
+            }}
+          >
             Export backup
           </button>
           <button className="btn ghost" onClick={() => fileRef.current?.click()}>
@@ -245,7 +314,7 @@ export function Settings() {
               <button
                 className="btn danger"
                 onClick={() => {
-                  replaceState({ ...defaultState(), settings: { ...defaultState().settings, theme: s.settings.theme } });
+                  replaceState({ ...defaultState(), settings: { ...defaultState().settings, theme: s.settings.theme, units: s.settings.units } });
                   setErase(false);
                   toast('All data erased');
                 }}
@@ -261,7 +330,20 @@ export function Settings() {
         )}
       </section>
 
+      <section className="block">
+        <div className="block-head">
+          <h2 className="label">What leaves this device</h2>
+        </div>
+        <ul className="hint" style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
+          <li>Barcode lookups send only the barcode number to Open Food Facts (a free public food database).</li>
+          <li>Label photos are read on this device and are never uploaded.</li>
+          <li>If you turn on push reminders, the reminder titles, times and your time zone go to the push service. Nothing else does.</li>
+          <li>Workouts, food, weight and settings never leave this device unless you export a backup.</li>
+        </ul>
+      </section>
+
       {editing && <ReminderSheet reminder={editing} onClose={() => setEditing(null)} />}
+      {targetsOpen && <TargetsSheet onClose={() => setTargetsOpen(false)} />}
     </>
   );
 }
@@ -363,11 +445,20 @@ function ReminderSheet({ reminder, onClose }: { reminder: Reminder; onClose: () 
     if (!valid) return;
     update((d) => {
       const clean = { ...r, title: r.title.trim(), days: [...r.days].sort() };
-      if (isNew) d.reminders.push({ ...clean, id: uid() });
-      else {
+      if (isNew) {
+        const id = uid();
+        d.reminders.push({ ...clean, id });
+        // A new reminder whose time has already passed today waits until next time instead of going off now.
+        if (alreadyPassedToday(clean.time)) d.reminderSeen[id] = clockDate();
+      } else {
         const i = d.reminders.findIndex((x) => x.id === r.id);
+        const old = d.reminders[i];
         if (i >= 0) d.reminders[i] = clean;
-        delete d.reminderSeen[r.id]; // a changed time may make it due again today
+        // Only a new time or new days can make it due again today; a rename does not.
+        if (old && (old.time !== clean.time || old.days.join() !== clean.days.join())) {
+          if (alreadyPassedToday(clean.time)) d.reminderSeen[r.id] = clockDate();
+          else delete d.reminderSeen[r.id];
+        }
       }
     });
     onClose();

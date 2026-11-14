@@ -17,6 +17,8 @@ export interface LabelResult {
   found: number;
   /** Values that looked misread and were corrected so the macros agree with the energy figure. */
   adjusted: ('p' | 'c' | 'f')[];
+  /** Energy was not on the label (or not readable) and was worked out from the macros. */
+  energyFromMacros: boolean;
 }
 
 interface Num {
@@ -42,16 +44,28 @@ function numbers(s: string): Num[] {
   const re = /(<\s*)?(\d+(?:\.\d+)?)\s*(kcal|cal|kj|mg|g|%)?/gi;
   let m: RegExpExecArray | null;
   while ((m = re.exec(s))) {
+    // A number glued to letters ("Eiweif3" for "Eiweiß", "kcal608") is OCR noise or the next column.
+    if (m.index > 0 && /[a-zà-ÿß]/i.test(s[m.index - 1]) && !m[1]) continue;
     out.push({ value: Number(m[2]), unit: (m[3] ?? '').toLowerCase(), raw: m[2] });
   }
   return out;
 }
 
+// English plus the common EU label languages (German, French, Spanish, Italian, Dutch, Portuguese).
+const OF_WHICH = /of which|davon|dont|de los cuales|de las cuales|di cui|waarvan|dos quais/i;
 const ROWS: { key: keyof LabelValues; match: RegExp; skip?: RegExp }[] = [
-  { key: 'kcal', match: /\b(energy|energie|calories|kcal)\b/i },
-  { key: 'f', match: /\bfat\b|\bfett\b|\blipid/i, skip: /saturat|trans|mono|poly|of which|calories from/i },
-  { key: 'c', match: /carbohydrate|carbs\b|glucides|kohlenhydrate/i, skip: /of which/i },
-  { key: 'p', match: /protein|eiwei/i },
+  { key: 'kcal', match: /energy|energie|énergie|energía|energia|energetic|brennwert|valor energ|calories|kcal/i },
+  {
+    key: 'f',
+    match: /\bfat\b|total fat|\bfett\b|lipid|matières grasses|matieres grasses|grasas|grassi|\bvet\b|gorduras/i,
+    skip: new RegExp(`saturat|satur|gesättigt|gesattigt|trans|mono|poly|calories from|verzadigd|${OF_WHICH.source}`, 'i'),
+  },
+  {
+    key: 'c',
+    match: /carbohydrate|carbs\b|glucides|kohlenhydrate|hidratos de carbono|carbohidratos|carboidrati|koolhydraten|hidratos/i,
+    skip: new RegExp(`sugar|sucre|zucker|azúcar|azucar|zucchero|suiker|açúcar|${OF_WHICH.source}`, 'i'),
+  },
+  { key: 'p', match: /protein|protéine|proteine|proteína|proteina|eiwei|eiwit/i },
 ];
 
 /**
@@ -184,10 +198,12 @@ export function parseNutritionText(text: string): LabelResult {
     const r1 = (v: number | null) => (v == null ? null : Math.round(v * k * 10) / 10);
     per100 = { kcal: raw.kcal == null ? null : Math.round(raw.kcal * k), p: r1(raw.p), c: r1(raw.c), f: r1(raw.f) };
   }
+  let energyFromMacros = false;
   if (per100.kcal == null && per100.p != null && per100.c != null && per100.f != null) {
     per100 = { ...per100, kcal: Math.round(kcalFromMacros(per100.p, per100.c, per100.f)) };
+    energyFromMacros = true;
   }
-  return { basis, servingG, per100, found, adjusted };
+  return { basis, servingG, per100, found, adjusted, energyFromMacros };
 }
 
 /** Shrink big phone photos so OCR is fast, and return a canvas the engine can read. */
@@ -204,25 +220,48 @@ async function toCanvas(file: Blob, maxSide = 1800): Promise<HTMLCanvasElement> 
 }
 
 /** Read the text in a photo entirely on this device. The photo is never uploaded. */
-export async function readLabelText(file: Blob, onProgress?: (fraction: number) => void): Promise<string> {
+export type LabelStage = 'download' | 'read';
+
+/**
+ * Read the text in a photo entirely on this device. The photo is never uploaded. The first time,
+ * the text reader itself (about 7 MB) is downloaded; `onProgress` reports which stage is running.
+ * Aborting `signal` stops it straight away.
+ */
+export async function readLabelText(
+  file: Blob,
+  onProgress?: (stage: LabelStage, fraction: number) => void,
+  signal?: AbortSignal,
+): Promise<string> {
+  const aborted = () => new DOMException('Cancelled', 'AbortError');
+  if (signal?.aborted) throw aborted();
+  onProgress?.('download', 0);
   const [{ createWorker }, canvas] = await Promise.all([import('tesseract.js'), toCanvas(file)]);
-  const worker = await createWorker('eng', 1, {
-    workerPath: '/ocr/worker.min.js',
-    corePath: '/ocr',
-    langPath: '/ocr',
-    logger: (m: { status: string; progress: number }) => {
-      if (m.status === 'recognizing text') onProgress?.(m.progress);
-    },
-  });
+  if (signal?.aborted) throw aborted();
+  let worker: Awaited<ReturnType<typeof createWorker>> | null = null;
+  const stop = () => void worker?.terminate();
+  signal?.addEventListener('abort', stop, { once: true });
   try {
+    worker = await createWorker('eng', 1, {
+      workerPath: '/ocr/worker.min.js',
+      corePath: '/ocr',
+      langPath: '/ocr',
+      logger: (m: { status: string; progress: number }) => {
+        if (m.status === 'recognizing text') onProgress?.('read', m.progress);
+        else if (/loading|initializ/i.test(m.status)) onProgress?.('download', m.progress);
+      },
+    });
+    if (signal?.aborted) throw aborted();
     // Mode 4 keeps each table row on one line; mode 6 is the fallback when that reads too little.
     await worker.setParameters({ tessedit_pageseg_mode: '4' as any });
     const first = (await worker.recognize(canvas)).data.text;
+    if (signal?.aborted) throw aborted();
     if (parseNutritionText(first).found === 4) return first;
     await worker.setParameters({ tessedit_pageseg_mode: '6' as any });
     const second = (await worker.recognize(canvas)).data.text;
+    if (signal?.aborted) throw aborted();
     return parseNutritionText(second).found > parseNutritionText(first).found ? second : first;
   } finally {
-    await worker.terminate();
+    signal?.removeEventListener('abort', stop);
+    await worker?.terminate().catch(() => undefined);
   }
 }

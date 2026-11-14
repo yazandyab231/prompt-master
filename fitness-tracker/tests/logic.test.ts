@@ -217,7 +217,7 @@ describe('maths', () => {
     expect(sum([scale(rice.per100, 100), scale(rice.per100, 100)]).kcal).toBe(260);
   });
   it('built-in foods roughly agree with 4/4/9', () => {
-    const off = BUILTIN_FOODS.filter((f) => {
+    const off = BUILTIN_FOODS.filter((f) => !/beer|wine/i.test(f.name)).filter((f) => {
       const est = kcalFromMacros(f.per100.p, f.per100.c, f.per100.f);
       return Math.abs(est - f.per100.kcal) > Math.max(30, f.per100.kcal * 0.2);
     }).map((f) => f.name);

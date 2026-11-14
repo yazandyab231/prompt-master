@@ -1,10 +1,10 @@
 import { produce } from 'immer';
-import { get, set } from 'idb-keyval';
+import { getMany, setMany } from 'idb-keyval';
 import { useSyncExternalStore } from 'react';
-import type { AppState, Exercise, Food, ID, Macros, Routine, SetLog, Workout } from './types';
+import type { AppState, Exercise, Food, ID, Macros, Routine, SetLog, ThemeChoice, ThemeId, Workout } from './types';
 import { BUILTIN_EXERCISES } from './exercises';
 import { BUILTIN_FOODS } from './foods';
-import { today, weekdayIndex } from './date';
+import { setDayStartHour, today, weekdayIndex } from './date';
 
 const KEY = 'logbook.state';
 
@@ -12,7 +12,15 @@ export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().to
 
 export const defaultState = (): AppState => ({
   version: 1,
-  settings: { theme: 'iron', units: 'kg', targets: { kcal: 2400, p: 160, c: 270, f: 75 } },
+  settings: {
+    theme: 'iron',
+    units: 'kg',
+    targets: { kcal: 2400, p: 160, c: 270, f: 75 },
+    targetHistory: [],
+    dayStart: 0,
+    targetsReviewed: false,
+    readableText: false,
+  },
   exercises: [],
   routines: [],
   week: [null, null, null, null, null, null, null],
@@ -24,15 +32,33 @@ export const defaultState = (): AppState => ({
   reminderSeen: {},
 });
 
-const THEME_IDS = ['iron', 'ember', 'tide', 'chalk', 'clay'];
+const THEME_IDS = ['iron', 'ember', 'tide', 'chalk', 'clay', 'auto'];
 export const THEME_BG: Record<string, string> = {
   iron: '#0b0b0c', ember: '#100d0b', tide: '#081018', chalk: '#f2efe9', clay: '#ece2d5',
 };
 const isObj = (v: unknown): v is Record<string, any> => !!v && typeof v === 'object' && !Array.isArray(v);
 const isStr = (v: unknown): v is string => typeof v === 'string';
 const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
+/** Read a number, also when an older or hand-edited file wrote it as text ("80", "61,25"). */
+const toNum = (v: unknown): number | null => {
+  if (isNum(v)) return v;
+  if (typeof v === 'string' && v.trim() !== '') {
+    const n = Number(v.trim().replace(',', '.'));
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+};
+/** "7:30" -> "07:30"; anything that is not a time -> null. */
+const toTime = (v: unknown): string | null => {
+  const m = typeof v === 'string' ? /^(\d{1,2}):(\d{2})$/.exec(v.trim()) : null;
+  if (!m || +m[1] > 23 || +m[2] > 59) return null;
+  return `${m[1].padStart(2, '0')}:${m[2]}`;
+};
 const isDate = (v: unknown): v is string => isStr(v) && /^\d{4}-\d{2}-\d{2}$/.test(v);
-const numOr = (v: unknown, fallback: number) => (isNum(v) && v >= 0 ? v : fallback);
+const numOr = (v: unknown, fallback: number) => {
+  const n = toNum(v);
+  return n != null && n >= 0 ? n : fallback;
+};
 const macros = (v: unknown): Macros | null =>
   isObj(v) ? { kcal: numOr(v.kcal, 0), p: numOr(v.p, 0), c: numOr(v.c, 0), f: numOr(v.f, 0) } : null;
 
@@ -59,10 +85,20 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
     theme: isObj(raw.settings) && THEME_IDS.includes(raw.settings.theme) ? raw.settings.theme : d.settings.theme,
     units: isObj(raw.settings) && raw.settings.units === 'lb' ? 'lb' : 'kg',
     targets: { ...d.settings.targets, ...(isObj(raw.settings) ? macros(raw.settings.targets) ?? {} : {}) },
+    targetHistory: (isObj(raw.settings) && Array.isArray(raw.settings.targetHistory) ? raw.settings.targetHistory : [])
+      .filter((h: any) => isObj(h) && isDate(h.from) && isObj(h.targets))
+      .map((h: any) => ({ from: h.from, targets: macros(h.targets)! }))
+      .sort((a: any, b: any) => a.from.localeCompare(b.from)),
+    dayStart: isObj(raw.settings) ? Math.min(6, Math.max(0, Math.round(numOr(raw.settings.dayStart, 0)))) : 0,
+    readableText: isObj(raw.settings) && raw.settings.readableText === true,
+    // Anyone restoring real data has been using the app: do not greet them as new.
+    targetsReviewed: isObj(raw.settings) ? raw.settings.targetsReviewed !== false || Array.isArray(raw.entries) && raw.entries.length > 0 : false,
+    ...(isObj(raw.settings) && isDate(raw.settings.lastExport) ? { lastExport: raw.settings.lastExport } : {}),
   };
   if (isObj(raw.settings) && isObj(raw.settings.targets)) {
     for (const k of ['kcal', 'p', 'c', 'f'] as const) {
-      if (!isNum(raw.settings.targets[k])) settings.targets[k] = d.settings.targets[k];
+      const n = toNum(raw.settings.targets[k]);
+      settings.targets[k] = n != null && n > 0 ? n : d.settings.targets[k];
     }
   }
 
@@ -103,14 +139,16 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
       date: x.date,
       startedAt: x.startedAt,
       finishedAt,
+      ...(isNum(x.lastAt) ? { lastAt: x.lastAt } : {}),
+      ...(isStr(x.note) ? { note: x.note } : {}),
       exercises: list(x.exercises, (e) =>
         isStr(e.exerciseId)
           ? {
               exerciseId: e.exerciseId,
               sets: list<SetLog>(e.sets, (st) => ({
-                weight: isNum(st.weight) && st.weight >= 0 ? st.weight : null,
-                reps: isNum(st.reps) && st.reps >= 0 ? Math.round(st.reps) : null,
-                done: st.done === true,
+                weight: (toNum(st.weight) ?? -1) >= 0 ? toNum(st.weight) : null,
+                reps: (toNum(st.reps) ?? -1) >= 0 ? Math.round(toNum(st.reps)!) : null,
+                done: st.done === true || st.done === 'true' || st.done === 'yes' || st.done === 1,
               })),
             }
           : null,
@@ -118,11 +156,18 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
     };
   });
 
+  // Inside a finished session every set was done (unticked sets are removed when it finishes).
+  for (const w of workouts) {
+    if (w.finishedAt == null) continue;
+    for (const ex of w.exercises) ex.sets = ex.sets.filter((x) => x.done && x.reps != null);
+    w.exercises = w.exercises.filter((ex) => ex.sets.length);
+  }
   const seenDates = new Set<string>();
   const bodyWeights = list<AppState['bodyWeights'][number]>(raw.bodyWeights, (x) => {
-    if (!isDate(x.date) || !isNum(x.kg) || x.kg <= 0 || seenDates.has(x.date)) return null;
+    const kg = toNum(x.kg);
+    if (!isDate(x.date) || kg == null || kg <= 0 || seenDates.has(x.date)) return null;
     seenDates.add(x.date);
-    return { date: x.date, kg: x.kg };
+    return { date: x.date, kg };
   }).sort((a, b) => a.date.localeCompare(b.date));
 
   const foods = list<Food>(raw.foods, (x) => {
@@ -133,7 +178,8 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
       name: x.name,
       brand: isStr(x.brand) ? x.brand : undefined,
       per100,
-      servingG: isNum(x.servingG) && x.servingG > 0 ? x.servingG : undefined,
+      servingG: (toNum(x.servingG) ?? 0) > 0 ? toNum(x.servingG)! : undefined,
+      ...(x.liquid === true ? { liquid: true } : {}),
       source: ['custom', 'barcode', 'label'].includes(x.source) ? x.source : 'custom',
       barcode: isStr(x.barcode) ? x.barcode : undefined,
     };
@@ -147,17 +193,17 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
       time: numOr(x.time, 0),
       foodId: isStr(x.foodId) ? x.foodId : undefined,
       name: x.name,
-      grams: isNum(x.grams) && x.grams > 0 ? x.grams : null,
+      grams: (toNum(x.grams) ?? 0) > 0 ? toNum(x.grams) : null,
       macros: m,
     };
   });
   const reminders = list<AppState['reminders'][number]>(raw.reminders, (x) =>
-    isStr(x.id) && isStr(x.title) && isStr(x.time) && /^\d{2}:\d{2}$/.test(x.time) && Array.isArray(x.days)
+    isStr(x.id) && isStr(x.title) && toTime(x.time) && Array.isArray(x.days)
       ? {
           id: x.id,
           kind: ['workout', 'meal', 'weigh', 'custom'].includes(x.kind) ? x.kind : 'custom',
           title: x.title,
-          time: x.time,
+          time: toTime(x.time)!,
           days: x.days.filter((n: unknown) => Number.isInteger(n) && (n as number) >= 0 && (n as number) <= 6),
           enabled: x.enabled !== false,
         }
@@ -166,8 +212,33 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
   const reminderSeen: Record<ID, string> = {};
   if (isObj(raw.reminderSeen)) for (const [k, v] of Object.entries(raw.reminderSeen)) if (isStr(v)) reminderSeen[k] = v;
 
+  // The same id twice would make one delete remove both: keep the first of each.
+  const unique = <T extends { id: string }>(items: T[]): T[] => {
+    const seen = new Set<string>();
+    return items.filter((x) => {
+      if (seen.has(x.id)) {
+        dropped++;
+        return false;
+      }
+      seen.add(x.id);
+      return true;
+    });
+  };
+
   return {
-    state: { version: 1, settings, exercises, routines, week, workouts, bodyWeights, foods, entries, reminders, reminderSeen },
+    state: {
+      version: 1,
+      settings,
+      exercises: unique(exercises),
+      routines: unique(routines),
+      week,
+      workouts: unique(workouts),
+      bodyWeights,
+      foods: unique(foods),
+      entries: unique(entries),
+      reminders: unique(reminders),
+      reminderSeen,
+    },
     dropped,
   };
 }
@@ -177,68 +248,165 @@ export const normalize = (raw: unknown): AppState => normalizeWithReport(raw).st
 let state: AppState = defaultState();
 let loaded = false;
 const listeners = new Set<() => void>();
-let saveTimer: ReturnType<typeof setTimeout> | undefined;
+const AT_KEY = KEY + '.savedAt'; // when the IndexedDB copy was written
+const PENDING_KEY = KEY + '.pending'; // emergency copy written synchronously when the page goes away
 
+/** Bumped on every change; `savedRev` catches up when a write finishes. */
+let rev = 0;
+let savedRev = 0;
+let writing = false;
+let lastSavedAt = 0;
+let storageBroken = false;
+/** True when the browser refuses to save anything: the app should warn the person. */
+export const isStorageBroken = () => storageBroken;
+const channel: BroadcastChannel | null = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('logbook') : null;
+
+/** Write the current state to IndexedDB straight away, coalescing bursts into one write. */
 async function persist() {
-  saveTimer = undefined;
+  if (writing) return;
+  writing = true;
   try {
-    await set(KEY, state);
-  } catch {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    } catch {
-      /* storage unavailable: the app still works for this session */
+    while (savedRev < rev) {
+      const target = rev;
+      const snapshot = state;
+      const at = Date.now();
+      try {
+        await setMany([
+          [KEY, snapshot],
+          [AT_KEY, at],
+        ]);
+        storageBroken = false;
+      } catch {
+        try {
+          localStorage.setItem(KEY, JSON.stringify(snapshot));
+          localStorage.setItem(AT_KEY, String(at));
+          storageBroken = false;
+        } catch {
+          // Neither IndexedDB nor localStorage works (private mode, blocked site data):
+          // say so on screen rather than letting data vanish on reload.
+          if (!storageBroken) {
+            storageBroken = true;
+            for (const l of listeners) l();
+          }
+        }
+      }
+      savedRev = target;
+      lastSavedAt = at;
+      channel?.postMessage({ type: 'saved', at });
     }
+    // Everything is on disk, so an emergency copy from an earlier close is no longer needed.
+    try {
+      localStorage.removeItem(PENDING_KEY);
+    } catch {
+      /* ignore */
+    }
+  } finally {
+    writing = false;
   }
 }
 
+/**
+ * Called as the page is hidden or closed. An IndexedDB write may not finish in time, so if
+ * anything is unsaved, also write it synchronously to localStorage; the next load picks it up.
+ */
 export function flush() {
-  if (saveTimer) {
-    clearTimeout(saveTimer);
-    void persist();
+  if (savedRev >= rev) return;
+  void persist();
+  try {
+    localStorage.setItem(PENDING_KEY, JSON.stringify({ at: Date.now(), state }));
+  } catch {
+    /* too large or blocked: the IndexedDB write is still under way */
   }
 }
+
+const darkQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+export const resolveTheme = (t: ThemeChoice): ThemeId => (t === 'auto' ? (darkQuery?.matches === false ? 'chalk' : 'iron') : t);
 
 function applyTheme() {
-  const theme = state.settings.theme;
+  setDayStartHour(state.settings.dayStart);
+  const theme = resolveTheme(state.settings.theme);
   document.documentElement.dataset.theme = theme;
+  if (state.settings.readableText) document.documentElement.dataset.readable = '';
+  else delete document.documentElement.dataset.readable;
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_BG[theme] ?? THEME_BG.iron);
   try {
     localStorage.setItem('logbook.theme', theme);
+    localStorage.setItem('logbook.dayStart', String(state.settings.dayStart));
+    localStorage.setItem('logbook.readable', state.settings.readableText ? '1' : '');
   } catch {
     /* ignore */
   }
 }
 
 function emit() {
+  rev++;
   for (const l of listeners) l();
   applyTheme();
-  if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(persist, 120);
+  queueMicrotask(() => void persist());
+}
+
+/** Read the newest saved copy: IndexedDB, the localStorage fallback, or an emergency copy. */
+async function readSaved(): Promise<{ raw: unknown; at: number }> {
+  const candidates: { raw: unknown; at: number }[] = [];
+  try {
+    const [raw, at] = await getMany([KEY, AT_KEY]);
+    if (raw) candidates.push({ raw, at: Number(at) || 1 });
+  } catch {
+    /* fall through */
+  }
+  try {
+    const s = localStorage.getItem(KEY);
+    if (s) candidates.push({ raw: JSON.parse(s), at: Number(localStorage.getItem(AT_KEY)) || 0 });
+  } catch {
+    /* ignore */
+  }
+  try {
+    const p = localStorage.getItem(PENDING_KEY);
+    if (p) {
+      const parsed = JSON.parse(p);
+      if (parsed?.state) candidates.push({ raw: parsed.state, at: Number(parsed.at) || 0 });
+    }
+  } catch {
+    /* ignore */
+  }
+  candidates.sort((x, y) => y.at - x.at);
+  return candidates[0] ?? { raw: undefined, at: 0 };
 }
 
 export async function loadState() {
   if (loaded) return;
-  let raw: unknown;
-  try {
-    raw = await get(KEY);
-  } catch {
-    /* fall through to localStorage */
-  }
-  if (!raw) {
-    try {
-      const s = localStorage.getItem(KEY);
-      if (s) raw = JSON.parse(s);
-    } catch {
-      /* ignore */
-    }
-  }
+  const { raw, at } = await readSaved();
   state = normalize(raw);
+  lastSavedAt = at;
   loaded = true;
   applyTheme();
   for (const l of listeners) l();
+  // If the newest copy was the emergency one, write it properly now.
+  try {
+    if (localStorage.getItem(PENDING_KEY)) {
+      rev++;
+      void persist();
+    }
+  } catch {
+    /* ignore */
+  }
   // Ask the browser not to evict our data under storage pressure.
   void navigator.storage?.persist?.().catch(() => undefined);
+}
+
+/**
+ * Another tab saved: take its copy, so this tab never writes an older state back over it.
+ * Only when this tab has nothing unsaved of its own.
+ */
+async function adoptOtherTab() {
+  if (!loaded || savedRev < rev || writing) return;
+  const { raw, at } = await readSaved();
+  if (raw && at > lastSavedAt) {
+    state = normalize(raw);
+    lastSavedAt = at;
+    applyTheme();
+    for (const l of listeners) l();
+  }
 }
 
 export const getState = () => state;
@@ -255,12 +423,28 @@ const subscribe = (l: () => void) => {
   return () => listeners.delete(l);
 };
 export const useApp = () => useSyncExternalStore(subscribe, getState);
+/** Re-renders when saving starts or stops failing (the app state itself does not change then). */
+export const useStorageBroken = () => useSyncExternalStore(subscribe, isStorageBroken);
 
 if (typeof window !== 'undefined') {
+  // 'auto' theme follows the phone switching between light and dark.
+  darkQuery?.addEventListener?.('change', () => {
+    if (state.settings.theme === 'auto') applyTheme();
+  });
+  // Apply the saved start of day before the first render, so the first "today" is already right.
+  try {
+    setDayStartHour(Number(localStorage.getItem('logbook.dayStart')) || 0);
+  } catch {
+    /* ignore */
+  }
   window.addEventListener('pagehide', flush);
+  window.addEventListener('beforeunload', flush);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') flush();
+    else void adoptOtherTab();
   });
+  if (channel) channel.onmessage = () => void adoptOtherTab();
+  window.addEventListener('focus', () => void adoptOtherTab());
 }
 
 /* ---------- lookups ---------- */
@@ -277,14 +461,21 @@ export const finishedWorkouts = (s: AppState) =>
   s.workouts.filter((w) => w.finishedAt != null).sort((a, b) => b.startedAt - a.startedAt);
 
 /** The most recent finished sets for an exercise, to show "last time" next to each set. */
-export function lastSets(s: AppState, exerciseId: ID, beforeWorkoutId?: ID): SetLog[] | null {
-  for (const w of finishedWorkouts(s)) {
-    if (w.id === beforeWorkoutId) continue;
-    const ex = w.exercises.find((e) => e.exerciseId === exerciseId);
-    const done = ex?.sets.filter((x) => x.done && x.reps != null);
-    if (done?.length) return done;
-  }
-  return null;
+export function lastSets(s: AppState, exerciseId: ID, beforeWorkoutId?: ID, routineId?: ID | null): SetLog[] | null {
+  const find = (sameDay: boolean) => {
+    for (const w of finishedWorkouts(s)) {
+      if (w.id === beforeWorkoutId) continue;
+      if (sameDay && w.routineId !== routineId) continue;
+      const done = w.exercises
+        .filter((e) => e.exerciseId === exerciseId)
+        .flatMap((e) => e.sets)
+        .filter((x) => x.done && x.reps != null);
+      if (done.length) return done;
+    }
+    return null;
+  };
+  // Prefer the same training day (heavy bench on Friday should not suggest Monday's light bench).
+  return (routineId ? find(true) : null) ?? find(false);
 }
 
 /* ---------- training actions ---------- */
@@ -300,9 +491,10 @@ export function startWorkout(routine: Routine | null): ID {
     name: routine?.name ?? 'Open session',
     date: today(),
     startedAt: Date.now(),
+    lastAt: Date.now(),
     finishedAt: null,
     exercises: (routine?.exercises ?? []).map((re) => {
-      const last = lastSets(s, re.exerciseId);
+      const last = lastSets(s, re.exerciseId, undefined, routine?.id);
       return {
         exerciseId: re.exerciseId,
         sets: Array.from({ length: Math.max(1, re.sets) }, (_, i) => ({
@@ -324,12 +516,51 @@ export function finishWorkout(id: ID) {
   update((d) => {
     const w = d.workouts.find((x) => x.id === id);
     if (!w) return;
+    // When editing a saved session, a set with reps filled in counts as done even if not ticked.
+    if (w.finishedAt != null) for (const ex of w.exercises) for (const x of ex.sets) if (x.reps != null) x.done = true;
     // Keep only what was actually done.
     for (const ex of w.exercises) ex.sets = ex.sets.filter((x) => x.done && x.reps != null);
     w.exercises = w.exercises.filter((ex) => ex.sets.length);
-    w.finishedAt = Date.now();
+    if (w.finishedAt != null) return; // editing an already finished session keeps its times
+    // A session left open for hours (forgotten) ends at its last activity, not now.
+    const now = Date.now();
+    const last = Math.max(w.lastAt ?? w.startedAt, w.startedAt);
+    w.finishedAt = now - last > 3 * 3600_000 ? last + 5 * 60_000 : now;
   });
 }
+
+/** Create an empty, already finished session on a past date, for logging after the fact. */
+export function createPastWorkout(date: string, routine: Routine | null): ID {
+  const id = uid();
+  const s = getState();
+  const [y, m, d] = date.split('-').map(Number);
+  const at = new Date(y, m - 1, d, 12, 0).getTime();
+  update((dr) => {
+    dr.workouts.push({
+      id,
+      routineId: routine?.id ?? null,
+      name: routine?.name ?? 'Session',
+      date,
+      startedAt: at,
+      finishedAt: at, // same as start: duration unknown
+      exercises: (routine?.exercises ?? []).map((re) => {
+        const last = lastSets(s, re.exerciseId, undefined, routine?.id);
+        return {
+          exerciseId: re.exerciseId,
+          sets: Array.from({ length: Math.max(1, re.sets) }, (_, i) => ({
+            weight: last?.[Math.min(i, last.length - 1)]?.weight ?? null,
+            reps: null,
+            done: false,
+          })),
+        };
+      }),
+    });
+  });
+  return id;
+}
+
+/** True when a finished session has no real duration (it was logged after the fact). */
+export const durationUnknown = (w: Workout) => w.finishedAt != null && w.finishedAt - w.startedAt < 60_000;
 
 export const deleteWorkout = (id: ID) =>
   update((d) => {
@@ -341,6 +572,28 @@ export function setBodyWeight(date: string, kg: number | null) {
     d.bodyWeights = d.bodyWeights.filter((b) => b.date !== date);
     if (kg != null && kg > 0) d.bodyWeights.push({ date, kg });
     d.bodyWeights.sort((a, b) => a.date.localeCompare(b.date));
+  });
+}
+
+/* ---------- targets ---------- */
+
+/** The targets that applied on a given day (changing targets today never rewrites the past). */
+export function targetsFor(s: AppState, date: string): Macros {
+  let found: Macros | null = null;
+  for (const h of s.settings.targetHistory) if (h.from <= date) found = h.targets;
+  return found ?? s.settings.targetHistory[0]?.targets ?? s.settings.targets;
+}
+
+/** Change today's targets, remembering what applied before. */
+export function setTargets(next: Macros) {
+  update((d) => {
+    const day = today();
+    const hist = d.settings.targetHistory;
+    if (!hist.length) hist.push({ from: '0000-01-01', targets: { ...d.settings.targets } });
+    const last = hist[hist.length - 1];
+    if (last.from === day) last.targets = { ...next };
+    else hist.push({ from: day, targets: { ...next } });
+    d.settings.targets = { ...next };
   });
 }
 

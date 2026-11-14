@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Food, FoodSource, ID } from '../lib/types';
-import { allFoods, logFood, recentFoods, saveFood, update, useApp } from '../lib/store';
+import { allFoods, logFood, recentFoods, saveFood, update, useApp, getState, replaceState } from '../lib/store';
 import { searchFoods } from '../lib/foods';
 import { lookupBarcode } from '../lib/off';
 import { parseNutritionText, readLabelText } from '../lib/label';
@@ -22,6 +22,7 @@ interface Draft {
   c: number | null;
   f: number | null;
   servingG: number | null;
+  liquid?: boolean;
   source: FoodSource;
   barcode?: string;
   /** Shown above the form, e.g. what the label scan could and could not read. */
@@ -74,7 +75,9 @@ export function AddFood({ date, onClose }: { date: string; onClose: () => void }
           onDone={onClose}
           onEdit={() =>
             setDraft({
-              id: food.id, name: food.name, brand: food.brand, source: food.source, barcode: food.barcode,
+              id: food.source === 'builtin' ? undefined : food.id,
+              name: food.source === 'builtin' ? `${food.name} (my version)` : food.name,
+              brand: food.brand, source: food.source === 'builtin' ? 'custom' : food.source, barcode: food.barcode, liquid: food.liquid,
               kcal: food.per100.kcal, p: food.per100.p, c: food.per100.c, f: food.per100.f, servingG: food.servingG ?? null,
             })
           }
@@ -98,6 +101,7 @@ export function AddFood({ date, onClose }: { date: string; onClose: () => void }
         {mode === 'barcode' && (
           <Barcode
             onFood={setFood}
+            onReview={setDraft}
             onManual={(barcode, name) => setDraft(emptyDraft({ barcode, name: name ?? '', source: 'barcode' }))}
             onLabel={(barcode, name) => {
               setCarry({ barcode, name });
@@ -124,7 +128,8 @@ function Search({ onPick, onCreate }: { onPick: (f: Food) => void; onCreate: (na
   const s = useApp();
   const [q, setQ] = useState('');
   const query = q.trim();
-  const results = useMemo(() => (query ? searchFoods(allFoods(s), query).slice(0, 40) : []), [s, query]);
+  const allResults = useMemo(() => (query ? searchFoods(allFoods(s), query) : []), [s, query]);
+  const results = allResults.slice(0, 40);
   const recent = useMemo(() => recentFoods(s), [s]);
 
   const list = (title: string, foods: Food[]) =>
@@ -158,6 +163,7 @@ function Search({ onPick, onCreate }: { onPick: (f: Food) => void; onCreate: (na
         className="input"
         placeholder="Search foods, e.g. rice"
         aria-label="Search foods"
+        dir="auto"
         value={q}
         autoFocus
         autoComplete="off"
@@ -165,7 +171,7 @@ function Search({ onPick, onCreate }: { onPick: (f: Food) => void; onCreate: (na
       />
       {query ? (
         <>
-          {list(`${results.length} ${results.length === 1 ? 'match' : 'matches'}`, results)}
+          {list(allResults.length > results.length ? `Top ${results.length} of ${allResults.length} matches` : `${results.length} ${results.length === 1 ? 'match' : 'matches'}`, results)}
           {results.length === 0 && <p className="hint">Nothing matches “{query}”. Create it once and it stays in your foods.</p>}
           <button className="btn ghost wide" onClick={() => onCreate(query)}>
             <Icon name="plus" /> Create “{query.length > 18 ? query.slice(0, 18) + '…' : query}”
@@ -192,6 +198,7 @@ function Search({ onPick, onCreate }: { onPick: (f: Food) => void; onCreate: (na
 /* ---------- amount ---------- */
 
 function Amount({ food, date, onDone, onEdit }: { food: Food; date: string; onDone: () => void; onEdit: () => void }) {
+  const unit = food.liquid ? 'ml' : 'g';
   const [grams, setGrams] = useState<number | null>(food.servingG ?? 100);
   const macros = scale(food.per100, grams ?? 0);
   const presets = [50, 100, 150, 200, 250];
@@ -217,17 +224,17 @@ function Amount({ food, date, onDone, onEdit }: { food: Food; date: string; onDo
           {Math.round(food.per100.kcal)} kcal · P {num(food.per100.p, 1)} · C {num(food.per100.c, 1)} · F {num(food.per100.f, 1)} per 100 g
         </p>
       </div>
-      <NumField label="Amount" unit="g" value={grams} onChange={setGrams} autoFocus dp={0} maxLength={5} />
-      {grams != null && grams > 5000 && <p className="error">Enter 5,000 g or less.</p>}
+      <NumField label="Amount" unit={unit} value={grams} onChange={setGrams} autoFocus dp={0} maxLength={5} />
+      {grams != null && grams > 5000 && <p className="error">Enter 5,000 {unit} or less.</p>}
       <div className="chips">
         {food.servingG && !presets.includes(food.servingG) && (
           <button type="button" className="chip" aria-pressed={grams === food.servingG} onClick={() => setGrams(food.servingG!)}>
-            1 serving · {num(food.servingG, 0)} g
+            1 serving · {num(food.servingG, 0)} {unit}
           </button>
         )}
         {presets.map((g) => (
           <button type="button" key={g} className="chip" aria-pressed={grams === g} onClick={() => setGrams(g)}>
-            {g} g
+            {g} {unit}
           </button>
         ))}
       </div>
@@ -235,9 +242,9 @@ function Amount({ food, date, onDone, onEdit }: { food: Food; date: string; onDo
       <button className="btn wide" disabled={!valid}>
         Add to log
       </button>
-      {food.source !== 'builtin' && (
+      {(
         <button type="button" className="btn quiet" style={{ alignSelf: 'flex-start' }} onClick={onEdit}>
-          <Icon name="edit" /> Edit this food's values
+          <Icon name="edit" /> {food.source === 'builtin' ? 'Make my own version of this food' : "Edit this food's values"}
         </button>
       )}
     </form>
@@ -248,31 +255,39 @@ function Amount({ food, date, onDone, onEdit }: { food: Food; date: string; onDo
 
 function FoodForm({ draft, onSaved, onDeleted }: { draft: Draft; onSaved: (f: Food) => void; onDeleted: () => void }) {
   const [d, setD] = useState(draft);
+  /** Labels print values per 100 g or per serving; let people type whichever their label shows. */
+  const [basis, setBasis] = useState<'100' | 'serving'>('100');
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => setD((x) => ({ ...x, [k]: v }));
+  const unit = d.liquid ? 'ml' : 'g';
+  const k = basis === 'serving' && d.servingG ? 100 / d.servingG : 1;
+  const per = (v: number | null) => (v == null ? null : Math.round(v * k * 10) / 10);
   const macrosKnown = d.p != null && d.c != null && d.f != null;
   const implied = macrosKnown ? kcalFromMacros(d.p!, d.c!, d.f!) : null;
   const kcal = d.kcal ?? (implied != null ? Math.round(implied) : null);
-  const mismatch = d.kcal != null && implied != null && Math.abs(implied - d.kcal) > Math.max(25, d.kcal * 0.25);
-  const impossible = macrosKnown && d.p! + d.c! + d.f! > 100.5;
-  const valid = d.name.trim() !== '' && macrosKnown && kcal != null && !impossible;
+  const tooLow = d.kcal != null && implied != null && implied - d.kcal > Math.max(25, implied * 0.25);
+  const tooHigh = d.kcal != null && implied != null && d.kcal - implied > Math.max(25, d.kcal * 0.25);
+  const totalPer100 = macrosKnown ? (d.p! + d.c! + d.f!) * k : 0;
+  const impossible = macrosKnown && basis === '100' && totalPer100 > 100.5;
+  const needServing = basis === 'serving' && !(d.servingG && d.servingG > 0);
+  const valid = d.name.trim() !== '' && macrosKnown && kcal != null && !impossible && !needServing;
+
+  const build = (asNew: boolean) => ({
+    id: asNew ? undefined : d.id,
+    name: d.name.trim(),
+    brand: d.brand,
+    per100: { kcal: Math.round(kcal! * k), p: per(d.p)!, c: per(d.c)!, f: per(d.f)! },
+    servingG: d.servingG && d.servingG > 0 ? d.servingG : undefined,
+    liquid: d.liquid || undefined,
+    source: d.source,
+    barcode: asNew ? undefined : d.barcode,
+  });
 
   return (
     <form
       className="stack"
       onSubmit={(e) => {
         e.preventDefault();
-        if (!valid) return;
-        onSaved(
-          saveFood({
-            id: d.id,
-            name: d.name.trim(),
-            brand: d.brand,
-            per100: { kcal: kcal!, p: d.p!, c: d.c!, f: d.f! },
-            servingG: d.servingG && d.servingG > 0 ? d.servingG : undefined,
-            source: d.source,
-            barcode: d.barcode,
-          }),
-        );
+        if (valid) onSaved(saveFood(build(false)));
       }}
     >
       {d.note && (
@@ -283,26 +298,57 @@ function FoodForm({ draft, onSaved, onDeleted }: { draft: Draft; onSaved: (f: Fo
       <TextField label="Name" value={d.name} onChange={(v) => set('name', v)} placeholder="e.g. Protein yogurt" autoFocus={!d.name} />
       <div>
         <div className="label" style={{ marginBottom: 8 }}>
-          Per 100 g
+          Values on the label are
         </div>
-        <div className="grid-2">
-          <NumField label="Energy" unit="kcal" value={d.kcal} onChange={(v) => set('kcal', v)} dp={0} placeholder={implied != null ? String(Math.round(implied)) : ''} />
-          <NumField label="Protein" unit="g" value={d.p} onChange={(v) => set('p', v)} />
-          <NumField label="Carbs" unit="g" value={d.c} onChange={(v) => set('c', v)} />
-          <NumField label="Fat" unit="g" value={d.f} onChange={(v) => set('f', v)} />
+        <div className="seg" role="group" aria-label="Values are per">
+          <button type="button" aria-pressed={basis === '100'} onClick={() => setBasis('100')}>
+            Per 100 {unit}
+          </button>
+          <button type="button" aria-pressed={basis === 'serving'} onClick={() => setBasis('serving')}>
+            Per serving
+          </button>
         </div>
       </div>
-      <NumField label="Serving size (optional)" unit="g" value={d.servingG} onChange={(v) => set('servingG', v)} dp={0} />
+      <NumField
+        label={basis === 'serving' ? 'Serving size' : 'Serving size (optional)'}
+        unit={unit}
+        value={d.servingG}
+        onChange={(v) => set('servingG', v)}
+        dp={0}
+      />
+      <div className="grid-2">
+        <NumField label="Energy" unit="kcal" value={d.kcal} onChange={(v) => set('kcal', v)} dp={0} placeholder={implied != null ? String(Math.round(implied)) : ''} />
+        <NumField label="Protein" unit="g" value={d.p} onChange={(v) => set('p', v)} />
+        <NumField label="Carbs" unit="g" value={d.c} onChange={(v) => set('c', v)} />
+        <NumField label="Fat" unit="g" value={d.f} onChange={(v) => set('f', v)} />
+      </div>
+      <label className="check">
+        <input type="checkbox" checked={!!d.liquid} onChange={(e) => set('liquid', e.target.checked)} />
+        <span>It is a drink (measure in ml)</span>
+      </label>
+      {basis === 'serving' && d.servingG && macrosKnown && kcal != null && (
+        <p className="hint">
+          Saved per 100 {unit}: {Math.round(kcal * k)} kcal · P {per(d.p)} · C {per(d.c)} · F {per(d.f)}.
+        </p>
+      )}
+      {needServing && <p className="hint">Enter the serving size so the values can be worked out per 100 {unit}.</p>}
       {d.kcal == null && implied != null && (
         <p className="hint">No energy value entered, so {Math.round(implied)} kcal will be used (worked out from the macros).</p>
       )}
       {impossible && <p className="error">Protein, carbs and fat add up to more than 100 g per 100 g. One of them is wrong.</p>}
-      {mismatch && !impossible && (
+      {tooLow && !impossible && (
         <p className="error">
-          These don't add up: the macros imply about {Math.round(implied!)} kcal, not {Math.round(d.kcal!)}. Check the numbers against the package. You can still save.
+          These don't add up: the macros imply about {Math.round(implied!)} kcal, more than the {Math.round(d.kcal!)} entered. Check the numbers
+          against the package. You can still save.
         </p>
       )}
-      {!valid && !impossible && (
+      {tooHigh && !impossible && (
+        <p className="hint">
+          The energy is higher than the macros explain (about {Math.round(implied!)} kcal). That is normal for alcoholic drinks and some
+          high-fibre foods; otherwise check the numbers.
+        </p>
+      )}
+      {!valid && !impossible && !needServing && (
         <p className="hint">
           To save, fill in: {[d.name.trim() === '' && 'a name', d.p == null && 'protein', d.c == null && 'carbs', d.f == null && 'fat'].filter(Boolean).join(', ')}.
         </p>
@@ -311,15 +357,21 @@ function FoodForm({ draft, onSaved, onDeleted }: { draft: Draft; onSaved: (f: Fo
         {d.id ? 'Save changes' : 'Save food'}
       </button>
       {d.id && (
+        <button type="button" className="btn ghost wide" disabled={!valid} onClick={() => onSaved(saveFood({ ...build(true), name: `${d.name.trim()} (copy)`.slice(0, 60) }))}>
+          Save as a new food
+        </button>
+      )}
+      {d.id && (
         <button
           type="button"
           className="btn quiet"
           style={{ alignSelf: 'flex-start', color: 'var(--danger)' }}
           onClick={() => {
+            const before = getState();
             update((s) => {
               s.foods = s.foods.filter((f) => f.id !== d.id);
             });
-            toast('Food deleted. Entries already logged are kept.');
+            toast('Food deleted. Entries already logged are kept.', { label: 'Undo', run: () => replaceState(before) });
             onDeleted();
           }}
         >
@@ -335,11 +387,12 @@ function FoodForm({ draft, onSaved, onDeleted }: { draft: Draft; onSaved: (f: Fo
 type BarcodeStatus =
   | { kind: 'scan' }
   | { kind: 'looking'; code: string }
-  | { kind: 'missing'; code: string; name?: string }
+  | { kind: 'missing'; code: string; name?: string; reason?: string }
   | { kind: 'error'; code: string; message: string };
 
 function Barcode(props: {
   onFood: (f: Food) => void;
+  onReview: (d: Draft) => void;
   onManual: (barcode: string, name?: string) => void;
   onLabel: (barcode: string, name?: string) => void;
 }) {
@@ -358,7 +411,13 @@ function Barcode(props: {
     try {
       const res = await lookupBarcode(code, abort.current.signal);
       if (res.status === 'found') props.onFood(saveFood(res.food));
-      else setStatus({ kind: 'missing', code, name: res.status === 'incomplete' ? res.name : undefined });
+      else if (res.status === 'review') {
+        const f = res.food;
+        props.onReview({
+          name: f.name, brand: f.brand, barcode: f.barcode, source: 'barcode',
+          kcal: f.per100.kcal, p: f.per100.p, c: f.per100.c, f: f.per100.f, servingG: f.servingG ?? null, note: res.reason,
+        });
+      } else setStatus({ kind: 'missing', code, name: res.status === 'incomplete' ? res.name : undefined, reason: res.status === 'incomplete' ? res.reason : undefined });
     } catch (e: any) {
       if (e?.name === 'AbortError') return;
       setStatus({
@@ -417,9 +476,7 @@ function Barcode(props: {
       {status.kind === 'missing' && (
         <>
           <p className="hint" role="status">
-            {status.name
-              ? `“${status.name}” is in the database, but without protein, carbs or fat values.`
-              : 'This product is not in the database.'}{' '}
+            {status.reason ?? 'This product is not in the database.'}{' '}
             Read the values off the package instead. They will be saved against this barcode, so the next scan finds it.
           </p>
           <button className="btn wide" onClick={() => props.onLabel(status.code, status.name)}>
@@ -458,6 +515,8 @@ function Label(props: {
   onManual: () => void;
 }) {
   const [busy, setBusy] = useState(false);
+  const [stage, setStage] = useState<'download' | 'read'>('download');
+  const cancel = useRef<AbortController | null>(null);
   const [progress, setProgress] = useState(0);
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -480,16 +539,27 @@ function Label(props: {
     setError(null);
     setBusy(true);
     setProgress(0);
+    setStage('download');
     setPreview(URL.createObjectURL(file));
+    cancel.current = new AbortController();
     try {
-      const text = await readLabelText(file, (p) => alive.current && setProgress(p));
+      const text = await readLabelText(
+        file,
+        (st, p) => {
+          if (!alive.current) return;
+          setStage(st);
+          setProgress(p);
+        },
+        cancel.current.signal,
+      );
       if (!alive.current) return;
       const r = parseNutritionText(text);
       if (r.found === 0) {
         setError('No nutrition values could be read from that photo. Fill the frame with the table, keep it flat and sharp, and avoid glare. Or type the values in.');
         return;
       }
-      const missing = (['kcal', 'p', 'c', 'f'] as const).filter((k) => r.per100[k] == null);
+      // Energy worked out from the macros was not read off the label, so it does not count as found.
+      const missing = (['kcal', 'p', 'c', 'f'] as const).filter((k) => r.per100[k] == null || (k === 'kcal' && r.energyFromMacros));
       const names = { kcal: 'energy', p: 'protein', c: 'carbs', f: 'fat' };
       const unconverted = r.basis === 'serving' && !r.servingG;
       props.onDraft({
@@ -503,7 +573,7 @@ function Label(props: {
         servingG: r.servingG,
         note:
           (missing.length
-            ? `Found ${4 - missing.length} of 4 values; could not find ${missing.map((k) => names[k]).join(', ')}. `
+            ? `Found ${4 - missing.length} of 4 values; could not find ${missing.map((k) => names[k]).join(', ')}${r.energyFromMacros ? ' (energy was worked out from the macros)' : ''}. `
             : 'Found all four values. ') +
           (r.adjusted.length
             ? `${r.adjusted.map((k) => names[k]).join(' and ')} looked misread, so ${r.adjusted.length > 1 ? 'they were' : 'it was'} corrected to agree with the energy figure. `
@@ -515,7 +585,8 @@ function Label(props: {
               : '') +
           'Text reading makes mistakes: check every number against the package before saving.',
       });
-    } catch {
+    } catch (e: any) {
+      if (e?.name === 'AbortError') return;
       if (alive.current) setError('The text reader could not start. Check your connection the first time you use it, then try again, or type the values in.');
     } finally {
       if (alive.current) setBusy(false);
@@ -530,7 +601,32 @@ function Label(props: {
           <div className="progress">
             <i style={{ width: Math.max(4, Math.round(progress * 100)) + '%' }} />
           </div>
-          <p className="hint">Reading the label on this device… {Math.round(progress * 100)}%</p>
+          <p className="hint">
+            {stage === 'download'
+              ? 'Getting the text reader ready. The first time, it downloads about 7 MB (later it works offline), which can take a minute or more on a slow connection.'
+              : `Reading the label on this device… ${Math.round(progress * 100)}%`}
+          </p>
+          <div className="btn-row">
+            <button
+              className="btn ghost"
+              onClick={() => {
+                cancel.current?.abort();
+                setBusy(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn ghost"
+              onClick={() => {
+                cancel.current?.abort();
+                setBusy(false);
+                props.onManual();
+              }}
+            >
+              Type it in
+            </button>
+          </div>
         </div>
       ) : (
         <>
@@ -572,7 +668,8 @@ function Quick({ date, onDone }: { date: string; onDone: () => void }) {
   const [f, setF] = useState<number | null>(null);
   const implied = kcalFromMacros(p ?? 0, c ?? 0, f ?? 0);
   const total = kcal ?? Math.round(implied);
-  const valid = total > 0 && total <= 20000 && (p ?? 0) <= 2000 && (c ?? 0) <= 2000 && (f ?? 0) <= 2000;
+  // 0 kcal is allowed for a named entry (diet drinks, black coffee); an unnamed empty entry is not.
+  const valid = (total > 0 || name.trim() !== '') && total <= 20000 && (p ?? 0) <= 2000 && (c ?? 0) <= 2000 && (f ?? 0) <= 2000;
   return (
     <form
       className="stack"

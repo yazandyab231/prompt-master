@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { activeWorkout, update, useApp } from './lib/store';
-import { dueReminders } from './lib/reminders';
+import { activeWorkout, getState, update, useApp, useStorageBroken } from './lib/store';
+import { clockDate, dueReminders } from './lib/reminders';
 import { getPushState, notifyLocal, syncPush } from './lib/push';
-import { today } from './lib/date';
 import { Icon } from './ui/Icon';
 import { Toast, useTick } from './ui/bits';
 import { Today } from './screens/Today';
@@ -28,14 +27,16 @@ const tabFromHash = (): Tab => {
 
 export interface Nav {
   go: (tab: Tab) => void;
-  openWorkout: () => void;
+  /** Open the logger: the session in progress, or a given (finished) session to edit. */
+  openWorkout: (id?: string) => void;
   addFood: (date: string) => void;
 }
 
 export function App() {
   const s = useApp();
+  const storageBroken = useStorageBroken();
   const [tab, setTab] = useState<Tab>(tabFromHash);
-  const [workoutOpen, setWorkoutOpen] = useState(false);
+  const [workoutId, setWorkoutId] = useState<string | null>(null);
   const [addFoodDate, setAddFoodDate] = useState<string | null>(null);
   useTick(30_000);
 
@@ -57,7 +58,8 @@ export function App() {
   }, []);
   const nav: Nav = {
     go,
-    openWorkout: () => setWorkoutOpen(true),
+    // Read the store now, not the render-time snapshot: the session may have been created a moment ago.
+    openWorkout: (id) => setWorkoutId(id ?? activeWorkout(getState())?.id ?? null),
     addFood: (date) => setAddFoodDate(date),
   };
 
@@ -66,24 +68,30 @@ export function App() {
   const due = dueReminders(s.reminders, s.reminderSeen);
   const announced = useRef(new Set<string>());
   useEffect(() => {
-    const fresh = due.filter((r) => !announced.current.has(r.id + today()));
+    const fresh = due.filter((r) => !announced.current.has(r.id + clockDate()));
     if (!fresh.length) return;
-    fresh.forEach((r) => announced.current.add(r.id + today()));
+    fresh.forEach((r) => announced.current.add(r.id + clockDate()));
     void getPushState().then((state) => {
       if (state !== 'on') fresh.forEach((r) => void notifyLocal(r.title, r.id));
     });
   }, [due]);
 
-  const active = activeWorkout(s);
-  const dismiss = (id: string) =>
+  const openWorkout = workoutId ? s.workouts.find((w) => w.id === workoutId) ?? null : null;
+  const dismiss = (ids: string[]) =>
     update((d) => {
-      d.reminderSeen[id] = today();
+      for (const id of ids) d.reminderSeen[id] = clockDate();
     });
 
   return (
     <>
       <div className="app">
         <main className="screen">
+          {storageBroken && (
+            <div className="note" role="alert" style={{ margin: '0 0 16px', borderLeftColor: 'var(--danger)' }}>
+              <b>This browser is not saving your data.</b> Private browsing or blocked site data stops the app from storing anything, so it
+              disappears when you close or reload. Use a normal window, or export a backup from Setup before closing.
+            </div>
+          )}
           {tab === 'today' && <Today nav={nav} due={due} onDismiss={dismiss} />}
           {tab === 'train' && <Train nav={nav} />}
           {tab === 'food' && <Food nav={nav} />}
@@ -99,7 +107,7 @@ export function App() {
           </button>
         ))}
       </nav>
-      {workoutOpen && active && <WorkoutLogger workout={active} onClose={() => setWorkoutOpen(false)} />}
+      {openWorkout && <WorkoutLogger workout={openWorkout} onClose={() => setWorkoutId(null)} />}
       {addFoodDate && <AddFood date={addFoodDate} onClose={() => setAddFoodDate(null)} />}
       <Toast />
     </>

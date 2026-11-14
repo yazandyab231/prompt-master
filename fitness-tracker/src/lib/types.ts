@@ -1,5 +1,7 @@
 export type ID = string;
 export type ThemeId = 'iron' | 'ember' | 'tide' | 'chalk' | 'clay';
+/** A theme, or 'auto': Iron when the phone is in dark mode, Chalk when it is light. */
+export type ThemeChoice = ThemeId | 'auto';
 export type Units = 'kg' | 'lb';
 
 export interface Macros {
@@ -48,6 +50,8 @@ export interface Workout {
   date: string; // YYYY-MM-DD (local)
   startedAt: number;
   finishedAt: number | null; // null = in progress
+  /** Last time a set was changed; used to end a forgotten session at a sensible time. */
+  lastAt?: number;
   exercises: WorkoutExercise[];
   note?: string;
 }
@@ -65,6 +69,8 @@ export interface Food {
   brand?: string;
   per100: Macros; // per 100 g (or 100 ml)
   servingG?: number;
+  /** Measured in ml rather than g (values are per 100 ml). */
+  liquid?: boolean;
   source: FoodSource;
   barcode?: string;
 }
@@ -91,9 +97,19 @@ export interface Reminder {
 }
 
 export interface Settings {
-  theme: ThemeId;
+  theme: ThemeChoice;
   units: Units;
   targets: Macros;
+  /** Targets as they were from a date on, so changing them never rewrites past days. */
+  targetHistory: { from: string; targets: Macros }[];
+  /** Hour (0-6) at which a new day starts; 0 = midnight. */
+  dayStart: number;
+  /** True once the person has looked at their targets (hides the first-run prompt). */
+  targetsReviewed: boolean;
+  /** Sentence-case, normal-width text instead of spaced capitals (easier for dyslexia and low vision). */
+  readableText: boolean;
+  /** Date of the last backup export, to nudge now and then. */
+  lastExport?: string;
 }
 
 export interface AppState {

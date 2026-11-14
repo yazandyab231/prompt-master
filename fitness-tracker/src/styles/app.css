@@ -1479,7 +1479,7 @@ p {
 
 .themes {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
@@ -1488,7 +1488,7 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 5 / 4;
   padding: 8px;
   border-radius: var(--r);
   border: 1px solid var(--line-2);
@@ -1602,20 +1602,45 @@ p {
   font-weight: 650;
 }
 
-.toast {
+.toast-region {
   position: fixed;
   left: 50%;
   bottom: calc(var(--tabbar) + var(--safe-b) + 14px);
   transform: translateX(-50%);
   z-index: 60;
+  width: max-content;
   max-width: calc(100vw - 32px);
-  padding: 11px 16px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 6px 6px 16px;
+  min-height: 46px;
   background: var(--ink);
   color: var(--bg);
   border-radius: var(--r);
   font-size: 14px;
   font-weight: 600;
   animation: rise 0.18s ease;
+}
+
+.toast > span {
+  padding: 6px 10px 6px 0;
+}
+
+.toast-action {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 3px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex: none;
 }
 
 .sr-only {
@@ -1642,4 +1667,307 @@ p {
   min-width: 0;
   min-height: 44px;
   text-align: left;
+}
+
+/* ---- added after the 100-customer review ---- */
+
+.over-tag {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.rail-target {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--ink);
+}
+
+.rail-track {
+  overflow: visible;
+}
+
+.fuel-hero .big.over {
+  color: var(--danger);
+}
+
+.banners {
+  margin-bottom: 10px;
+}
+
+.banner .t .mono {
+  margin-left: 8px;
+}
+
+.banner-more {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: -4px 0 4px;
+}
+
+.week {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h2.label,
+h3.session-name {
+  margin: 0;
+}
+
+.rest {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-height: 44px;
+  padding: 2px 8px 2px 12px;
+  border-left: 1px solid var(--line);
+}
+
+.rest .label {
+  font-size: 10px;
+}
+
+.rest b {
+  font-size: 22px;
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1;
+  color: var(--accent);
+}
+
+[data-theme='chalk'] .rest b,
+[data-theme='clay'] .rest b {
+  color: var(--ink);
+}
+
+/* Bigger, easier targets (people mid-set, with a tremor, or using one thumb). */
+.link {
+  min-height: 44px;
+}
+
+.chip {
+  min-height: 44px;
+}
+
+.seg button {
+  min-height: 44px;
+}
+
+.btn.small {
+  min-height: 44px;
+}
+
+.ex-actions {
+  gap: 12px;
+}
+
+.switch {
+  width: 52px;
+  height: 32px;
+}
+
+.switch::after {
+  width: 24px;
+  height: 24px;
+}
+
+.switch[aria-checked='true']::after {
+  transform: translateX(20px);
+}
+
+/* Text fields show focus as clearly as buttons do. */
+.input:focus-visible,
+.select:focus-visible,
+.set-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* "Last time" hints in empty set fields are real information: keep them readable. */
+.set-input::placeholder {
+  color: var(--ink-3);
+  opacity: 1;
+}
+
+/* Very narrow screens (folded phones, big system text): drop the Last column, keep the inputs wide. */
+@media (max-width: 330px) {
+  .set-grid {
+    grid-template-columns: 22px minmax(0, 1.3fr) minmax(0, 1fr) 44px;
+  }
+  .set-grid .col-last {
+    display: none;
+  }
+  .tab {
+    font-size: 0;
+    gap: 0;
+  }
+  .fuel-hero {
+    flex-wrap: wrap;
+  }
+  .fuel-hero .big {
+    font-size: 60px;
+  }
+}
+
+/* Windows high contrast and other forced-colour modes: show state with borders and system colours. */
+@media (forced-colors: active) {
+  .btn,
+  .chip,
+  .seg button,
+  .set-check,
+  .switch,
+  .days button,
+  .theme-card {
+    border: 1px solid ButtonText;
+  }
+  .btn:not(.ghost):not(.quiet):not(.danger),
+  .chip[aria-pressed='true'],
+  .seg button[aria-pressed='true'],
+  .days button[aria-pressed='true'],
+  .set-row.is-done .set-check,
+  .switch[aria-checked='true'] {
+    background: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+  .switch::after {
+    background: ButtonText;
+    forced-color-adjust: none;
+  }
+  .switch[aria-checked='true']::after {
+    background: HighlightText;
+  }
+  .rail-track {
+    border: 1px solid CanvasText;
+  }
+  .rail-fill {
+    background: CanvasText !important;
+    forced-color-adjust: none;
+  }
+  .theme-card[aria-pressed='true'] {
+    outline: 3px solid Highlight;
+  }
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.check input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent);
+  flex: none;
+}
+
+.chart .raw-dot {
+  fill: var(--ink-3);
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lg-line {
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.lg-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-3);
+}
+
+.chart-table {
+  margin-top: 10px;
+}
+
+.chart-table summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.chart-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+
+.chart-table th,
+.chart-table td {
+  text-align: left;
+  padding: 7px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chart-table th {
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+/* Easier-to-read text: sentence case, normal width and spacing everywhere. */
+[data-readable] .label,
+[data-readable] .link,
+[data-readable] .btn,
+[data-readable] .tab,
+[data-readable] .seg button,
+[data-readable] .sheet-head h2,
+[data-readable] .rail-name,
+[data-readable] .week-day .t,
+[data-readable] .theme-card b,
+[data-readable] .toast-action {
+  text-transform: none;
+  letter-spacing: 0;
+  font-stretch: 100%;
+}
+
+[data-readable] .label {
+  font-size: 13px;
+}
+
+[data-readable] .display,
+[data-readable] .ex-head h3,
+[data-readable] .food-title,
+[data-readable] .workout-bar .title b,
+[data-readable] .empty strong {
+  text-transform: none;
+  font-stretch: 85%;
+  letter-spacing: 0;
+}
+
+[data-readable] .tab {
+  font-size: 11.5px;
+}
+
+[data-readable] .btn {
+  font-size: 15px;
 }

@@ -27,7 +27,22 @@ function niceTicks(min: number, max: number, count = 4): number[] {
  * Single-series line chart: 2px line, light wash, direct label on the last point,
  * crosshair + tooltip on hover/touch. One series, so the heading names it (no legend).
  */
-export function LineChart({ points, unit, height = 190 }: { points: Point[]; unit: string; height?: number }) {
+export function LineChart({
+  points,
+  unit,
+  height = 190,
+  trend,
+  trendLabel = '7-day average',
+  title,
+}: {
+  points: Point[];
+  unit: string;
+  height?: number;
+  /** Optional smoothed series, same length as points: drawn as the line, with the raw points as dots. */
+  trend?: number[];
+  trendLabel?: string;
+  title: string;
+}) {
   const wrap = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(320);
   const [hover, setHover] = useState<number | null>(null);
@@ -48,7 +63,7 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
 
   const geo = useMemo(() => {
     const m = { t: 34, r: 14, b: 24, l: 36 };
-    const ys = points.map((p) => p.y);
+    const ys = [...points.map((p) => p.y), ...(trend ?? [])];
     const ticks = niceTicks(Math.min(...ys), Math.max(...ys));
     const y0 = ticks[0];
     const y1 = ticks[ticks.length - 1];
@@ -59,11 +74,12 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
     const sx = (x: number) => m.l + (x1 === x0 ? iw / 2 : ((x - x0) / (x1 - x0)) * iw);
     const sy = (y: number) => m.t + ih - ((y - y0) / (y1 - y0)) * ih;
     const xy = points.map((p) => [sx(p.x), sy(p.y)] as const);
-    const path = xy.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+    const lineXY = trend ? points.map((p, i) => [sx(p.x), sy(trend[i])] as const) : xy;
+    const path = lineXY.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
     const base = m.t + ih;
-    const area = `${path} L${xy[xy.length - 1][0].toFixed(1)} ${base} L${xy[0][0].toFixed(1)} ${base} Z`;
-    return { m, ticks, sy, xy, path, area, base, iw };
-  }, [points, width, height]);
+    const area = `${path} L${lineXY[lineXY.length - 1][0].toFixed(1)} ${base} L${lineXY[0][0].toFixed(1)} ${base} Z`;
+    return { m, ticks, sy, xy, lineXY, path, area, base, iw };
+  }, [points, width, height, trend]);
 
   const pick = (clientX: number) => {
     const rect = wrap.current!.getBoundingClientRect();
@@ -76,7 +92,7 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
   };
 
   const last = points.length - 1;
-  const fmt = (v: number) => String(Math.round(v * 10) / 10);
+  const fmt = (v: number) => String(Math.round(v * 100) / 100);
   const h = hover != null && hover < points.length ? hover : null;
   const tipX = h != null ? Math.min(Math.max(tipHalf, width - tipHalf), Math.max(tipHalf, geo.xy[h][0])) : 0;
   const endAnchor = geo.xy[last][0] > width - 60 ? 'end' : 'middle';
@@ -89,7 +105,7 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
       onPointerDown={(e) => pick(e.clientX)}
       onPointerLeave={() => setHover(null)}
     >
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Line chart, ${points.length} points, latest ${fmt(points[last].y)} ${unit}`}>
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${title}: ${points.length} points from ${points[0].label} to ${points[last].label}, latest ${fmt(points[last].y)} ${unit}${trend ? `, ${trendLabel.toLowerCase()} ${fmt(trend[last])}` : ''}. A table view follows.`}>
         {geo.ticks.map((t) => (
           <g key={t}>
             <line className="grid" x1={geo.m.l} x2={width - geo.m.r} y1={geo.sy(t)} y2={geo.sy(t)} />
@@ -109,15 +125,16 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
         {points.length > 1 && <path className="wash" d={geo.area} />}
         {points.length > 1 && <path className="line" d={geo.path} />}
         {h != null && <line className="cross" x1={geo.xy[h][0]} x2={geo.xy[h][0]} y1={geo.m.t - 4} y2={geo.base} />}
-        {points.length <= 24 &&
-          geo.xy.slice(0, last).map(([x, y], i) => <circle key={i} className="dot" cx={x} cy={y} r={3} />)}
-        <circle className="dot" cx={geo.xy[last][0]} cy={geo.xy[last][1]} r={5} />
+        {trend
+          ? geo.xy.map(([x, y], i) => <circle key={i} className="raw-dot" cx={x} cy={y} r={2.5} />)
+          : points.length <= 24 && geo.xy.slice(0, last).map(([x, y], i) => <circle key={i} className="dot" cx={x} cy={y} r={3} />)}
+        <circle className="dot" cx={geo.lineXY[last][0]} cy={geo.lineXY[last][1]} r={5} />
         {h == null && (
-          <text className="end-label" x={geo.xy[last][0]} y={geo.xy[last][1] - 12} textAnchor={endAnchor}>
-            {fmt(points[last].y)}
+          <text className="end-label" x={geo.lineXY[last][0]} y={geo.lineXY[last][1] - 12} textAnchor={endAnchor}>
+            {fmt(trend ? trend[last] : points[last].y)}
           </text>
         )}
-        {h != null && h !== last && <circle className="dot" cx={geo.xy[h][0]} cy={geo.xy[h][1]} r={5} />}
+        {h != null && h !== last && <circle className="dot" cx={geo.lineXY[h][0]} cy={geo.lineXY[h][1]} r={5} />}
       </svg>
       {h != null && (
         <div className="chart-tip" ref={tip} style={{ left: tipX }}>
@@ -125,9 +142,44 @@ export function LineChart({ points, unit, height = 190 }: { points: Point[]; uni
             {fmt(points[h].y)} {unit}
           </b>{' '}
           · {points[h].label}
+          {trend ? ` · avg ${fmt(trend[h])}` : ''}
           {points[h].detail ? ` · ${points[h].detail}` : ''}
         </div>
       )}
+      {trend && (
+        <div className="legend" aria-hidden="true">
+          <span>
+            <i className="lg-line" /> {trendLabel}
+          </span>
+          <span>
+            <i className="lg-dot" /> Daily weigh-in
+          </span>
+        </div>
+      )}
+      <details className="chart-table">
+        <summary>Show as a table</summary>
+        <table>
+          <caption className="sr-only">{title}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">{unit}</th>
+              {trend && <th scope="col">{trendLabel}</th>}
+              {points.some((p) => p.detail) && <th scope="col">Set</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {[...points.keys()].reverse().map((i) => (
+              <tr key={i}>
+                <td>{points[i].label}</td>
+                <td>{fmt(points[i].y)}</td>
+                {trend && <td>{fmt(trend[i])}</td>}
+                {points.some((p) => p.detail) && <td>{points[i].detail ?? ''}</td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </details>
     </div>
   );
 }
