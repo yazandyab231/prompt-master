@@ -1,5 +1,3 @@
-import '@fontsource-variable/archivo/wdth.css';
-import '@fontsource-variable/jetbrains-mono/wght.css';
 import './styles/app.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

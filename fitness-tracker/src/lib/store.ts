@@ -13,7 +13,7 @@ export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().to
 export const defaultState = (): AppState => ({
   version: 1,
   settings: {
-    theme: 'iron',
+    theme: 'clean',
     units: 'kg',
     targets: { kcal: 2400, p: 160, c: 270, f: 75 },
     targetHistory: [],
@@ -32,9 +32,9 @@ export const defaultState = (): AppState => ({
   reminderSeen: {},
 });
 
-const THEME_IDS = ['iron', 'ember', 'tide', 'chalk', 'clay', 'auto'];
+const THEME_IDS = ['clean', 'iron', 'ember', 'tide', 'chalk', 'clay', 'auto'];
 export const THEME_BG: Record<string, string> = {
-  iron: '#0b0b0c', ember: '#100d0b', tide: '#081018', chalk: '#f2efe9', clay: '#ece2d5',
+  clean: '#f6f7f9', iron: '#16171a', ember: '#100d0b', tide: '#081018', chalk: '#f2efe9', clay: '#ece2d5',
 };
 const isObj = (v: unknown): v is Record<string, any> => !!v && typeof v === 'object' && !Array.isArray(v);
 const isStr = (v: unknown): v is string => typeof v === 'string';
@@ -81,8 +81,12 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
     return out;
   };
 
+  const pickedTheme = isObj(raw.settings) && THEME_IDS.includes(raw.settings.theme) ? raw.settings.theme : d.settings.theme;
+  const themeChosen = isObj(raw.settings) && raw.settings.themeChosen === true;
   const settings: AppState['settings'] = {
-    theme: isObj(raw.settings) && THEME_IDS.includes(raw.settings.theme) ? raw.settings.theme : d.settings.theme,
+    // The old neon default (Iron) moves to the new clean default unless the person chose a theme themselves.
+    theme: pickedTheme === 'iron' && !themeChosen ? 'clean' : pickedTheme,
+    ...(themeChosen ? { themeChosen: true } : {}),
     units: isObj(raw.settings) && raw.settings.units === 'lb' ? 'lb' : 'kg',
     targets: { ...d.settings.targets, ...(isObj(raw.settings) ? macros(raw.settings.targets) ?? {} : {}) },
     targetHistory: (isObj(raw.settings) && Array.isArray(raw.settings.targetHistory) ? raw.settings.targetHistory : [])
@@ -92,7 +96,7 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
     dayStart: isObj(raw.settings) ? Math.min(6, Math.max(0, Math.round(numOr(raw.settings.dayStart, 0)))) : 0,
     readableText: isObj(raw.settings) && raw.settings.readableText === true,
     // Anyone restoring real data has been using the app: do not greet them as new.
-    targetsReviewed: isObj(raw.settings) ? raw.settings.targetsReviewed !== false || Array.isArray(raw.entries) && raw.entries.length > 0 : false,
+    targetsReviewed: isObj(raw.settings) && raw.settings.targetsReviewed === true,
     ...(isObj(raw.settings) && isDate(raw.settings.lastExport) ? { lastExport: raw.settings.lastExport } : {}),
   };
   if (isObj(raw.settings) && isObj(raw.settings.targets)) {
@@ -118,6 +122,7 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
         }
       : null,
   );
+  const splitName = isStr(raw.splitName) ? raw.splitName.slice(0, 30) : undefined;
   const routineIds = new Set(routines.map((r) => r.id));
   const week: (ID | null)[] = Array.from({ length: 7 }, (_, i) => {
     const v = Array.isArray(raw.week) ? raw.week[i] : null;
@@ -231,6 +236,7 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
       settings,
       exercises: unique(exercises),
       routines: unique(routines),
+      ...(splitName ? { splitName } : {}),
       week,
       workouts: unique(workouts),
       bodyWeights,
@@ -320,7 +326,7 @@ export function flush() {
 }
 
 const darkQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-export const resolveTheme = (t: ThemeChoice): ThemeId => (t === 'auto' ? (darkQuery?.matches === false ? 'chalk' : 'iron') : t);
+export const resolveTheme = (t: ThemeChoice): ThemeId => (t === 'auto' ? (darkQuery?.matches ? 'iron' : 'clean') : t);
 
 function applyTheme() {
   setDayStartHour(state.settings.dayStart);
@@ -588,6 +594,13 @@ export function targetsFor(s: AppState, date: string): Macros {
 export function setTargets(next: Macros) {
   update((d) => {
     const day = today();
+    // The first real targets (from the questions) apply to every earlier day too: the placeholder
+    // shown before was never the person's target.
+    if (!d.settings.targetsReviewed) {
+      d.settings.targetHistory = [{ from: '0000-01-01', targets: { ...next } }];
+      d.settings.targets = { ...next };
+      return;
+    }
     const hist = d.settings.targetHistory;
     if (!hist.length) hist.push({ from: '0000-01-01', targets: { ...d.settings.targets } });
     const last = hist[hist.length - 1];
@@ -671,6 +684,7 @@ export function applyTemplate(index: number) {
     exercises: d.ex.map(([n, sets, reps]) => ({ exerciseId: X(n), sets, reps })),
   }));
   update((d) => {
+    if (!d.splitName) d.splitName = tpl.name;
     d.routines.push(...routines);
     d.week = tpl.week.map((i) => (i == null ? null : routines[i].id));
   });

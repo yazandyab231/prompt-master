@@ -12,8 +12,9 @@ import { TargetsSheet } from './Today';
 import { NumField, TextField, toast } from '../ui/bits';
 
 const THEMES: { id: ThemeChoice; name: string; bg: string; ink: string; accent: string }[] = [
-  { id: 'auto', name: 'Auto', bg: 'linear-gradient(135deg, #0b0b0c 50%, #f2efe9 50%)', ink: '#7d7a74', accent: '#d7ff3e' },
-  { id: 'iron', name: 'Iron', bg: '#0b0b0c', ink: '#edeae4', accent: '#d7ff3e' },
+  { id: 'clean', name: 'Clean', bg: '#f6f7f9', ink: '#16191f', accent: '#2453d6' },
+  { id: 'auto', name: 'Auto', bg: 'linear-gradient(135deg, #f6f7f9 50%, #16171a 50%)', ink: '#6b7280', accent: '#2453d6' },
+  { id: 'iron', name: 'Dark', bg: '#16171a', ink: '#eceef2', accent: '#8fb0ff' },
   { id: 'ember', name: 'Ember', bg: '#100d0b', ink: '#f1e9e0', accent: '#ff5a2b' },
   { id: 'tide', name: 'Tide', bg: '#081018', ink: '#e4edf5', accent: '#3ee0cf' },
   { id: 'chalk', name: 'Chalk', bg: '#f2efe9', ink: '#151515', accent: '#1f3bff' },
@@ -52,10 +53,7 @@ export function Settings() {
   return (
     <>
       <header className="masthead">
-        <div>
-          <span className="label">Preferences</span>
-          <h1 className="display">Setup</h1>
-        </div>
+        <h1 className="display">Setup</h1>
       </header>
 
       <section className="block">
@@ -69,7 +67,12 @@ export function Settings() {
               className="theme-card"
               style={{ background: th.bg, color: th.ink }}
               aria-pressed={s.settings.theme === th.id}
-              onClick={() => update((d) => void (d.settings.theme = th.id))}
+              onClick={() =>
+                update((d) => {
+                  d.settings.theme = th.id;
+                  d.settings.themeChosen = true;
+                })
+              }
             >
               <span className="sw" style={{ background: th.accent }} />
               <span className="bar" style={{ background: th.ink }} />
@@ -77,22 +80,6 @@ export function Settings() {
               <b>{th.name}</b>
             </button>
           ))}
-        </div>
-      </section>
-
-      <section className="block">
-        <div className="row" style={{ borderBottom: 0, padding: 0 }}>
-          <span className="row-main">
-            <span className="row-title" style={{ whiteSpace: 'normal' }}>Easier-to-read text</span>
-            <span className="row-sub" style={{ whiteSpace: 'normal' }}>No spaced capitals or narrow type. Helps with dyslexia and low vision.</span>
-          </span>
-          <button
-            className="switch"
-            role="switch"
-            aria-checked={s.settings.readableText}
-            aria-label="Easier-to-read text"
-            onClick={() => update((d) => void (d.settings.readableText = !d.settings.readableText))}
-          />
         </div>
       </section>
 
@@ -108,15 +95,23 @@ export function Settings() {
             Pounds
           </button>
         </div>
-        <p className="hint" style={{ marginTop: 10 }}>
-          Applies to lifts and body weight. Food is always in grams. Switching converts what you see; nothing you logged is changed.
-        </p>
       </section>
 
       <section className="block">
         <div className="block-head">
           <span className="label">Daily targets</span>
+          {s.settings.targetsReviewed && (
+            <button className="link" onClick={() => setTargetsOpen(true)}>
+              Recalculate
+            </button>
+          )}
         </div>
+        {!s.settings.targetsReviewed ? (
+          <button className="btn wide" onClick={() => setTargetsOpen(true)}>
+            Answer 5 questions to set your targets
+          </button>
+        ) : (
+        <>
         <div className="grid-2">
           <NumField label="Energy" unit="kcal" value={t.kcal} onChange={(v) => setTarget('kcal', v)} dp={0} />
           <NumField label="Protein" unit="g" value={t.p} onChange={(v) => setTarget('p', v)} dp={0} />
@@ -125,22 +120,16 @@ export function Settings() {
         </div>
         {capNote && <p className="error" style={{ marginTop: 10 }}>{capNote}</p>}
         <p className="hint" style={{ marginTop: 10 }}>
-          Those macros add up to {implied.toLocaleString('en-US')} kcal
-          {Math.abs(implied - t.kcal) > 60
-            ? `, which is ${Math.abs(implied - t.kcal).toLocaleString('en-US')} ${implied > t.kcal ? 'more' : 'less'} than your energy target. `
-            : ', in line with your energy target. '}
+          {Math.abs(implied - t.kcal) > 60 &&
+            `Your macros add up to ${implied.toLocaleString('en-US')} kcal, not ${t.kcal.toLocaleString('en-US')}. `}
           {Math.abs(implied - t.kcal) > 60 && (
             <button className="link accent" style={{ padding: 0 }} onClick={() => setTarget('kcal', implied)}>
               Use {implied.toLocaleString('en-US')}
             </button>
           )}
         </p>
-        <p className="hint" style={{ marginTop: 6 }}>
-          Changing targets applies from today on; past days keep the targets they had.{' '}
-          <button className="link accent" style={{ padding: 0 }} onClick={() => setTargetsOpen(true)}>
-            Work them out for me
-          </button>
-        </p>
+        </>
+        )}
       </section>
 
       <section className="block">
@@ -160,9 +149,7 @@ export function Settings() {
             </option>
           ))}
         </select>
-        <p className="hint" style={{ marginTop: 10 }}>
-          For night shifts or late meals (suhoor in Ramadan, say): with 04:00, anything you log before 4 am still counts toward the day before.
-        </p>
+        <p className="hint" style={{ marginTop: 8 }}>For night shifts or late meals: food logged before this time counts for the day before.</p>
       </section>
 
       <section className="block">
@@ -229,9 +216,7 @@ export function Settings() {
           <span className="label">Your data</span>
         </div>
         <p className="hint" style={{ marginBottom: 14 }}>
-          Everything is stored in this browser on this device, with no account. Clearing the browser's site data deletes it, so export a backup now and then.
-          {' '}
-          {s.settings.lastExport ? `Last backup: ${s.settings.lastExport}.` : 'You have not exported a backup yet.'}
+          Saved on this phone only. {s.settings.lastExport ? `Last backup: ${s.settings.lastExport}.` : 'No backup yet.'}
         </p>
         <div className="btn-row">
           <button
@@ -301,9 +286,7 @@ export function Settings() {
               </button>
             </div>
           </div>
-        ) : (
-          <p className="hint" style={{ margin: '10px 0 14px' }}>Importing replaces everything currently in the app with the backup. You confirm before anything changes.</p>
-        )}
+        ) : null}
         {erase ? (
           <div className="stack tight">
             <p className="error">This deletes every workout, food entry, weigh-in and setting on this device. It cannot be undone.</p>
@@ -328,18 +311,6 @@ export function Settings() {
             <Icon name="trash" /> Erase all data
           </button>
         )}
-      </section>
-
-      <section className="block">
-        <div className="block-head">
-          <h2 className="label">What leaves this device</h2>
-        </div>
-        <ul className="hint" style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
-          <li>Barcode lookups send only the barcode number to Open Food Facts (a free public food database).</li>
-          <li>Label photos are read on this device and are never uploaded.</li>
-          <li>If you turn on push reminders, the reminder titles, times and your time zone go to the push service. Nothing else does.</li>
-          <li>Workouts, food, weight and settings never leave this device unless you export a backup.</li>
-        </ul>
       </section>
 
       {editing && <ReminderSheet reminder={editing} onClose={() => setEditing(null)} />}

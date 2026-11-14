@@ -1,6 +1,6 @@
 export type ID = string;
-export type ThemeId = 'iron' | 'ember' | 'tide' | 'chalk' | 'clay';
-/** A theme, or 'auto': Iron when the phone is in dark mode, Chalk when it is light. */
+export type ThemeId = 'clean' | 'iron' | 'ember' | 'tide' | 'chalk' | 'clay';
+/** A theme, or 'auto': Iron (soft dark) when the phone is in dark mode, Clean when it is light. */
 export type ThemeChoice = ThemeId | 'auto';
 export type Units = 'kg' | 'lb';
 
@@ -104,8 +104,10 @@ export interface Settings {
   targetHistory: { from: string; targets: Macros }[];
   /** Hour (0-6) at which a new day starts; 0 = midnight. */
   dayStart: number;
-  /** True once the person has looked at their targets (hides the first-run prompt). */
+  /** True once the person answered the target questions. No calorie or macro target is shown before that. */
   targetsReviewed: boolean;
+  /** True once the person picked a theme themselves (otherwise the default can change). */
+  themeChosen?: boolean;
   /** Sentence-case, normal-width text instead of spaced capitals (easier for dyslexia and low vision). */
   readableText: boolean;
   /** Date of the last backup export, to nudge now and then. */
@@ -117,6 +119,8 @@ export interface AppState {
   settings: Settings;
   exercises: Exercise[]; // custom exercises only
   routines: Routine[];
+  /** The person's name for their split, e.g. "PPL". */
+  splitName?: string;
   /** Weekly split: index 0 = Monday … 6 = Sunday; null = rest day. */
   week: (ID | null)[];
   workouts: Workout[];

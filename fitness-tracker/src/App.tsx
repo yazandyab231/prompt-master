@@ -95,7 +95,7 @@ export function App() {
           {tab === 'today' && <Today nav={nav} due={due} onDismiss={dismiss} />}
           {tab === 'train' && <Train nav={nav} />}
           {tab === 'food' && <Food nav={nav} />}
-          {tab === 'progress' && <Progress />}
+          {tab === 'progress' && <Progress nav={nav} />}
           {tab === 'settings' && <Settings />}
         </main>
       </div>

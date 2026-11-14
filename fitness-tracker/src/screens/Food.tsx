@@ -7,12 +7,14 @@ import { num, scale, sum } from '../lib/units';
 import { Icon } from '../ui/Icon';
 import { Sheet } from '../ui/Sheet';
 import { MacroRails, MacroStrip, NumField, toast, useTick } from '../ui/bits';
+import { TargetsSheet } from './Today';
 
 export function Food({ nav }: { nav: Nav }) {
   const s = useApp();
   const t = today();
   const [date, setDate] = useState(t);
   const [editing, setEditing] = useState<string | null>(null);
+  const [targetsOpen, setTargetsOpen] = useState(false);
   useTick(60_000);
 
   // If the screen was showing "today" and the day rolls over while it is open, follow the new day.
@@ -35,10 +37,7 @@ export function Food({ nav }: { nav: Nav }) {
   return (
     <>
       <header className="masthead">
-        <div>
-          <span className="label">Macros</span>
-          <h1 className="display">{fmtRelative(date)}</h1>
-        </div>
+        <h1 className="display">{fmtRelative(date)}</h1>
         <div style={{ display: 'flex' }}>
           <button className="icon-btn" onClick={() => setDate(addDays(date, -1))} aria-label="Previous day">
             <Icon name="left" />
@@ -50,25 +49,41 @@ export function Food({ nav }: { nav: Nav }) {
       </header>
 
       {date !== t && (
-        <div className="note" style={{ marginBottom: 14 }}>
-          You are looking at <b>{fmtRelative(date).toLowerCase()}</b>. Food you log here goes on that day.{' '}
-          <button className="link accent" style={{ padding: 0 }} onClick={() => setDate(t)}>
-            Back to today
-          </button>
-        </div>
+        <button className="link" style={{ marginBottom: 6, paddingLeft: 0 }} onClick={() => setDate(t)}>
+          <Icon name="left" /> Back to today
+        </button>
       )}
 
       <section className="block">
-        <div className="fuel-hero">
-          <div className={'display big' + (left < 0 ? ' over' : '')}>{Math.abs(left).toLocaleString('en-US')}</div>
-          <div className="cap">
-            <span className="label">{left >= 0 ? 'kcal left' : 'kcal over target'}</span>
-            <span className="mono">
-              {Math.round(eaten.kcal).toLocaleString('en-US')} of {Math.round(targets.kcal).toLocaleString('en-US')}
-            </span>
+        {s.settings.targetsReviewed ? (
+          <>
+            <div className="fuel-hero">
+              <div className={'display big' + (left < 0 ? ' over' : '')}>{Math.abs(left).toLocaleString('en-US')}</div>
+              <div className="cap">
+                <span className="label">{left >= 0 ? 'kcal left' : 'kcal over'}</span>
+                <span className="mono">
+                  {Math.round(eaten.kcal).toLocaleString('en-US')} / {Math.round(targets.kcal).toLocaleString('en-US')} kcal
+                </span>
+              </div>
+            </div>
+            <MacroRails eaten={eaten} targets={targets} />
+          </>
+        ) : (
+          <div className="stack tight">
+            <div className="fuel-hero">
+              <div className="display big">{Math.round(eaten.kcal).toLocaleString('en-US')}</div>
+              <div className="cap">
+                <span className="label">kcal eaten</span>
+                <span className="mono">
+                  P {Math.round(eaten.p)} · C {Math.round(eaten.c)} · F {Math.round(eaten.f)} g
+                </span>
+              </div>
+            </div>
+            <button className="btn wide" onClick={() => setTargetsOpen(true)}>
+              Set my calorie target
+            </button>
           </div>
-        </div>
-        <MacroRails eaten={eaten} targets={targets} />
+        )}
       </section>
 
       <section className="block">
@@ -79,10 +94,7 @@ export function Food({ nav }: { nav: Nav }) {
           <Icon name="plus" /> Log food
         </button>
         {entries.length === 0 ? (
-          <div className="empty">
-            <strong>Nothing logged</strong>
-            Search a food, scan a barcode, or read the nutrition table off a package.
-          </div>
+          <p className="hint" style={{ marginTop: 14 }}>Nothing logged yet.</p>
         ) : (
           <div className="rows" style={{ marginTop: 16 }}>
             {entries.map((e) => {
@@ -108,6 +120,7 @@ export function Food({ nav }: { nav: Nav }) {
       </section>
 
       {entry && <EntrySheet entry={entry} onClose={() => setEditing(null)} />}
+      {targetsOpen && <TargetsSheet onClose={() => setTargetsOpen(false)} />}
     </>
   );
 }
@@ -195,9 +208,6 @@ function EntrySheet({ entry, onClose }: { entry: FoodEntry; onClose: () => void 
           <input className="input" type="date" value={day} onChange={(e) => e.target.value && setDay(e.target.value)} />
         </label>
         <MacroStrip m={macros} />
-        {food && food.source !== 'builtin' && (
-          <p className="hint">Changing this entry does not change the saved food, and editing the food later does not change this entry.</p>
-        )}
         <button className="sr-only" tabIndex={-1} aria-hidden="true">
           Save
         </button>

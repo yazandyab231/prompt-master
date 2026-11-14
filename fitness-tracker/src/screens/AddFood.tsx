@@ -172,7 +172,7 @@ function Search({ onPick, onCreate }: { onPick: (f: Food) => void; onCreate: (na
       {query ? (
         <>
           {list(allResults.length > results.length ? `Top ${results.length} of ${allResults.length} matches` : `${results.length} ${results.length === 1 ? 'match' : 'matches'}`, results)}
-          {results.length === 0 && <p className="hint">Nothing matches “{query}”. Create it once and it stays in your foods.</p>}
+          {results.length === 0 && <p className="hint">No match for “{query}”.</p>}
           <button className="btn ghost wide" onClick={() => onCreate(query)}>
             <Icon name="plus" /> Create “{query.length > 18 ? query.slice(0, 18) + '…' : query}”
           </button>
@@ -181,11 +181,6 @@ function Search({ onPick, onCreate }: { onPick: (f: Food) => void; onCreate: (na
         <>
           {list('Recent', recent)}
           {list('My foods', s.foods.filter((f) => !recent.some((r) => r.id === f.id)).slice(0, 30))}
-          {recent.length === 0 && s.foods.length === 0 && (
-            <p className="hint">
-              Type to search {'≈'}90 common foods with per-100 g values. Packaged products are more exact through the barcode or label tabs.
-            </p>
-          )}
           <button className="btn ghost wide" onClick={() => onCreate('')}>
             <Icon name="plus" /> Create a food
           </button>
@@ -331,9 +326,9 @@ function FoodForm({ draft, onSaved, onDeleted }: { draft: Draft; onSaved: (f: Fo
           Saved per 100 {unit}: {Math.round(kcal * k)} kcal · P {per(d.p)} · C {per(d.c)} · F {per(d.f)}.
         </p>
       )}
-      {needServing && <p className="hint">Enter the serving size so the values can be worked out per 100 {unit}.</p>}
+      {needServing && <p className="hint">Enter the serving size.</p>}
       {d.kcal == null && implied != null && (
-        <p className="hint">No energy value entered, so {Math.round(implied)} kcal will be used (worked out from the macros).</p>
+        <p className="hint">{Math.round(implied)} kcal, from the macros.</p>
       )}
       {impossible && <p className="error">Protein, carbs and fat add up to more than 100 g per 100 g. One of them is wrong.</p>}
       {tooLow && !impossible && (
@@ -434,7 +429,7 @@ function Barcode(props: {
     return (
       <>
         <Scanner onCode={lookup} />
-        <p className="hint">Hold the barcode inside the frame. It is looked up in Open Food Facts, a free public database; only the barcode number is sent.</p>
+
         <form
           className="grid-2"
           style={{ gridTemplateColumns: '1fr auto' }}
@@ -630,12 +625,7 @@ function Label(props: {
         </div>
       ) : (
         <>
-          {!preview && (
-            <p className="hint">
-              Photograph the nutrition table on the package. The text is read on this device, so the photo never leaves it. Expect to fix a number
-              now and then: you always review the values before anything is saved.
-            </p>
-          )}
+          {!preview && <p className="hint">Take a photo of the nutrition table. You check the numbers before saving.</p>}
           {error && (
             <p className="error" role="alert">
               {error}
@@ -681,7 +671,7 @@ function Quick({ date, onDone }: { date: string; onDone: () => void }) {
         onDone();
       }}
     >
-      <p className="hint">Enter totals straight in, for a meal out or anything you would rather not look up.</p>
+
       <TextField label="Name (optional)" value={name} onChange={setName} placeholder="e.g. Lunch out" />
       <div className="grid-2">
         <NumField label="Energy" unit="kcal" value={kcal} onChange={setKcal} dp={0} placeholder={implied > 0 ? String(Math.round(implied)) : ''} />
@@ -689,7 +679,7 @@ function Quick({ date, onDone }: { date: string; onDone: () => void }) {
         <NumField label="Carbs" unit="g" value={c} onChange={setC} />
         <NumField label="Fat" unit="g" value={f} onChange={setF} />
       </div>
-      {kcal == null && implied > 0 && <p className="hint">No energy entered: {Math.round(implied)} kcal will be used, worked out from the macros.</p>}
+      {kcal == null && implied > 0 && <p className="hint">{Math.round(implied)} kcal, from the macros.</p>}
       {total > 20000 && <p className="error">That is more than 20,000 kcal. Check the numbers.</p>}
       <button className="btn wide" disabled={!valid}>
         Add to log

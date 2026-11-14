@@ -6,6 +6,8 @@ import { smoothed } from '../lib/trend';
 import { LineChart, type Point } from '../ui/Chart';
 import { Icon } from '../ui/Icon';
 import { WeighSheet } from './Today';
+import { WeeklyReport } from './Weekly';
+import type { Nav } from '../App';
 
 const RANGES = [
   { id: '1M', days: 30 },
@@ -14,7 +16,7 @@ const RANGES = [
   { id: 'All', days: Infinity },
 ] as const;
 
-export function Progress() {
+export function Progress({ nav }: { nav: Nav }) {
   const s = useApp();
   const units = s.settings.units;
   const [range, setRange] = useState<(typeof RANGES)[number]['id']>('3M');
@@ -92,11 +94,12 @@ export function Progress() {
   return (
     <>
       <header className="masthead">
-        <div>
-          <span className="label">Trends</span>
-          <h1 className="display">Progress</h1>
-        </div>
+        <h1 className="display">Progress</h1>
       </header>
+
+      <WeeklyReport nav={nav} />
+
+      <h2 className="label" style={{ margin: '22px 0 10px' }}>Trends</h2>
 
       <div className="chips" role="group" aria-label="Time range" style={{ marginBottom: 18 }}>
         {RANGES.map((r) => (
@@ -115,7 +118,7 @@ export function Progress() {
         </div>
         {weights.length === 0 ? (
           <p className="hint">
-            {s.bodyWeights.length ? 'No weigh-ins in this range. Try a longer one.' : 'No weigh-ins yet. Log your weight a few times a week to see the trend.'}
+            {s.bodyWeights.length ? 'No weigh-ins in this range.' : 'No weigh-ins yet.'}
           </p>
         ) : (
           <>
@@ -134,9 +137,7 @@ export function Progress() {
               </div>
             </div>
             <LineChart points={weightPoints} unit={units} trend={weightTrend} title="Body weight" />
-            <p className="hint" style={{ marginTop: 8 }}>
-              Latest weigh-in {fmtWeight(last.kg, units)} {units}. Daily weight moves with water and food; the line is the 7-day average.
-            </p>
+            <p className="hint" style={{ marginTop: 8 }}>Latest weigh-in {fmtWeight(last.kg, units)} {units}.</p>
           </>
         )}
         {listed.length > 0 && (
@@ -211,7 +212,7 @@ export function Progress() {
                 </button>
               </div>
             ) : (
-              <p className="hint">No added weight logged for this one, so it is tracked by your best set's reps.</p>
+              <p className="hint">Tracked by reps.</p>
             )}
             {liftPoints.length === 0 ? (
               <p className="hint">No sessions with this lift in the range. Try a longer one.</p>
@@ -232,9 +233,7 @@ export function Progress() {
                   </div>
                 </div>
                 <LineChart points={liftPoints} unit={liftUnit} title={`${liftName}, ${measure === 'reps' ? 'most reps' : measure === 'top' ? 'heaviest set' : 'estimated 1-rep max'}`} />
-                {metric === 'e1rm' && (
-                  <p className="hint">Estimated from weight and reps (Epley formula). It is a rough guide, and gets less reliable above about 10 reps.</p>
-                )}
+                {metric === 'e1rm' && <p className="hint">Estimated from weight and reps.</p>}
               </>
             )}
           </div>

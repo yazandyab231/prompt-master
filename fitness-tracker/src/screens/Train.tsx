@@ -39,10 +39,7 @@ export function Train({ nav }: { nav: Nav }) {
   return (
     <>
       <header className="masthead">
-        <div>
-          <span className="label">Training</span>
-          <h1 className="display">Train</h1>
-        </div>
+        <h1 className="display">Train</h1>
       </header>
 
       <div className="seg" style={{ marginBottom: 20 }}>
@@ -60,8 +57,7 @@ export function Train({ nav }: { nav: Nav }) {
             <section className="block">
               <div className="empty" style={{ paddingTop: 0 }}>
                 <strong>Plan your week</strong>
-                A <b>split</b> is your weekly plan: which days you train and which exercises you do on each. Start from a common one and change
-                anything, build your own, or skip planning and just log.
+                Pick a plan to start from. You can change everything.
               </div>
               <div className="rows" style={{ marginTop: 16 }}>
                 {TEMPLATES.map((tpl, i) => (
@@ -70,7 +66,7 @@ export function Train({ nav }: { nav: Nav }) {
                     className="row"
                     onClick={() => {
                       applyTemplate(i);
-                      toast(`${tpl.name} added. Edit any day to make it yours.`);
+                      toast(`${tpl.name} added`);
                     }}
                   >
                     <span className="row-main">
@@ -87,14 +83,14 @@ export function Train({ nav }: { nav: Nav }) {
                 <Icon name="plus" /> Build my own day
               </button>
               <button className="btn quiet" style={{ marginTop: 8, marginLeft: -10 }} onClick={() => begin(null)}>
-                Just log a workout without a plan
+                Just log a workout
               </button>
             </section>
           ) : (
             <>
               <section className="block">
                 <div className="block-head">
-                  <span className="label">{active ? 'In progress' : 'Start a session'}</span>
+                  <span className="label">{active ? 'In progress' : 'Start a workout'}</span>
                 </div>
                 {active ? (
                   <button className="btn wide" onClick={() => nav.openWorkout()}>
@@ -124,9 +120,7 @@ export function Train({ nav }: { nav: Nav }) {
               </section>
 
               <section className="block">
-                <div className="block-head">
-                  <span className="label">Weekly split</span>
-                </div>
+                <SplitName />
                 <div className="rows">
                   {DAYS_LONG.map((d, i) => (
                     <label key={d} className="row" style={{ minHeight: 56, padding: '6px 0' }}>
@@ -197,7 +191,7 @@ export function Train({ nav }: { nav: Nav }) {
 
       {view === 'history' && (
         <div className="block-head" style={{ marginBottom: 6 }}>
-          <span className="hint">Forgot to log one?</span>
+          <span />
           <button className="link" onClick={() => setPastOpen(true)}>
             <Icon name="plus" /> Log a past session
           </button>
@@ -309,7 +303,7 @@ function RoutineEditor({ id, onClose }: { id: ID; onClose: () => void }) {
             <span className="label">Exercises</span>
             <span className="mono">sets × reps</span>
           </div>
-          {routine.exercises.length === 0 && <p className="hint">No exercises yet. Add the lifts you do on this day.</p>}
+          {routine.exercises.length === 0 && <p className="hint">No exercises yet.</p>}
           <div className="rows">
             {routine.exercises.map((re, i) => (
               <div key={i} className="row" style={{ alignItems: 'flex-start', flexDirection: 'column', gap: 8, padding: '12px 0' }}>
@@ -497,8 +491,60 @@ function PastSessionSheet({ onClose, onCreated }: { onClose: () => void; onCreat
             ))}
           </select>
         </label>
-        <p className="hint">Next you fill in the sets you did. Sets you add are counted as done.</p>
+
       </div>
     </Sheet>
+  );
+}
+
+/** The split's own name ("PPL", "My 4-day split"), shown above the week. Tap to rename. */
+function SplitName() {
+  const s = useApp();
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(s.splitName ?? '');
+  const save = () => {
+    update((d) => {
+      const v = value.trim().replace(/\s+/g, ' ').slice(0, 30);
+      if (v) d.splitName = v;
+      else delete d.splitName;
+    });
+    setEditing(false);
+  };
+  if (editing) {
+    return (
+      <form
+        className="split-name-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          save();
+        }}
+      >
+        <input
+          className="input"
+          value={value}
+          autoFocus
+          maxLength={30}
+          dir="auto"
+          placeholder="e.g. PPL"
+          aria-label="Split name"
+          onChange={(e) => setValue(e.target.value)}
+        />
+        <button className="btn small">Save</button>
+      </form>
+    );
+  }
+  return (
+    <div className="block-head">
+      <h2 className="split-title">{s.splitName || 'My split'}</h2>
+      <button
+        className="link"
+        onClick={() => {
+          setValue(s.splitName ?? '');
+          setEditing(true);
+        }}
+      >
+        <Icon name="edit" /> Rename
+      </button>
+    </div>
   );
 }
