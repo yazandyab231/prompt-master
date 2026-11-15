@@ -106,6 +106,15 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 15:33 Fri 11-13 summary: account $4999.36 (-0.64 vs $5,000): positions $4074.27 + cash $925.09. MRNA -3.4%, ERAS +6.8%, ECO +2.1%, VSXY -0.8%, AMD -1.2%, RXO -0.0%.
   SPY 752.58 vs 200-day 731.91 → crash guard off (SPY above its 200-day). Benchmark (6.6040 SPY) $4970.04 (-29.96): account ahead by $29.32.
 
+## Sun 2026-11-15: crypto allowed by the owner
+
+5-year test (15 big coins, 2021-11 to 2026-11, weekly, two halves):
+- BTC buy & hold -1.0% / +19.6% (worst drops -75% / -52%); BTC only above its 50-day +31.7% / +11.7% (worst -53% / -35%).
+- ETH buy & hold -35.3% / -27.7%; ETH only above its 50-day -15.7% / +36.7%.
+- Top-3 coin momentum +40.8% / -56.4% (worst -85%): rejected. Equal weight all 15: +2.0% / -24.6%.
+- Now: BTC 64,520 (50-day 79,739, 200-day 72,918, -20.8% in a month, -33% off its 1-year high); ETH 1,813 (50-day 2,378,
+  200-day 2,142, -25.1% in a month). Both below their 50-day → the rule says no crypto now. Checked every pre-market.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.

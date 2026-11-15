@@ -30,6 +30,12 @@ in both halves was 12-1 momentum, also the best-documented anomaly in the resear
   next 09:52 check refills those slots from a fresh `momentum_pick.py`. (SPY on 11-12: 757.12; 200-day 731.62.)
 - **Judging it:** one month is mostly luck. The fair test is many months against SPY (MTUM, a real momentum
   fund, beat SPY over 3 years but lost to it over 5 because of the 2022 momentum crash).
+- **Crypto (allowed by the owner 11-15).** Tested on 5 years of daily data (research note in LOG.md 11-15): holding BTC or ETH
+  only while it is above its 50-day average beat buy-and-hold on ETH in both halves and cut BTC's worst drops (-75% → -53%,
+  -52% → -35%); top-3 coin momentum was unstable (+41% then -56%, worst drop -85%) and is NOT used. Rule: at each pre-market
+  check, if BTC-USD or ETH-USD closed above its 50-day average, buy it with spare cash (at most $400 each, never touching
+  the stock slots); sell at the first pre-market check where it closes below its 50-day average, or by the 12-11 close.
+  -20% disaster stop like the stocks. Fractional coins are fine; if ticket.py refuses a fractional qty, record cash by hand.
 - **No other trades:** no setup swings, no opening-range day trades (no edge found).
 - **Benchmark:** $5,000 in SPY at the Thu 2026-11-12 close (757.12 → 6.6040 shares). Every report compares.
 
@@ -115,7 +121,7 @@ cd paper-week   # every skill reads and writes ./trader/
    FILLED → `ticket.py fill --symbol SYM --side sell --qty Q --price P`, remove it from positions.json,
    log it, one-line note in the chat.
 3. **Pre-market (~08:45):** news on every holding (`news.py --tickers ... --no-sec --hours 24`): log anything
-   material (deal, halt, guidance, legal). Watch items (NVDA, TTWO) as background only. If a slot is empty,
+   material (deal, halt, guidance, legal). Watch items (NVDA, TTWO) as background only. Crypto: check BTC-USD and ETH-USD against their 50-day averages (rule above). If a slot is empty,
    run `momentum_pick.py` and choose the refill (diversification rules).
 4. **09:52:** buy any planned entries or refills at the live price (`alerts.py quote SYM`, then
    `ticket.py fill --side buy`), add to positions.json (symbol, qty, entry, date, time, stop, kind "momentum").
