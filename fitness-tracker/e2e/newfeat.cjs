@@ -1,0 +1,48 @@
+const { chromium } = require('playwright');
+const fs = require('fs');
+const out = []; const ok = (n, c, x = '') => out.push(`${c ? 'PASS' : 'FAIL'}  ${n}${x ? '  [' + x + ']' : ''}`);
+(async () => {
+  const b = await chromium.launch();
+  const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
+  const p = await ctx.newPage(); const c = p.click.bind(p); p.click = async (...a) => { await p.waitForTimeout(420); return c(...a); };
+  const errs = []; p.on('pageerror', (e) => errs.push(e.message));
+  await p.goto('http://localhost:4173/'); await p.waitForSelector('.masthead');
+  ok('default theme is clean light', (await p.getAttribute('html', 'data-theme')) === 'clean');
+  ok('body text uses the system font', /apple-system|system-ui/.test(await p.evaluate(() => getComputedStyle(document.body).fontFamily)));
+  ok('no uppercase labels', (await p.evaluate(() => [...document.querySelectorAll('.label, .btn, .tab, .link')].filter((e) => getComputedStyle(e).textTransform === 'uppercase').length)) === 0);
+  // plan a week, then check missed days in the report
+  await p.click('.tab:has-text("Train")');
+  await p.click('button:has-text("Push / Pull / Legs")');
+  ok('template names the split', (await p.locator('.split-title').innerText()) === 'Push / Pull / Legs');
+  await p.click('button:has-text("Rename")');
+  await p.fill('input[aria-label="Split name"]', 'My PPL');
+  await p.click('.split-name-form button:has-text("Save")');
+  ok('split can be renamed', (await p.locator('.split-title').innerText()) === 'My PPL');
+  await p.click('.tab:has-text("Progress")');
+  await p.click('button[aria-label="Previous week"]');
+  const missedTxt = await p.locator('.report-missed').innerText().catch(() => '');
+  ok('weekly report lists missed workouts and food for last week', /6 workouts/.test(missedTxt) && /7 days without food/.test(missedTxt), missedTxt);
+  await p.click('.report-day >> nth=0');
+  const dayTitle = await p.locator('.sheet').getAttribute('aria-label');
+  await p.click('.sheet .row:has-text("Log a workout")');
+  await p.waitForSelector('.workout'); await p.waitForTimeout(450);
+  await p.locator('.workout input[aria-label*="set 1 weight"]').first().fill('80');
+  await p.locator('.workout input[aria-label*="set 1 reps"]').first().fill('5');
+  await p.click('.workout-foot button:has-text("Save changes")');
+  await p.waitForTimeout(500);
+  const missedAfter = await p.locator('.report-missed').innerText().catch(() => '');
+  ok('filling a missed day from the report counts it as trained', /5 workouts/.test(missedAfter), `${dayTitle}: ${missedAfter}`);
+  ok('weekly report shows the lift', (await p.locator('.block:has-text("Weekly report") .row-title').allInnerTexts()).includes('Bench Press'));
+  // missed food via the report
+  await p.click('.report-day >> nth=1');
+  await p.click('.sheet .row:has-text("Log food")');
+  await p.click('.seg button:has-text("Quick")');
+  await p.locator('.sheet .grid-2 input').first().fill('500');
+  await p.click('button:has-text("Add to log")');
+  await p.waitForTimeout(400);
+  const missedFood = await p.locator('.report-missed').innerText().catch(() => '');
+  ok('food logged for a missed day counts', /6 days without food/.test(missedFood), missedFood);
+  ok('no page errors', errs.length === 0, errs.join(' | '));
+  console.log(out.join('\n'));
+  await b.close();
+})().catch((e) => { console.log(out.join('\n')); console.error('SCRIPT ERROR', e.message.slice(0, 400)); });

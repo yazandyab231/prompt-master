@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "npm run build && node e2e/run.cjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

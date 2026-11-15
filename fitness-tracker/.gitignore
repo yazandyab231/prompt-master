@@ -5,3 +5,4 @@ public/ocr
 .env
 .env.local
 *.local
+e2e/.out
