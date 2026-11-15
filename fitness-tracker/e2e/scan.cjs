@@ -45,6 +45,8 @@ const labelHTML = (kind) => kind === 'eu' ? `
     if (u.includes('/5000000000003')) return route.fulfill({ status: 404, json: { status: 0 } });
     return route.abort();
   });
+  // Barcode and label scanning are frozen behind the off-by-default Experimental switch.
+  await p.goto('http://localhost:4173/#/settings'); await p.waitForSelector('.masthead'); await p.click('button[aria-label="Experimental features"]'); await p.waitForTimeout(300);
   await p.goto('http://localhost:4173/#/food');
   await p.waitForSelector('.masthead');
   const openBarcode = async (code) => {

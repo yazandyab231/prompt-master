@@ -110,6 +110,8 @@ export interface Settings {
   themeChosen?: boolean;
   /** Sentence-case, normal-width text instead of spaced capitals (easier for dyslexia and low vision). */
   readableText: boolean;
+  /** Unverified features (barcode scan, label scan, push notifications). Off by default; frozen, not maintained. */
+  experimental?: boolean;
   /** Date of the last backup export, to nudge now and then. */
   lastExport?: string;
 }

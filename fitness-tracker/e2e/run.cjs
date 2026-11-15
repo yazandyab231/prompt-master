@@ -7,7 +7,7 @@ const { spawn, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const SUITES = { flow: 31, scan: 15, regress: 23, regress2: 47, newfeat: 10 };
+const SUITES = { flow: 33, scan: 15, regress: 23, regress2: 47, newfeat: 10 };
 const PORT = 4173;
 const root = path.join(__dirname, '..');
 const only = process.argv.slice(2);

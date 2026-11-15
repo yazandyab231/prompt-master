@@ -1,6 +1,6 @@
 # Browser checks
 
-126 end-to-end checks that drive the production build in headless Chromium at phone size.
+128 end-to-end checks that drive the production build in headless Chromium at phone size.
 
 ```bash
 npm run e2e              # build, then run all suites
@@ -11,7 +11,7 @@ Needs Playwright (tested with 1.63) and its Chromium. It is not a project depend
 
 | Suite | Checks | What it covers |
 | --- | --- | --- |
-| flow | 31 | Main paths: split, workout, body weight, food, themes, units, export/erase/import |
+| flow | 33 | Main paths: split, workout, body weight, food, themes, units, export/erase/import |
 | scan | 15 | Barcode lookups (mocked Open Food Facts) and nutrition-label reading |
 | regress | 23 | Bugs found by the first independent tester |
 | regress2 | 47 | One check per issue the simulated users reported |

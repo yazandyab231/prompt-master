@@ -41,6 +41,7 @@ const MODES: { id: Mode; label: string; icon: string }[] = [
 ];
 
 export function AddFood({ date, onClose }: { date: string; onClose: () => void }) {
+  const experimental = useApp().settings.experimental === true;
   const [mode, setMode] = useState<Mode>('search');
   const [food, setFood] = useState<Food | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -90,7 +91,7 @@ export function AddFood({ date, onClose }: { date: string; onClose: () => void }
     <Sheet title={`Log food · ${fmtRelative(date)}`} onClose={onClose} full>
       <div className="stack">
         <div className="seg stacked" role="group" aria-label="How to add">
-          {MODES.map((m) => (
+          {MODES.filter((m) => experimental || m.id === 'search' || m.id === 'quick').map((m) => (
             <button key={m.id} aria-pressed={mode === m.id} onClick={() => setMode(m.id)}>
               <Icon name={m.icon} />
               {m.label}

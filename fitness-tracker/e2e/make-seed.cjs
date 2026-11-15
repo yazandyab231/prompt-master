@@ -41,7 +41,7 @@ foods.forEach(([name, grams, kcal, p, c, f], i) => {
   entries.push({ id: 'e' + i, date: iso(now), time: +t, foodId: 'b-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), name, grams, macros: { kcal, p, c, f } });
 });
 const state = {
-  version: 1, settings: { theme: 'iron', units: 'kg', targets: { kcal: 2400, p: 160, c: 270, f: 75 } }, exercises: [],
+  version: 1, settings: { theme: 'iron', units: 'kg', experimental: true, targets: { kcal: 2400, p: 160, c: 270, f: 75 } }, exercises: [],
   routines: days.map((d) => ({ id: d.id, name: d.name, exercises: d.ex.map(([n, sets, reps]) => ({ exerciseId: X(n), sets, reps })) })),
   week, workouts, bodyWeights, foods: [], entries,
   reminders: [{ id: 'rm1', kind: 'workout', title: 'Time to train', time: '18:00', days: [0, 1, 2, 4, 5, 6], enabled: true }], reminderSeen: {},

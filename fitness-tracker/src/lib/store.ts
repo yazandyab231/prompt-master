@@ -95,6 +95,7 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
       .sort((a: any, b: any) => a.from.localeCompare(b.from)),
     dayStart: isObj(raw.settings) ? Math.min(6, Math.max(0, Math.round(numOr(raw.settings.dayStart, 0)))) : 0,
     readableText: isObj(raw.settings) && raw.settings.readableText === true,
+    ...(isObj(raw.settings) && raw.settings.experimental === true ? { experimental: true } : {}),
     // Anyone restoring real data has been using the app: do not greet them as new.
     targetsReviewed: isObj(raw.settings) && raw.settings.targetsReviewed === true,
     ...(isObj(raw.settings) && isDate(raw.settings.lastExport) ? { lastExport: raw.settings.lastExport } : {}),

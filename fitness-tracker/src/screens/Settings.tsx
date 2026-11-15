@@ -162,7 +162,7 @@ export function Settings() {
             <Icon name="plus" /> New
           </button>
         </div>
-        <PushPanel reminders={s.reminders} />
+        {s.settings.experimental && <PushPanel reminders={s.reminders} />}
         {s.reminders.length === 0 ? (
           <div className="chips" style={{ marginTop: 14 }}>
             {REMINDER_PRESETS.map((p) => (
@@ -209,6 +209,22 @@ export function Settings() {
             ))}
           </div>
         )}
+      </section>
+
+      <section className="block">
+        <div className="row" style={{ borderBottom: 0, padding: 0 }}>
+          <span className="row-main">
+            <span className="row-title" style={{ whiteSpace: 'normal' }}>Experimental features</span>
+            <span className="row-sub" style={{ whiteSpace: 'normal' }}>Barcode scan, label scan, push reminders. Not fully tested.</span>
+          </span>
+          <button
+            className="switch"
+            role="switch"
+            aria-checked={s.settings.experimental === true}
+            aria-label="Experimental features"
+            onClick={() => update((d) => void (d.settings.experimental = !d.settings.experimental))}
+          />
+        </div>
       </section>
 
       <section className="block">

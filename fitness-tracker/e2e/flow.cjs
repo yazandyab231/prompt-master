@@ -101,6 +101,16 @@ const ok = (name, cond, extra = '') => { out.push(`${cond ? 'PASS' : 'FAIL'}  ${
   await overflow('food');
 
   // --- barcode: typed number, real Open Food Facts lookup (may be blocked by this sandbox's network)
+  // Hidden by default (feature freeze): check, then switch on for the barcode checks.
+  await p.click('button:has-text("Log food")');
+  const modesOff = await p.locator('.sheet .seg button').allInnerTexts();
+  ok('barcode and label are hidden by default', modesOff.length === 2 && !modesOff.some((t) => /barcode|label/i.test(t)), modesOff.join(','));
+  await p.click('.sheet button[aria-label="Close"]');
+  await p.click('.tab:has-text("Setup")');
+  const pushOff = await p.locator('text=Push is').count();
+  await p.click('button[aria-label="Experimental features"]');
+  ok('push panel is hidden by default and appears with Experimental on', pushOff === 0 && (await p.locator('text=Push is').count()) === 1);
+  await p.click('.tab:has-text("Food")');
   await p.click('button:has-text("Log food")');
   await p.click('.seg button:has-text("Barcode")');
   await p.waitForTimeout(800);

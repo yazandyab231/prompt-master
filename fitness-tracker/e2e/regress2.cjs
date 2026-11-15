@@ -220,6 +220,7 @@ const human = (p) => { const c = p.click.bind(p); p.click = async (...a) => { aw
     if (u.includes('/333')) return r.fulfill({ json: { status: 1, product: { product_name: 'Serving Bar', serving_quantity: 40, nutriments: { 'energy-kcal_serving': 160, proteins_serving: 8, carbohydrates_serving: 20, fat_serving: 5 } } } });
     return r.abort();
   });
+  await p.goto(URL0 + '#/settings'); await p.waitForSelector('.masthead'); await p.click('button[aria-label="Experimental features"]'); await p.waitForTimeout(300);
   await p.goto(URL0 + '#/food'); await p.waitForSelector('.masthead');
   const scan = async (code) => {
     await p.click('.block button:has-text("Log food")');
