@@ -121,6 +121,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   for AMD; NVDA watch item: earnings date found, but NVDA is far from the momentum list, so no entry either way); BofA
   downgraded VSXY while raising its target; MRNA -12% last week, CEO wants an FDA filing before year-end; ECO held its Q3
   call 11-13. No merger, halt or legal shock → hold all. Crypto: BTC 64,387 < 50-day 79,354, ETH 1,806 < 2,360 → stay out.
+- 15:33 Mon 11-16 summary: account $4863.35 (-136.65 vs $5,000): positions $3938.26 + cash $925.09. MRNA -6.6%, ERAS +1.9%, ECO -2.5%, VSXY -4.1%, AMD -6.1%, RXO +0.1%.
+  SPY 739.15 vs 200-day 732.15 → crash guard off (SPY above its 200-day). Benchmark (6.6040 SPY) $4881.35 (-118.65): account behind by $18.00.
 
 ## Scheduled check-ins
 
