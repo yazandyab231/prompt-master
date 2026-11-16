@@ -115,6 +115,13 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - Now: BTC 64,520 (50-day 79,739, 200-day 72,918, -20.8% in a month, -33% off its 1-year high); ETH 1,813 (50-day 2,378,
   200-day 2,142, -25.1% in a month). Both below their 50-day → the rule says no crypto now. Checked every pre-market.
 
+## Mon 2026-11-16
+
+- 08:46 pre-market: all six open, none near its -20% stop. News (72 h): Nvidia reports earnings Tue 11-17 (chip-sector event
+  for AMD; NVDA watch item: earnings date found, but NVDA is far from the momentum list, so no entry either way); BofA
+  downgraded VSXY while raising its target; MRNA -12% last week, CEO wants an FDA filing before year-end; ECO held its Q3
+  call 11-13. No merger, halt or legal shock → hold all. Crypto: BTC 64,387 < 50-day 79,354, ETH 1,806 < 2,360 → stay out.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
