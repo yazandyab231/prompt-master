@@ -90,9 +90,14 @@ export function Food({ nav }: { nav: Nav }) {
         <div className="block-head">
           <h2 className="label">Logged{entries.length ? ` · ${entries.length}` : ''}</h2>
         </div>
-        <button className="btn wide" onClick={() => nav.addFood(date)}>
-          <Icon name="plus" /> Log food
-        </button>
+        <div className="btn-row">
+          <button className="btn" onClick={() => nav.addFood(date)}>
+            <Icon name="plus" /> Log food
+          </button>
+          <button className="btn ghost" onClick={() => nav.addFood(date, 'barcode')}>
+            <Icon name="barcode" /> Scan barcode
+          </button>
+        </div>
         {entries.length === 0 ? (
           <p className="hint" style={{ marginTop: 14 }}>Nothing logged yet.</p>
         ) : (
@@ -104,7 +109,7 @@ export function Food({ nav }: { nav: Nav }) {
                   <span className="row-main">
                     <span className="row-title">{e.name}</span>
                     <span className="row-sub">
-                      {fmtTime(e.time)} · {e.grams != null ? `${num(e.grams, 0)} ${unit} · ` : ''}P {num(e.macros.p, 0)} · C {num(e.macros.c, 0)} · F{' '}
+                      {fmtTime(e.time)} · {e.grams != null ? `${num(e.grams, 0)} ${unit} · ` : ''}{e.portions ? `${num(e.portions, 1)} ${e.portions === 1 ? 'portion' : 'portions'} · ` : ''}P {num(e.macros.p, 0)} · C {num(e.macros.c, 0)} · F{' '}
                       {num(e.macros.f, 0)}
                     </span>
                   </span>
@@ -129,7 +134,9 @@ function EntrySheet({ entry, onClose }: { entry: FoodEntry; onClose: () => void 
   const s = useApp();
   const food = entry.foodId ? allFoods(s).find((f) => f.id === entry.foodId) : undefined;
   const unit = food?.liquid ? 'ml' : 'g';
-  const quick = entry.grams == null;
+  const fromRecipe = entry.portions != null && entry.portions > 0;
+  const quick = entry.grams == null && !fromRecipe;
+  const [portions, setPortions] = useState<number | null>(entry.portions ?? null);
   const [grams, setGrams] = useState<number | null>(entry.grams);
   const [day, setDay] = useState(entry.date);
   const [q, setQ] = useState<Macros>(entry.macros);
@@ -143,8 +150,21 @@ function EntrySheet({ entry, onClose }: { entry: FoodEntry; onClose: () => void 
         f: (entry.macros.f / entry.grams) * 100,
       }
     : null;
-  const macros = quick ? q : per100 && grams != null ? scale(per100, grams) : entry.macros;
-  const valid = quick ? q.kcal >= 0 && q.kcal <= 20000 : grams != null && grams > 0 && grams <= 5000;
+  const macros = fromRecipe
+    ? (() => {
+        const k = (portions ?? 0) / entry.portions!;
+        return { kcal: entry.macros.kcal * k, p: entry.macros.p * k, c: entry.macros.c * k, f: entry.macros.f * k };
+      })()
+    : quick
+      ? q
+      : per100 && grams != null
+        ? scale(per100, grams)
+        : entry.macros;
+  const valid = fromRecipe
+    ? portions != null && portions > 0 && portions <= 20
+    : quick
+      ? q.kcal >= 0 && q.kcal <= 20000
+      : grams != null && grams > 0 && grams <= 5000;
 
   const remove = () => {
     const before = getState();
@@ -159,7 +179,8 @@ function EntrySheet({ entry, onClose }: { entry: FoodEntry; onClose: () => void 
     update((d) => {
       const e = d.entries.find((x) => x.id === entry.id);
       if (!e) return;
-      if (!quick) e.grams = grams!;
+      if (fromRecipe) e.portions = portions!;
+      else if (!quick) e.grams = grams!;
       e.macros = macros;
       e.date = day;
     });
@@ -190,7 +211,9 @@ function EntrySheet({ entry, onClose }: { entry: FoodEntry; onClose: () => void 
         }}
       >
         <h3 className="food-title">{entry.name}</h3>
-        {quick ? (
+        {fromRecipe ? (
+          <NumField label="Portions" value={portions} onChange={setPortions} maxLength={4} />
+        ) : quick ? (
           <div className="grid-2">
             <NumField label="Energy" unit="kcal" value={q.kcal} onChange={(v) => setQuick('kcal', v)} dp={0} />
             <NumField label="Protein" unit="g" value={q.p} onChange={(v) => setQuick('p', v)} />

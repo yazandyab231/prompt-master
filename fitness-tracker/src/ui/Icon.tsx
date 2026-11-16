@@ -18,6 +18,7 @@ const PATHS: Record<string, string> = {
   bolt: 'M13 3L5 13.5h6L10 21l8-10.5h-6z',
   bell: 'M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4',
   edit: 'M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4',
+  pot: 'M4 10h16v4a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6zM2 10h20M9 4c0 1.5 1 1.5 1 3M14 4c0 1.5 1 1.5 1 3',
 };
 
 export function Icon({ name }: { name: keyof typeof PATHS | string }) {

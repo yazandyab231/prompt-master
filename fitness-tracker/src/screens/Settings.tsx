@@ -215,7 +215,7 @@ export function Settings() {
         <div className="row" style={{ borderBottom: 0, padding: 0 }}>
           <span className="row-main">
             <span className="row-title" style={{ whiteSpace: 'normal' }}>Experimental features</span>
-            <span className="row-sub" style={{ whiteSpace: 'normal' }}>Barcode scan, label scan, push reminders. Not fully tested.</span>
+            <span className="row-sub" style={{ whiteSpace: 'normal' }}>Push reminders when the app is closed. Not fully tested.</span>
           </span>
           <button
             className="switch"

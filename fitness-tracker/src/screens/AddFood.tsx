@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Food, FoodSource, ID } from '../lib/types';
+import type { Food, FoodSource, ID, Recipe } from '../lib/types';
+import { LogRecipe, logRecipeTitle, RecipeEditor, RecipeList } from './Recipes';
 import { allFoods, logFood, recentFoods, saveFood, update, useApp, getState, replaceState } from '../lib/store';
 import { searchFoods } from '../lib/foods';
 import { lookupBarcode } from '../lib/off';
@@ -11,7 +12,7 @@ import { Sheet } from '../ui/Sheet';
 import { Scanner } from '../ui/Scanner';
 import { MacroStrip, NumField, TextField, toast } from '../ui/bits';
 
-type Mode = 'search' | 'barcode' | 'label' | 'quick';
+type Mode = 'search' | 'barcode' | 'label' | 'recipes' | 'quick';
 
 interface Draft {
   id?: ID;
@@ -37,16 +38,47 @@ const MODES: { id: Mode; label: string; icon: string }[] = [
   { id: 'search', label: 'Search', icon: 'search' },
   { id: 'barcode', label: 'Barcode', icon: 'barcode' },
   { id: 'label', label: 'Label', icon: 'camera' },
+  { id: 'recipes', label: 'Recipes', icon: 'pot' },
   { id: 'quick', label: 'Quick', icon: 'bolt' },
 ];
 
-export function AddFood({ date, onClose }: { date: string; onClose: () => void }) {
-  const experimental = useApp().settings.experimental === true;
-  const [mode, setMode] = useState<Mode>('search');
+
+
+export type AddFoodMode = Mode;
+
+export function AddFood({ date, onClose, startMode = 'search' }: { date: string; onClose: () => void; startMode?: Mode }) {
+  const [mode, setMode] = useState<Mode>(startMode);
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  // null = closed; 'new' = new recipe; a Recipe = editing that one
+  const [editingRecipe, setEditingRecipe] = useState<Recipe | 'new' | null>(null);
   const [food, setFood] = useState<Food | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   // A barcode that had no usable data, carried into the label scan so the result is saved against it.
   const [carry, setCarry] = useState<{ barcode?: string; name?: string }>({});
+
+  if (editingRecipe) {
+    return (
+      <RecipeEditor
+        recipe={editingRecipe === 'new' ? null : editingRecipe}
+        onClose={() => {
+          setEditingRecipe(null);
+          setRecipe(null);
+        }}
+        onSaved={(r) => {
+          setEditingRecipe(null);
+          setRecipe(r);
+        }}
+      />
+    );
+  }
+
+  if (recipe) {
+    return (
+      <Sheet title={logRecipeTitle(date)} onClose={onClose} onBack={() => setRecipe(null)} full>
+        <LogRecipe recipe={recipe} date={date} onDone={onClose} onEdit={() => setEditingRecipe(recipe)} />
+      </Sheet>
+    );
+  }
 
   if (draft) {
     return (
@@ -91,7 +123,7 @@ export function AddFood({ date, onClose }: { date: string; onClose: () => void }
     <Sheet title={`Log food · ${fmtRelative(date)}`} onClose={onClose} full>
       <div className="stack">
         <div className="seg stacked" role="group" aria-label="How to add">
-          {MODES.filter((m) => experimental || m.id === 'search' || m.id === 'quick').map((m) => (
+          {MODES.map((m) => (
             <button key={m.id} aria-pressed={mode === m.id} onClick={() => setMode(m.id)}>
               <Icon name={m.icon} />
               {m.label}
@@ -117,6 +149,7 @@ export function AddFood({ date, onClose }: { date: string; onClose: () => void }
             onManual={() => setDraft(emptyDraft({ barcode: carry.barcode, name: carry.name ?? '' }))}
           />
         )}
+        {mode === 'recipes' && <RecipeList onPick={setRecipe} onNew={() => setEditingRecipe('new')} />}
         {mode === 'quick' && <Quick date={date} onDone={onClose} />}
       </div>
     </Sheet>

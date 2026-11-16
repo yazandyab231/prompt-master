@@ -6,7 +6,7 @@ import { e1rm, kcalFromMacros, parseNum, scale, sum } from '../src/lib/units';
 import { BUILTIN_FOODS, searchFoods } from '../src/lib/foods';
 import { addDays, startOfWeek, weekdayIndex } from '../src/lib/date';
 import { BUILTIN_EXERCISES, EXERCISE_GROUPS, groupForOldArms } from '../src/lib/exercises';
-import { normalize, TEMPLATES } from '../src/lib/store';
+import { normalize, recipeTotals, TEMPLATES } from '../src/lib/store';
 
 describe('nutrition label parsing', () => {
   it('reads an EU table with per-100g and per-serving columns', () => {
@@ -138,6 +138,19 @@ Protein 3g`);
   it('repairs all three values only when they are impossible as read (tester image x2)', () => {
     const r = parseNutritionText('Per 100g\nEnergy 1590 kJ / 380 kcal\nFat 65g\nCarbohydrate 629\nProtein 1359');
     expect(r.per100).toEqual({ kcal: 380, p: 13.5, c: 62, f: 6.5 });
+  });
+
+  it('reads the per-100 g column when the serving column comes first (real OCR text, tester images 11 and x4)', () => {
+    for (const fat of ['26g 6.59', '2649 6.59']) {
+      const r = parseNutritionText(`Nutrition per 40 g serving per 100 g
+Energy 636 kJ / 152 kcal 1590 kJ / 380 kcal
+Fat ${fat}
+of which saturates | 0.59 129
+Carbohydrate 248¢ 629g
+of which sugars 7.29 189
+Protein 549 135¢g`);
+      expect(r.per100).toEqual({ kcal: 380, p: 13.5, c: 62, f: 6.5 });
+    }
   });
 
   it('does not invent a repair when nothing fits', () => {
@@ -274,3 +287,33 @@ describe('exercises', () => {
   });
 });
 const ids = () => BUILTIN_EXERCISES.map((e) => e.id);
+
+describe('recipes', () => {
+  const rice = BUILTIN_FOODS.find((f) => f.name === 'Rice, white, cooked')!;
+  const chicken = BUILTIN_FOODS.find((f) => f.name === 'Chicken breast, cooked')!;
+  const recipe = {
+    id: 'r1',
+    name: 'Chicken and rice',
+    portions: 2,
+    ingredients: [
+      { foodId: rice.id, name: rice.name, grams: 100, per100: rice.per100 },
+      { foodId: chicken.id, name: chicken.name, grams: 150, per100: chicken.per100 },
+    ],
+  };
+  it('adds up 100 g rice + 150 g chicken and splits it into portions', () => {
+    const { total, perPortion } = recipeTotals(recipe);
+    expect(total.kcal).toBeCloseTo(130 + 247.5, 5);
+    expect(total.p).toBeCloseTo(2.7 + 46.5, 5);
+    expect(perPortion.kcal).toBeCloseTo((130 + 247.5) / 2, 5);
+  });
+  it('survives backup and import, dropping broken ingredients', () => {
+    const st = normalize({
+      workouts: [],
+      entries: [{ id: 'e', date: '2026-11-16', name: 'Chicken and rice', grams: null, macros: { kcal: 188.75, p: 24.6, c: 14.1, f: 5 }, recipeId: 'r1', portions: 1 }],
+      recipes: [{ ...recipe, ingredients: [...recipe.ingredients, { name: 'broken', grams: -5, per100: {} }] }],
+    });
+    expect(st.recipes).toHaveLength(1);
+    expect(st.recipes[0].ingredients).toHaveLength(2);
+    expect(st.entries[0]).toMatchObject({ recipeId: 'r1', portions: 1 });
+  });
+});

@@ -8,7 +8,7 @@ import { Today } from './screens/Today';
 import { Train } from './screens/Train';
 import { WorkoutLogger } from './screens/Workout';
 import { Food } from './screens/Food';
-import { AddFood } from './screens/AddFood';
+import { AddFood, type AddFoodMode } from './screens/AddFood';
 import { Progress } from './screens/Progress';
 import { Settings } from './screens/Settings';
 
@@ -29,7 +29,8 @@ export interface Nav {
   go: (tab: Tab) => void;
   /** Open the logger: the session in progress, or a given (finished) session to edit. */
   openWorkout: (id?: string) => void;
-  addFood: (date: string) => void;
+  /** Open Log food for a day, optionally straight on a tab (e.g. the barcode scanner). */
+  addFood: (date: string, mode?: AddFoodMode) => void;
 }
 
 export function App() {
@@ -38,6 +39,7 @@ export function App() {
   const [tab, setTab] = useState<Tab>(tabFromHash);
   const [workoutId, setWorkoutId] = useState<string | null>(null);
   const [addFoodDate, setAddFoodDate] = useState<string | null>(null);
+  const [addFoodMode, setAddFoodMode] = useState<AddFoodMode>('search');
   useTick(30_000);
 
   useEffect(() => {
@@ -60,7 +62,10 @@ export function App() {
     go,
     // Read the store now, not the render-time snapshot: the session may have been created a moment ago.
     openWorkout: (id) => setWorkoutId(id ?? activeWorkout(getState())?.id ?? null),
-    addFood: (date) => setAddFoodDate(date),
+    addFood: (date, mode = 'search') => {
+      setAddFoodMode(mode);
+      setAddFoodDate(date);
+    },
   };
 
   // While the app is open, raise a system notification for each newly due reminder.
@@ -108,7 +113,7 @@ export function App() {
         ))}
       </nav>
       {openWorkout && <WorkoutLogger workout={openWorkout} onClose={() => setWorkoutId(null)} />}
-      {addFoodDate && <AddFood date={addFoodDate} onClose={() => setAddFoodDate(null)} />}
+      {addFoodDate && <AddFood date={addFoodDate} startMode={addFoodMode} onClose={() => setAddFoodDate(null)} />}
       <Toast />
     </>
   );

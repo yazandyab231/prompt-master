@@ -104,7 +104,7 @@ const ok = (name, cond, extra = '') => { out.push(`${cond ? 'PASS' : 'FAIL'}  ${
   // Hidden by default (feature freeze): check, then switch on for the barcode checks.
   await p.click('button:has-text("Log food")');
   const modesOff = await p.locator('.sheet .seg button').allInnerTexts();
-  ok('barcode and label are hidden by default', modesOff.length === 2 && !modesOff.some((t) => /barcode|label/i.test(t)), modesOff.join(','));
+  ok('barcode, label and recipes are shown by default', ['Barcode', 'Label', 'Recipes'].every((m) => modesOff.some((t) => t.includes(m))), modesOff.join(','));
   await p.click('.sheet button[aria-label="Close"]');
   await p.click('.tab:has-text("Setup")');
   const pushOff = await p.locator('text=Push is').count();

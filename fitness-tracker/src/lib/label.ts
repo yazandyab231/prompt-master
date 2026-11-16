@@ -30,7 +30,7 @@ interface Num {
 /** Undo the most common OCR slips inside numbers: "O"/"o" for 0, "l"/"I" for 1, "S" for 5. */
 function cleanLine(line: string) {
   return line
-    .replace(/(?<=\d)\s?¢\s?g?/g, 'g')
+    .replace(/(?<=\d)\s?¢g?/g, 'g') // "135¢g" / "248¢" = "g"; never eat the space before the next column
     .replace(/(?<=\d)[Oo](?=[\d.,]|\s?(?:g|mg|kcal|kj)\b)/g, '0')
     .replace(/(?<![A-Za-z])[Oo](?=[.,]\d)/g, '0')
     .replace(/(?<![A-Za-z])[Oo](?=\s?(?:g|mg)\b)/g, '0')

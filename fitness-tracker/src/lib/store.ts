@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { getMany, setMany } from 'idb-keyval';
 import { useSyncExternalStore } from 'react';
-import type { AppState, Exercise, Food, ID, Macros, Routine, SetLog, ThemeChoice, ThemeId, Workout } from './types';
+import type { AppState, Exercise, Food, ID, Macros, Routine, SetLog, ThemeChoice, ThemeId, Workout, Recipe, RecipeIngredient } from './types';
 import { BUILTIN_EXERCISES, EXERCISE_GROUPS, groupForOldArms } from './exercises';
 import { BUILTIN_FOODS } from './foods';
 import { setDayStartHour, today, weekdayIndex } from './date';
@@ -27,6 +27,7 @@ export const defaultState = (): AppState => ({
   workouts: [],
   bodyWeights: [],
   foods: [],
+  recipes: [],
   entries: [],
   reminders: [],
   reminderSeen: {},
@@ -208,7 +209,19 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
       name: x.name,
       grams: (toNum(x.grams) ?? 0) > 0 ? toNum(x.grams) : null,
       macros: m,
+      ...(isStr(x.recipeId) ? { recipeId: x.recipeId } : {}),
+      ...((toNum(x.portions) ?? 0) > 0 ? { portions: toNum(x.portions)! } : {}),
     };
+  });
+  const recipes = list<Recipe>(raw.recipes, (x) => {
+    if (!isStr(x.id) || !isStr(x.name)) return null;
+    const ingredients = list<RecipeIngredient>(x.ingredients, (g) => {
+      const per100 = macros(g.per100);
+      const grams = toNum(g.grams);
+      if (!isStr(g.name) || !per100 || grams == null || grams <= 0) return null;
+      return { ...(isStr(g.foodId) ? { foodId: g.foodId } : {}), name: g.name, grams, per100, ...(g.liquid === true ? { liquid: true } : {}) };
+    });
+    return { id: x.id, name: x.name, portions: Math.min(100, Math.max(1, numOr(x.portions, 1))), ingredients };
   });
   const reminders = list<AppState['reminders'][number]>(raw.reminders, (x) =>
     isStr(x.id) && isStr(x.title) && toTime(x.time) && Array.isArray(x.days)
@@ -249,6 +262,7 @@ export function normalizeWithReport(raw: unknown): { state: AppState; dropped: n
       workouts: unique(workouts),
       bodyWeights,
       foods: unique(foods),
+      recipes: unique(recipes),
       entries: unique(entries),
       reminders: unique(reminders),
       reminderSeen,
@@ -619,6 +633,46 @@ export function setTargets(next: Macros) {
 }
 
 /* ---------- food actions ---------- */
+
+/** Total macros of a recipe, and per portion. */
+export function recipeTotals(r: Recipe): { total: Macros; perPortion: Macros } {
+  const total = r.ingredients.reduce(
+    (a, g) => ({
+      kcal: a.kcal + (g.per100.kcal * g.grams) / 100,
+      p: a.p + (g.per100.p * g.grams) / 100,
+      c: a.c + (g.per100.c * g.grams) / 100,
+      f: a.f + (g.per100.f * g.grams) / 100,
+    }),
+    { kcal: 0, p: 0, c: 0, f: 0 },
+  );
+  const n = Math.max(1, r.portions);
+  return { total, perPortion: { kcal: total.kcal / n, p: total.p / n, c: total.c / n, f: total.f / n } };
+}
+
+export function saveRecipe(r: Recipe) {
+  update((d) => {
+    const i = d.recipes.findIndex((x) => x.id === r.id);
+    if (i >= 0) d.recipes[i] = r;
+    else d.recipes.unshift(r);
+  });
+}
+
+/** Log some portions of a recipe; the values are copied, so editing the recipe later never changes past days. */
+export function logRecipe(r: Recipe, portions: number, date: string) {
+  const per = recipeTotals(r).perPortion;
+  update((d) => {
+    d.entries.push({
+      id: uid(),
+      time: Date.now(),
+      date,
+      name: r.name,
+      grams: null,
+      recipeId: r.id,
+      portions,
+      macros: { kcal: per.kcal * portions, p: per.p * portions, c: per.c * portions, f: per.f * portions },
+    });
+  });
+}
 
 export function logFood(args: { date: string; name: string; grams: number | null; macros: Macros; foodId?: ID }) {
   update((d) => {

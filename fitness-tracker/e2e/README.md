@@ -1,6 +1,6 @@
 # Browser checks
 
-128 end-to-end checks that drive the production build in headless Chromium at phone size.
+164 end-to-end checks that drive the production build in headless Chromium at phone size.
 
 ```bash
 npm run e2e              # build, then run all suites
@@ -16,6 +16,8 @@ Needs Playwright (tested with 1.63) and its Chromium. It is not a project depend
 | regress | 23 | Bugs found by the first independent tester |
 | regress2 | 47 | One check per issue the simulated users reported |
 | newfeat | 10 | Clean theme, split naming, weekly report, filling in missed days |
+| labels | 23 | Nutrition-label reading on 24 test images in `fixtures/labels` (one known miss is reported, not counted) |
+| recipes | 13 | Build a recipe, log portions, edit, re-log, delete; Scan barcode shortcut |
 
 Sample data is generated fresh on every run (`make-seed.cjs`) so date-based checks keep working.
 Logs and screenshots go to `e2e/.out/` (not committed).

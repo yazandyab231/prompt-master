@@ -2472,3 +2472,17 @@ body {
     forced-color-adjust: none;
   }
 }
+
+.ingredient-row {
+  gap: 8px;
+}
+
+.ingredient-amount {
+  width: 112px;
+  flex: none;
+}
+
+.ingredient-amount .input {
+  height: 44px;
+  font-size: 16px;
+}

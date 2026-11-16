@@ -81,8 +81,28 @@ export interface FoodEntry {
   time: number;
   foodId?: ID;
   name: string;
-  grams: number | null; // null for quick-add entries
+  grams: number | null; // null for quick-add and recipe entries
   macros: Macros; // snapshot at the time of logging
+  /** Logged from a recipe: which one, and how many portions. */
+  recipeId?: ID;
+  portions?: number;
+}
+
+export interface RecipeIngredient {
+  foodId?: ID;
+  name: string;
+  grams: number;
+  /** Per-100 g values copied when the ingredient was added, so later food edits do not change the recipe. */
+  per100: Macros;
+  liquid?: boolean;
+}
+
+/** A dish made of several foods, e.g. 100 g rice + 150 g chicken, split into portions. */
+export interface Recipe {
+  id: ID;
+  name: string;
+  portions: number;
+  ingredients: RecipeIngredient[];
 }
 
 export type ReminderKind = 'workout' | 'meal' | 'weigh' | 'custom';
@@ -128,6 +148,7 @@ export interface AppState {
   workouts: Workout[];
   bodyWeights: BodyWeight[];
   foods: Food[]; // saved foods (custom, barcode, label)
+  recipes: Recipe[];
   entries: FoodEntry[];
   reminders: Reminder[];
   /** reminder id -> YYYY-MM-DD it was last shown, so it fires once a day. */
