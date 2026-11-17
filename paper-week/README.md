@@ -124,6 +124,8 @@ cd paper-week   # every skill reads and writes ./trader/
    trading halt, fraud or SEC charges, bankruptcy or delisting → sell at the live price (or when trading resumes);
    anything else (FDA, trial data, guidance, analyst calls, sector news, big moves) → no discretionary sale, the
    -20% stop handles risk. Every event gets one line in the chat and in LOG.md. Restart the watcher after each wake.
+   Its seen-headline memory (trader/state/newswatch.json) changes every minute and is not committed; after a machine
+   restart the first run re-learns the feed silently, and the 08:44 news check covers anything missed.
 1. Setup above. Read positions.json and the bottom of LOG.md.
 2. **Every position:** `python3 -I bracket_check.py SYM HH:MM STOP 999999 YYYY-MM-DD` (stop = entry x 0.80).
    FILLED → `ticket.py fill --symbol SYM --side sell --qty Q --price P`, remove it from positions.json,
