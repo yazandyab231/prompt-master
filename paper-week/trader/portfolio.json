@@ -1,18 +1,6 @@
 {
-  "cash": 925.09,
+  "cash": 2627.21,
   "positions": [
-    {
-      "ticker": "MRNA",
-      "shares": 3.0,
-      "lots": [
-        {
-          "id": "MRNA-1",
-          "date": "2026-11-13",
-          "shares": 3.0,
-          "cost": 692.16
-        }
-      ]
-    },
     {
       "ticker": "ERAS",
       "shares": 50.0,
@@ -34,30 +22,6 @@
           "date": "2026-11-13",
           "shares": 8.0,
           "cost": 695.92
-        }
-      ]
-    },
-    {
-      "ticker": "VSXY",
-      "shares": 6.0,
-      "lots": [
-        {
-          "id": "VSXY-1",
-          "date": "2026-11-13",
-          "shares": 6.0,
-          "cost": 641.16
-        }
-      ]
-    },
-    {
-      "ticker": "AMD",
-      "shares": 1.0,
-      "lots": [
-        {
-          "id": "AMD-1",
-          "date": "2026-11-13",
-          "shares": 1.0,
-          "cost": 537.26
         }
       ]
     },

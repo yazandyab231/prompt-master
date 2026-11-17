@@ -79,6 +79,36 @@
       "qty": "26",
       "price": 28.4,
       "plain": "BUY 26 RXO at 28.40"
+    },
+    {
+      "at": "2026-11-17T15:51:40-05:00",
+      "date": "2026-11-17",
+      "status": "filled",
+      "symbol": "MRNA",
+      "side": "sell",
+      "qty": "3",
+      "price": 206.28,
+      "plain": "SELL 3 MRNA at 206.28"
+    },
+    {
+      "at": "2026-11-17T15:51:40-05:00",
+      "date": "2026-11-17",
+      "status": "filled",
+      "symbol": "AMD",
+      "side": "sell",
+      "qty": "1",
+      "price": 490.72,
+      "plain": "SELL 1 AMD at 490.72"
+    },
+    {
+      "at": "2026-11-17T15:51:41-05:00",
+      "date": "2026-11-17",
+      "status": "filled",
+      "symbol": "VSXY",
+      "side": "sell",
+      "qty": "6",
+      "price": 98.76,
+      "plain": "SELL 6 VSXY at 98.76"
     }
   ]
 }

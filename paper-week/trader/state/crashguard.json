@@ -1,0 +1,29 @@
+{
+  "active": true,
+  "since": "2026-11-17",
+  "sold": [
+    {
+      "symbol": "MRNA",
+      "qty": 3,
+      "entry": 230.72,
+      "exit": 206.28,
+      "pnl": -73.32
+    },
+    {
+      "symbol": "AMD",
+      "qty": 1,
+      "entry": 537.26,
+      "exit": 490.72,
+      "pnl": -46.54
+    },
+    {
+      "symbol": "VSXY",
+      "qty": 6,
+      "entry": 106.86,
+      "exit": 98.76,
+      "pnl": -48.6
+    }
+  ],
+  "spy_close_above_200_streak": 0,
+  "note": "refill 3 slots at the 09:52 check after SPY closes above its 200-day 2 days in a row"
+}

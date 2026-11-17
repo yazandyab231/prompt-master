@@ -156,6 +156,14 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   **CRASH GUARD: sell the 3 worst at 15:51** (now MRNA -10.8%, AMD -8.5%, VSXY -8.0% since entry; ERAS -6.2% next).
   The 15:51 check re-checks SPY (nearest reading to the close): sell only if SPY is still below its 200-day then.
   Account $4,747.28 = -$252.72 vs $5,000 (today -$110.24). SPY benchmark $4,827.00 (-$173.00) -> behind by $79.72.
+- 15:51 CRASH GUARD SALES (SPY re-checked 729.79 < 200-day 732.33): sold the 3 worst since entry at the live price.
+  | sym | qty | entry | exit | P&L |
+  |---|---|---|---|---|
+  | MRNA | 3 | 230.72 | 206.28 | -73.32 |
+  | AMD | 1 | 537.26 | 490.72 | -46.54 |
+  | VSXY | 6 | 106.86 | 98.76 | -48.60 |
+  Realized -$168.46. Cash $2,627.21. Left: ERAS 50, ECO 8, RXO 26. Guard state in trader/state/crashguard.json.
+  Account $4,739.09 at 15:51. Refill (fresh momentum_pick.py) only after SPY closes above its 200-day 2 days in a row.
 
 ## Scheduled check-ins
 
