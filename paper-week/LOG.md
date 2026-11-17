@@ -146,6 +146,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   Watch items (background only, not v3 trades): NVDA earnings this week; TTWO GTA VI launch Thu 11-19.
 - 09:53 ENTRIES check: watcher running; all 6 OPEN (MRNA 207.54 -3.7% today, ERAS 15.02, ECO 85.02, VSXY 103.66, AMD 503.28,
   RXO 28.50). Nothing planned, no trades. Account $4,845.11.
+- 11:26 EVENT news MRNA: "Moderna's INT Outlook Strengthens After Phase 3 Melanoma Data, Morgan Stanley Says": analyst
+  note on trial data, positive. Rule: no discretionary trade. MRNA 209.03 -2.9% on the day.
 
 ## Scheduled check-ins
 
