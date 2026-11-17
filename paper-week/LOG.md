@@ -133,6 +133,9 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   Context: 04:09 "Trump's Tighter Chip Rules Sink AMD and Broadcom, Not Just Nvidia" (TIKR); AMD closed Mon 504.37
   (-6.1% from entry 537.26), pre-market 502.48 (-0.4%); stop 429.80 is 14.5% below. Sector/policy news: no sale (rule).
   The 04:09 headline was logged but not flagged ("sink" was not a material word): added sink/sank/slump/curb.
+- 07:25 watcher run quiet (Moderna valuation piece; Tepper sold AMD last quarter, a 13F, old news). Restarted.
+- 07:44 EVENT news AMD: "AMD's Long-Term Prospects Remain Strong Despite Recent Stock Slump": opinion, a false alarm from
+  the new word "slump". No action.
 
 ## Scheduled check-ins
 
