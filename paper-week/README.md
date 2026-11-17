@@ -116,6 +116,14 @@ cd paper-week   # every skill reads and writes ./trader/
 
 ## Each check-in (rules v3)
 
+0. **News watcher (owner asked for minute-by-minute news, 11-17):** `pgrep -f news_watch.py`; if it is not running,
+   start `python3 -I news_watch.py --interval 60 --max-minutes 115` with Bash run_in_background (timeout 7200000).
+   It reads every holding's headline feed each minute and checks prices every 5 minutes, and exits (waking Claude)
+   on a material headline or an 8%+ daily move; quiet runs end after 115 minutes and are restarted on wake-up.
+   **Reaction rules:** buyout or merger agreed for a holding → sell at the live price (the upside is capped);
+   trading halt, fraud or SEC charges, bankruptcy or delisting → sell at the live price (or when trading resumes);
+   anything else (FDA, trial data, guidance, analyst calls, sector news, big moves) → no discretionary sale, the
+   -20% stop handles risk. Every event gets one line in the chat and in LOG.md. Restart the watcher after each wake.
 1. Setup above. Read positions.json and the bottom of LOG.md.
 2. **Every position:** `python3 -I bracket_check.py SYM HH:MM STOP 999999 YYYY-MM-DD` (stop = entry x 0.80).
    FILLED → `ticket.py fill --symbol SYM --side sell --qty Q --price P`, remove it from positions.json,

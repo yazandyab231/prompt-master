@@ -124,6 +124,11 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 15:33 Mon 11-16 summary: account $4863.35 (-136.65 vs $5,000): positions $3938.26 + cash $925.09. MRNA -6.6%, ERAS +1.9%, ECO -2.5%, VSXY -4.1%, AMD -6.1%, RXO +0.1%.
   SPY 739.15 vs 200-day 732.15 → crash guard off (SPY above its 200-day). Benchmark (6.6040 SPY) $4881.35 (-118.65): account behind by $18.00.
 
+## Tue 2026-11-17
+
+- 01:50 owner asked for minute-by-minute news: news_watch.py started (every holding's Yahoo headlines each minute,
+  prices every 5 minutes; wakes Claude on material news or an 8%+ move). Reaction rules in README step 0.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
