@@ -138,6 +138,12 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   the new word "slump". No action.
 - 08:35 EVENT news RXO: "RXO's Latest Curve Freight Market Forecast Marks the Tenth Consecutive Quarter of Spot Rate
   Inflation": RXO's routine industry report, not company guidance. No action. (Also AMD: BofA sees 39% upside; opinion.)
+- 08:45 PRE-MARKET (v3). Watcher running. Stop check: all 6 OPEN (MRNA 215.27, ERAS 15.11, ECO 84.83, VSXY 101.85,
+  AMD 504.28, RXO 28.35; nearest stop AMD, 14.8% away). News 24h: nothing material (no deal, halt, legal, guidance) on any
+  holding; AMD only opinion/13F/analyst pieces, RXO its freight report; nothing on ERAS, ECO, VSXY. No empty slot, no refill.
+  Crypto: BTC 64,879 < 50-day 78,991; ETH 1,821 < 2,343 -> no crypto. SPY 739.95 > 200-day 732.16 (+1.1%): crash guard off.
+  Account $4,857.52 (cash 925.09) = -$142.48; SPY benchmark $4,886.63 -> behind by $29.11.
+  Watch items (background only, not v3 trades): NVDA earnings this week; TTWO GTA VI launch Thu 11-19.
 
 ## Scheduled check-ins
 

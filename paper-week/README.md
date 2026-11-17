@@ -130,7 +130,7 @@ cd paper-week   # every skill reads and writes ./trader/
 2. **Every position:** `python3 -I bracket_check.py SYM HH:MM STOP 999999 YYYY-MM-DD` (stop = entry x 0.80).
    FILLED → `ticket.py fill --symbol SYM --side sell --qty Q --price P`, remove it from positions.json,
    log it, one-line note in the chat.
-3. **Pre-market (~08:45):** news on every holding (`news.py --tickers ... --no-sec --hours 24`): log anything
+3. **Pre-market (~08:45):** news on every holding (`python3 -I $P/trader-news/news.py --tickers ... --no-sec --hours 24`): log anything
    material (deal, halt, guidance, legal). Watch items (NVDA, TTWO) as background only. Crypto: check BTC-USD and ETH-USD against their 50-day averages (rule above). If a slot is empty,
    run `momentum_pick.py` and choose the refill (diversification rules).
 4. **09:52:** buy any planned entries or refills at the live price (`alerts.py quote SYM`, then
