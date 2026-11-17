@@ -136,6 +136,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 07:25 watcher run quiet (Moderna valuation piece; Tepper sold AMD last quarter, a 13F, old news). Restarted.
 - 07:44 EVENT news AMD: "AMD's Long-Term Prospects Remain Strong Despite Recent Stock Slump": opinion, a false alarm from
   the new word "slump". No action.
+- 08:35 EVENT news RXO: "RXO's Latest Curve Freight Market Forecast Marks the Tenth Consecutive Quarter of Spot Rate
+  Inflation": RXO's routine industry report, not company guidance. No action. (Also AMD: BofA sees 39% upside; opinion.)
 
 ## Scheduled check-ins
 
