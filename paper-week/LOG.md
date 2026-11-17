@@ -144,6 +144,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   Crypto: BTC 64,879 < 50-day 78,991; ETH 1,821 < 2,343 -> no crypto. SPY 739.95 > 200-day 732.16 (+1.1%): crash guard off.
   Account $4,857.52 (cash 925.09) = -$142.48; SPY benchmark $4,886.63 -> behind by $29.11.
   Watch items (background only, not v3 trades): NVDA earnings this week; TTWO GTA VI launch Thu 11-19.
+- 09:53 ENTRIES check: watcher running; all 6 OPEN (MRNA 207.54 -3.7% today, ERAS 15.02, ECO 85.02, VSXY 103.66, AMD 503.28,
+  RXO 28.50). Nothing planned, no trades. Account $4,845.11.
 
 ## Scheduled check-ins
 
