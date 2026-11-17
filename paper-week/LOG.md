@@ -152,6 +152,10 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   (rule). Not flagged by the watcher: added "licens" to its words.
 - 14:51 EVENT move ERAS -8.0% today (13.90; entry 14.81 = -6.1%; stop 11.84 is 14.8% below). No new headline today (latest:
   Mon 13:01 "Erasca to Host Virtual Investor Event..."); biotech XBI -0.9%, IBB -0.9%; no halt. Rule: no sale on a move.
+- 15:33 DAILY SUMMARY: all 6 OPEN, no stop hit. SPY live 730.92 vs 200-day 732.33 (incl. today; 732.16 through Mon): 0.19% BELOW.
+  **CRASH GUARD: sell the 3 worst at 15:51** (now MRNA -10.8%, AMD -8.5%, VSXY -8.0% since entry; ERAS -6.2% next).
+  The 15:51 check re-checks SPY (nearest reading to the close): sell only if SPY is still below its 200-day then.
+  Account $4,747.28 = -$252.72 vs $5,000 (today -$110.24). SPY benchmark $4,827.00 (-$173.00) -> behind by $79.72.
 
 ## Scheduled check-ins
 
