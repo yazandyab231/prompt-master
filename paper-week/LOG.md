@@ -128,6 +128,11 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 
 - 01:50 owner asked for minute-by-minute news: news_watch.py started (every holding's Yahoo headlines each minute,
   prices every 5 minutes; wakes Claude on material news or an 8%+ move). Reaction rules in README step 0.
+- 03:45 watcher run 1 quiet (one routine AMD article). Restarted.
+- 05:30 EVENT news AMD: "US Stock Futures Edge Lower After Tech Sell-Off: NVDA Earnings, AMD ... In Focus" (Stocktwits).
+  Context: 04:09 "Trump's Tighter Chip Rules Sink AMD and Broadcom, Not Just Nvidia" (TIKR); AMD closed Mon 504.37
+  (-6.1% from entry 537.26), pre-market 502.48 (-0.4%); stop 429.80 is 14.5% below. Sector/policy news: no sale (rule).
+  The 04:09 headline was logged but not flagged ("sink" was not a material word): added sink/sank/slump/curb.
 
 ## Scheduled check-ins
 
