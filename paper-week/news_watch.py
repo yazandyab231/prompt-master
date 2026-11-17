@@ -35,7 +35,7 @@ MATERIAL = re.compile(
     r"\bSEC\b|investigat|probe|subpoena|lawsuit|\bsued\b|fraud|restat|guidance|outlook|forecast|"
     r"downgrad|upgrad|bankrupt|chapter 11|default|\bCEO\b|resign|steps down|recall|"
     r"plunge|plummet|soar|surge|tumble|crash|selloff|sell-off|short[- ]seller|delist|warning|"
-    r"restrict|export|ban\b|sanction|tariff|\bsinks?\b|\bsank\b|slump|curb", re.I)
+    r"restrict|export|ban\b|sanction|tariff|\bsinks?\b|\bsank\b|slump|curb|licens", re.I)
 MOVE_PCT = 8.0
 
 

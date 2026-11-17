@@ -148,6 +148,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   RXO 28.50). Nothing planned, no trades. Account $4,845.11.
 - 11:26 EVENT news MRNA: "Moderna's INT Outlook Strengthens After Phase 3 Melanoma Data, Morgan Stanley Says": analyst
   note on trial data, positive. Rule: no discretionary trade. MRNA 209.03 -2.9% on the day.
+- 14:27 AMD: "AMD Stocks Decrease 1.62% as New US Rule Requires Licenses for Five Chip Hubs": policy news, no sale
+  (rule). Not flagged by the watcher: added "licens" to its words.
 
 ## Scheduled check-ins
 
