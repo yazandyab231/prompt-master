@@ -150,6 +150,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   note on trial data, positive. Rule: no discretionary trade. MRNA 209.03 -2.9% on the day.
 - 14:27 AMD: "AMD Stocks Decrease 1.62% as New US Rule Requires Licenses for Five Chip Hubs": policy news, no sale
   (rule). Not flagged by the watcher: added "licens" to its words.
+- 14:51 EVENT move ERAS -8.0% today (13.90; entry 14.81 = -6.1%; stop 11.84 is 14.8% below). No new headline today (latest:
+  Mon 13:01 "Erasca to Host Virtual Investor Event..."); biotech XBI -0.9%, IBB -0.9%; no halt. Rule: no sale on a move.
 
 ## Scheduled check-ins
 
