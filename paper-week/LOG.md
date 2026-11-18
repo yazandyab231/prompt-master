@@ -168,6 +168,22 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   with Navlimetostat": a trial partnership, not a buyout. No sale (rule). Logged but not flagged: added collaborat/partnership.
 - ~19:50 the cloud machine restarted; the watcher stopped and was restarted at 19:57.
 
+## Wed 2026-11-18
+
+- Overnight: watcher runs ending 21:52, 23:48, 01:44, 05:10, 07:06 all quiet; restarted each time. The cloud machine
+  restarted twice more (~01:45 and ~03:10); watcher restarted at 01:45 and 03:15. The 08:45 news check covers the gaps.
+- 08:45 pre-market: all three open (Tue closes ERAS 13.89 vs stop 11.84, ECO 84.93 vs 69.59, RXO 28.68 vs 22.72).
+  Pre-market: ERAS 14.63 (+5.3%), ECO 85.80 (+1.0%), RXO 28.49 (-0.7%), SPY 734.99 (+0.3%). News (24 h): ERAS-BMS
+  collaboration (06:43 repeat on InvestorsHub), RXO says truckload spot rates are not entering deflation (industry
+  comment), ECO none. No deal, halt or legal news → hold all. Watch: NVDA pre-market 160.15 vs close 155.46 (+3.0%),
+  background only. Crypto: BTC 63,940 < 50-day 78,597, ETH 1,791 < 2,326 → stay out.
+- Crash guard: SPY's official Tue close was 732.44, just above its 200-day 732.34 (+0.01%). It was 729.79 at 15:51
+  and jumped in the last minutes (730.05 at 15:50 → 732.39 at 15:55). The guard sold on the 15:51 reading as the rule
+  says, then the close landed above the line: the whipsaw risk flagged at the time. (On dividend-adjusted closes the
+  200-day is 729.79, so SPY sat right on the line at 15:51; the rule keeps raw closes, as every check so far.)
+  Streak = 1. If Wed also closes above its 200-day, the Thu pre-market writes CRASH GUARD OFF and the 3 slots are
+  refilled at 09:52 Thu. Fix: the streak now comes from official closes at the next pre-market (README), not the 15:33 estimate.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.

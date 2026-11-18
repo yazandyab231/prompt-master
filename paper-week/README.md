@@ -29,7 +29,10 @@ in both halves was 12-1 momentum, also the best-documented anomaly in the resear
   entry and keeps that money in cash. When SPY has closed back above its 200-day average 2 days in a row, the
   next 09:52 check refills those slots from a fresh `momentum_pick.py`. (SPY on 11-12: 757.12; 200-day 731.62.)
   The guard sells once: while it is on (trader/state/crashguard.json "active": true), it does not sell again; the
-  -20% stops still apply to the rest. The 15:33 check updates `spy_close_above_200_streak` (reset to 0 on a close below).
+  -20% stops still apply to the rest. The pre-market check sets `spy_close_above_200_streak` from the previous
+  day's official close vs the 200-day of the 200 closes ending that day (reset to 0 on a close below); the 15:33
+  reading is only a live estimate (fixed 11-18: on 11-17 SPY was below at 15:51 but closed above). At 2, the
+  pre-market check writes "CRASH GUARD OFF: refill at 09:52" in LOG.md and plans the 3 refills.
 - **Judging it:** one month is mostly luck. The fair test is many months against SPY (MTUM, a real momentum
   fund, beat SPY over 3 years but lost to it over 5 because of the 2022 momentum crash).
 - **Crypto (allowed by the owner 11-15).** Tested on 5 years of daily data (research note in LOG.md 11-15): holding BTC or ETH
