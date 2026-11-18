@@ -187,6 +187,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   crash guard on (streak 1), crypto out. SPY 731.27 vs today's 200-day 732.55 (below for now).
 - 13:48 RXO: "RXO Q3 Earnings & Revenues Beat Estimates on Brokerage Strength" (Yahoo/Zacks recap). Good news, no
   action (rule); RXO 28.70 at 14:17, flat. Intraday checks 10:17-14:17: all three open, far from their stops.
+- 15:33 Wed 11-18 summary: account $4711.06 (-288.94 vs $5,000; today -35.77): positions $2083.85 + cash $2627.21. ERAS -8.2%, ECO -5.3%, RXO +1.0% since entry; all far from stops.
+  SPY 728.57 vs 200-day 732.54 → below. Crash guard already active (sells once): no further sale at 15:51. If SPY closes below today the streak resets to 0 at the Thu pre-market. Benchmark (6.6040 SPY) $4811.44 (-188.56): account behind by $100.38.
 
 ## Scheduled check-ins
 
