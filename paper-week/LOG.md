@@ -183,6 +183,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   200-day is 729.79, so SPY sat right on the line at 15:51; the rule keeps raw closes, as every check so far.)
   Streak = 1. If Wed also closes above its 200-day, the Thu pre-market writes CRASH GUARD OFF and the 3 slots are
   refilled at 09:52 Thu. Fix: the streak now comes from official closes at the next pre-market (README), not the 15:33 estimate.
+- 09:53 check: all three open (ERAS 13.51, ECO 83.65, RXO 28.59; stops 11.84 / 69.59 / 22.72). Nothing planned to buy:
+  crash guard on (streak 1), crypto out. SPY 731.27 vs today's 200-day 732.55 (below for now).
 
 ## Scheduled check-ins
 
