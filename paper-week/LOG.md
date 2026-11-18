@@ -185,6 +185,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   refilled at 09:52 Thu. Fix: the streak now comes from official closes at the next pre-market (README), not the 15:33 estimate.
 - 09:53 check: all three open (ERAS 13.51, ECO 83.65, RXO 28.59; stops 11.84 / 69.59 / 22.72). Nothing planned to buy:
   crash guard on (streak 1), crypto out. SPY 731.27 vs today's 200-day 732.55 (below for now).
+- 13:48 RXO: "RXO Q3 Earnings & Revenues Beat Estimates on Brokerage Strength" (Yahoo/Zacks recap). Good news, no
+  action (rule); RXO 28.70 at 14:17, flat. Intraday checks 10:17-14:17: all three open, far from their stops.
 
 ## Scheduled check-ins
 
