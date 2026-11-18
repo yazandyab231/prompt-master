@@ -164,6 +164,9 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   | VSXY | 6 | 106.86 | 98.76 | -48.60 |
   Realized -$168.46. Cash $2,627.21. Left: ERAS 50, ECO 8, RXO 26. Guard state in trader/state/crashguard.json.
   Account $4,739.09 at 15:51. Refill (fresh momentum_pick.py) only after SPY closes above its 200-day 2 days in a row.
+- 18:49 ERAS: "Erasca Enters into Clinical Collaboration with Bristol Myers Squibb to Evaluate ERAS-0015 in Clinical Study
+  with Navlimetostat": a trial partnership, not a buyout. No sale (rule). Logged but not flagged: added collaborat/partnership.
+- ~19:50 the cloud machine restarted; the watcher stopped and was restarted at 19:57.
 
 ## Scheduled check-ins
 
