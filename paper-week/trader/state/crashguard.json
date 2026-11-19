@@ -24,7 +24,7 @@
       "pnl": -48.6
     }
   ],
-  "spy_close_above_200_streak": 1,
+  "spy_close_above_200_streak": 0,
   "note": "refill 3 slots at the 09:52 check after SPY closes above its 200-day 2 days in a row; the streak is set from official closes at the next pre-market check",
   "closes": [
     {
@@ -32,6 +32,12 @@
       "spy_close": 732.44,
       "spy_200d": 732.34,
       "above": true
+    },
+    {
+      "date": "2026-11-18",
+      "spy_close": 730.2,
+      "spy_200d": 732.55,
+      "above": false
     }
   ]
 }

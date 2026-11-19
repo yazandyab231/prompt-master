@@ -190,6 +190,18 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 15:33 Wed 11-18 summary: account $4711.06 (-288.94 vs $5,000; today -35.77): positions $2083.85 + cash $2627.21. ERAS -8.2%, ECO -5.3%, RXO +1.0% since entry; all far from stops.
   SPY 728.57 vs 200-day 732.54 → below. Crash guard already active (sells once): no further sale at 15:51. If SPY closes below today the streak resets to 0 at the Thu pre-market. Benchmark (6.6040 SPY) $4811.44 (-188.56): account behind by $100.38.
 
+## Thu 2026-11-19
+
+- Overnight: the machine restarted ~19:25 Wed; watcher restarted. Runs ending 03:09, 05:05, 07:00 quiet. Logged, not
+  material: RXO "fully valued?" article (02:11), ERAS "fair value edges higher" analyst piece (06:10).
+- 08:45 pre-market: all three open (Wed closes ERAS 13.76 vs stop 11.84, ECO 82.78 vs 69.59, RXO 28.60 vs 22.72).
+  Pre-market: ERAS 13.85 (+0.7%), ECO 83.60 (+1.0%), RXO no trades yet, SPY 737.62 (+1.0%). News (24 h): only the two
+  opinion pieces above and Wed's RXO earnings recap. No deal, halt or legal news → hold all. Watch: NVDA 152.82 (+1.2%);
+  TTWO 210.45 (-2.8%) on GTA VI launch day; background only (no setup trades under v3). Crypto: BTC 62,987 < 50-day
+  78,578, ETH 1,775 < 2,325 → stay out.
+- Crash guard: SPY's official Wed close 730.20 < its 200-day 732.55 → streak reset to 0 (was 1). Guard stays on; the 3
+  slots stay in cash. SPY needs 2 closes in a row above its 200-day before the refill. No other empty slot → no buys planned.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
