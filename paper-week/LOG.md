@@ -209,7 +209,7 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   No action (rule). ECO 81.92 (-1.0% today) vs stop 69.59. Watcher restarted.
 - Intraday checks 14:18-15:17: all three open, far from their stops.
 - 15:34 Thu 11-19 summary: account $4754.42 (-245.58 vs $5,000; today +33.37): positions $2127.21 + cash $2627.21. ERAS -3.5%, ECO -4.4%, RXO +1.2% since entry; all far from stops.
-  SPY 716.61 vs 200-day 732.70 → below (big reversal: opened 739.31, +1.3%, now -1.9%; QQQ -2.1%). Crash guard already active (sells once): no further sale at 15:51. Streak stays 0 if it closes below. Benchmark (6.6040 SPY) $4732.49 (-267.51): account AHEAD by $21.93 (first time since the 11-17 guard sale).
+  SPY 716.61 vs 200-day 732.70 → below (big reversal: opened 739.31, +1.3%, now -1.9%; QQQ -2.1%). Crash guard already active (sells once): no further sale at 15:51. Streak stays 0 if it closes below. Benchmark (6.6040 SPY) $4732.49 (-267.51): account AHEAD by $21.93 (was behind by $100.38 on Wed).
 
 ## Scheduled check-ins
 
