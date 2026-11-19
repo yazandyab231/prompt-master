@@ -203,6 +203,10 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   slots stay in cash. SPY needs 2 closes in a row above its 200-day before the refill. No other empty slot → no buys planned.
 - 09:53 check: all three open (ERAS 14.03, ECO 83.55, RXO 28.71; stops 11.84 / 69.59 / 22.72). Nothing planned to buy:
   crash guard on (streak 0), crypto out. SPY 737.71 (+1.0%), above its 200-day for now; only the official close counts.
+- Intraday checks 10:18-13:47: all three open, far from their stops. Watcher runs ending 10:52, 12:47 quiet.
+- 13:58 ECO watcher event: "Is ECO a Buy Now as Soaring Earnings Offset Debt and Dilution Risks?" (Yahoo opinion piece,
+  12:52). It matched "soar"/"dilut"; no share offering or other deal, halt or legal news in 72 h of ECO headlines.
+  No action (rule). ECO 81.92 (-1.0% today) vs stop 69.59. Watcher restarted.
 
 ## Scheduled check-ins
 
