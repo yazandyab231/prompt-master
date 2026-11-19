@@ -201,6 +201,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   78,578, ETH 1,775 < 2,325 → stay out.
 - Crash guard: SPY's official Wed close 730.20 < its 200-day 732.55 → streak reset to 0 (was 1). Guard stays on; the 3
   slots stay in cash. SPY needs 2 closes in a row above its 200-day before the refill. No other empty slot → no buys planned.
+- 09:53 check: all three open (ERAS 14.03, ECO 83.55, RXO 28.71; stops 11.84 / 69.59 / 22.72). Nothing planned to buy:
+  crash guard on (streak 0), crypto out. SPY 737.71 (+1.0%), above its 200-day for now; only the official close counts.
 
 ## Scheduled check-ins
 
