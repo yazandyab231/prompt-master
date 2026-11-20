@@ -210,6 +210,13 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - Intraday checks 14:18-15:17: all three open, far from their stops.
 - 15:34 Thu 11-19 summary: account $4754.42 (-245.58 vs $5,000; today +33.37): positions $2127.21 + cash $2627.21. ERAS -3.5%, ECO -4.4%, RXO +1.2% since entry; all far from stops.
   SPY 716.61 vs 200-day 732.70 → below (big reversal: opened 739.31, +1.3%, now -1.9%; QQQ -2.1%). Crash guard already active (sells once): no further sale at 15:51. Streak stays 0 if it closes below. Benchmark (6.6040 SPY) $4732.49 (-267.51): account AHEAD by $21.93 (was behind by $100.38 on Wed).
+- Overnight Thu→Fri: machine restarted ~20:05 Thu; watcher restarted. Runs ending 15:54, 17:49, 19:45, 22:01, 23:56,
+  01:51 quiet. 00:03 ECO: "Okeanis Eco Tankers Corp. – Ex Dividend Date" (Yahoo). Not a sell event, but it changes the
+  scorekeeping: on the ex-date the price drops by the dividend while a holder is owed the cash. Amount and date not
+  confirmed: the article site is blocked from this machine and Yahoo's quote API needs a login token. ECO's recent
+  dividends (Yahoo chart data): $1.55 (03-02), $2.00 (05-27), $5.25 (08-13). Fix: from now on the pre-market check reads
+  dividend events for every holding and credits qty x amount to cash on the ex-date (README step 3). SPY's next
+  ex-date is mid-December (last ones 09-18, 06-18, 03-20), after 12-11, so the benchmark needs no adjustment.
 
 ## Scheduled check-ins
 

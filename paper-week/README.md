@@ -136,7 +136,9 @@ cd paper-week   # every skill reads and writes ./trader/
    FILLED → `ticket.py fill --symbol SYM --side sell --qty Q --price P`, remove it from positions.json,
    log it, one-line note in the chat.
 3. **Pre-market (~08:45):** news on every holding (`python3 -I $P/trader-news/news.py --tickers ... --no-sec --hours 24`): log anything
-   material (deal, halt, guidance, legal). Watch items (NVDA, TTWO) as background only. Crypto: check BTC-USD and ETH-USD against their 50-day averages (rule above). If a slot is empty,
+   material (deal, halt, guidance, legal). Watch items (NVDA, TTWO) as background only. Crypto: check BTC-USD and ETH-USD against their 50-day averages (rule above). Dividends (added 11-20): read `v8/finance/chart/SYM?range=1mo&interval=1d&events=div`
+   for every holding; for a dividend whose ex-date is on or before today and after the entry, add qty x amount to cash
+   in trader/portfolio.json once (note it in LOG.md), since the price drops by it on the ex-date. If a slot is empty,
    run `momentum_pick.py` and choose the refill (diversification rules), EXCEPT slots emptied by the crash guard while
    trader/state/crashguard.json says "active": true (those wait for "CRASH GUARD OFF" in LOG.md).
 4. **09:52:** buy any planned entries or refills at the live price (`alerts.py quote SYM`, then
