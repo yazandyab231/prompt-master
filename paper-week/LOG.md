@@ -223,6 +223,18 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   data → no discretionary sale; the -20% stop (11.84, 5.3% below 12.50) handles the risk, and a gap below it at the
   open fills at the open. ERAS -15.6% since entry at 12.50. Watcher restarted.
 
+## Fri 2026-11-20
+
+- 08:45 pre-market: all three open (Thu closes ERAS 14.22 vs stop 11.84, ECO 83.02 vs 69.59, RXO 28.60 vs 22.72).
+  Pre-market: ERAS 13.25 (-6.8%; was 12.50 at 07:05), ECO 82.48 (-0.7%), RXO 28.62 (+0.1%), SPY 708.52 (-1.0%).
+  News (24 h): ERAS Phase 1 data for ERAS-0015 (07:00 release; 07:38 "44% response rate in advanced pancreatic
+  cancer"; 08:16 "Erasca falls 5% as early RAS cancer data leave key questions unanswered"), ECO ex-dividend notice
+  (see overnight). No deal, halt or legal news → hold all (trial data: no discretionary sale; the stop handles it).
+  Dividends: no new event in Yahoo's data for ERAS, ECO or RXO yet; ECO's -0.7% pre-market does not look like a large
+  ex-dividend drop, so the ex-date is probably later. Checked again each pre-market. Watch: NVDA 141.04 (-3.4%), TTWO
+  212.20 (+1.7%): background only. Crypto: BTC 61,902 < 50-day 78,145, ETH 1,755 < 2,307 → stay out.
+- Crash guard: SPY's official Thu close 715.87 < its 200-day 732.69 → streak stays 0. Guard on; 3 slots in cash.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
