@@ -240,6 +240,18 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   Dive; "Erasca Throws Down A Gauntlet"): industry comparison with Revolution Medicines, no action.
 - 15:34 Fri 11-20 summary: account $4731.57 (-268.43 vs $5,000; today -14.40): positions $2104.36 + cash $2627.21. ERAS -7.5%, ECO -2.1%, RXO -0.1% since entry; all far from stops.
   SPY 690.29 (-3.6% today; QQQ -5.5%, VIX 35.5) vs 200-day 732.76 → below, 5.8% under. Crash guard already active (sells once): no further sale at 15:51. Benchmark (6.6040 SPY) $4558.70 (-441.30): account AHEAD by $172.87. The 53% cash from the guard is what is holding up.
+- 15:52 close check: all three open (ERAS 13.67, ECO 85.30, RXO 28.39). No guard sale (already active).
+
+### Weekly report 1 (Thu 11-12 to Fri 11-20, at the Fri close)
+
+- Account $4721.11 (-$278.89, -5.6%): cash $2627.21 + ERAS 50 x 13.61, ECO 8 x 84.83, RXO 26 x 28.26.
+  Realized -$197.97 (JNJ day trade -29.51 on 11-12; crash-guard sales 11-17: MRNA -73.32, AMD -46.54, VSXY -48.60);
+  open positions -$80.92.
+- SPY benchmark: 690.87 close (-8.75% since 757.12 on 11-12) → $4562.51 (-$437.49). Account AHEAD by $158.60.
+- Holdings since entry 11-13: ERAS -8.1%, ECO -2.5%, RXO -0.5%. Stops hit: none of the -20% stops (JNJ's day-trade
+  stop on 11-12 was the only stop all week). Crash guard on since 11-17; SPY 5.7% under its 200-day (732.76).
+- Lesson: in a falling market the crash guard's cash did the work (the 3 sold names are lower now); we lost less than
+  SPY but still lost money, and one week is too short to call the strategy good or bad.
 
 ## Scheduled check-ins
 
