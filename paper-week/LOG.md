@@ -217,6 +217,11 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   dividends (Yahoo chart data): $1.55 (03-02), $2.00 (05-27), $5.25 (08-13). Fix: from now on the pre-market check reads
   dividend events for every holding and credits qty x amount to cash on the ex-date (README step 3). SPY's next
   ex-date is mid-December (last ones 09-18, 06-18, 03-20), after 12-11, so the benchmark needs no adjustment.
+- 07:05 ERAS watcher event: "Erasca Reports Broad and Robust Phase 1 Clinical Efficacy and Favorable Safety Data for
+  Pan-RAS Molecular Glue ERAS-0015" (company release, 07:00). First pre-market trade after it: 12.50 (-12.1% vs Thu
+  close 14.22; thin pre-market, one 5-minute bar), so the market is reading it as "sell the news" for now. Rule: trial
+  data → no discretionary sale; the -20% stop (11.84, 5.3% below 12.50) handles the risk, and a gap below it at the
+  open fills at the open. ERAS -15.6% since entry at 12.50. Watcher restarted.
 
 ## Scheduled check-ins
 
