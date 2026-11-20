@@ -236,6 +236,10 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - Crash guard: SPY's official Thu close 715.87 < its 200-day 732.69 → streak stays 0. Guard on; 3 slots in cash.
 - 09:52 check: all three open (ERAS 13.79, opened 13.13 = its low so far; ECO 85.39; RXO 28.54; stops 11.84 / 69.59 /
   22.72). Nothing planned to buy: crash guard on (streak 0), crypto out. SPY 713.92 (-0.3%).
+- Intraday checks 10:17-15:18: all three open, far from their stops. 12:30 and 13:05 ERAS commentary pieces (BioPharma
+  Dive; "Erasca Throws Down A Gauntlet"): industry comparison with Revolution Medicines, no action.
+- 15:34 Fri 11-20 summary: account $4731.57 (-268.43 vs $5,000; today -14.40): positions $2104.36 + cash $2627.21. ERAS -7.5%, ECO -2.1%, RXO -0.1% since entry; all far from stops.
+  SPY 690.29 (-3.6% today; QQQ -5.5%, VIX 35.5) vs 200-day 732.76 → below, 5.8% under. Crash guard already active (sells once): no further sale at 15:51. Benchmark (6.6040 SPY) $4558.70 (-441.30): account AHEAD by $172.87. The 53% cash from the guard is what is holding up.
 
 ## Scheduled check-ins
 
