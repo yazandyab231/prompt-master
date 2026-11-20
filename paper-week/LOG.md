@@ -234,6 +234,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   ex-dividend drop, so the ex-date is probably later. Checked again each pre-market. Watch: NVDA 141.04 (-3.4%), TTWO
   212.20 (+1.7%): background only. Crypto: BTC 61,902 < 50-day 78,145, ETH 1,755 < 2,307 → stay out.
 - Crash guard: SPY's official Thu close 715.87 < its 200-day 732.69 → streak stays 0. Guard on; 3 slots in cash.
+- 09:52 check: all three open (ERAS 13.79, opened 13.13 = its low so far; ECO 85.39; RXO 28.54; stops 11.84 / 69.59 /
+  22.72). Nothing planned to buy: crash guard on (streak 0), crypto out. SPY 713.92 (-0.3%).
 
 ## Scheduled check-ins
 
