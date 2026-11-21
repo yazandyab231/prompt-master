@@ -253,6 +253,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - Lesson: in a falling market the crash guard's cash did the work (the 3 sold names are lower now); we lost less than
   SPY but still lost money, and one week is too short to call the strategy good or bad.
 
+- Sat 11-21 correction: SPY's official Fri close is 689.81 (the report used 690.87, a 15:52 price). Benchmark $4555.51 (-8.89%); account $4721.11, so ahead by $165.60 (not $158.60).
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
