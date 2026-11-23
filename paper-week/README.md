@@ -24,7 +24,9 @@ in both halves was 12-1 momentum, also the best-documented anomaly in the resear
 - **Hold:** to the close on Fri 2026-12-11 (about 20 market days, the tested holding period).
 - **Disaster stop:** -20% from the entry (`bracket_check.py SYM HH:MM STOP 999999 DATE`). A stopped slot is
   refilled at the next 09:52 check with the best untaken pick from a fresh `momentum_pick.py`.
-- **Crash guard** (momentum crashes cluster after market declines, Daniel & Moskowitz 2016): at the 15:33 check,
+- **Crash guard: OFF since Mon 11-23 12:10 ET, by the owner ("do whatever you want the guard is off").** The 15:33
+  check no longer writes guard sales and the 15:51 check does not sell for it; the -20% stops still apply. History:
+  crash guard (momentum crashes cluster after market declines, Daniel & Moskowitz 2016): at the 15:33 check,
   if SPY closes below its 200-day average, the 15:51 check sells the 3 positions with the worst return since
   entry and keeps that money in cash. When SPY has closed back above its 200-day average 2 days in a row, the
   next 09:52 check refills those slots from a fresh `momentum_pick.py`. (SPY on 11-12: 757.12; 200-day 731.62.)
@@ -139,11 +141,10 @@ cd paper-week   # every skill reads and writes ./trader/
    material (deal, halt, guidance, legal). Watch items (NVDA, TTWO) as background only. Crypto: check BTC-USD and ETH-USD against their 50-day averages (rule above). Dividends (added 11-20): read `v8/finance/chart/SYM?range=1mo&interval=1d&events=div`
    for every holding; for a dividend whose ex-date is on or before today and after the entry, add qty x amount to cash
    in trader/portfolio.json once (note it in LOG.md), since the price drops by it on the ex-date. If a slot is empty,
-   run `momentum_pick.py` and choose the refill (diversification rules), EXCEPT slots emptied by the crash guard while
-   trader/state/crashguard.json says "active": true (those wait for "CRASH GUARD OFF" in LOG.md).
+   run `momentum_pick.py` and choose the refill (diversification rules), (the crash guard is off since 11-23, so every empty slot is refilled).
 4. **09:52:** buy any planned entries or refills at the live price (`alerts.py quote SYM`, then
    `ticket.py fill --side buy`), add to positions.json (symbol, qty, entry, date, time, stop, kind "momentum").
-5. **15:51:** if the 15:33 check found SPY below its 200-day average, sell the 3 worst positions (crash guard).
+5. **15:51:** (crash guard off since 11-23: no guard sales.)
    On Fri 2026-12-11, sell everything at the live price.
 6. Commit and push after every change. One-line chat note after every buy or sell.
 7. **After the close on 2026-12-11:** final report in the chat and in LOG.md; delete

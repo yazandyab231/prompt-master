@@ -109,6 +109,36 @@
       "qty": "6",
       "price": 98.76,
       "plain": "SELL 6 VSXY at 98.76"
+    },
+    {
+      "at": "2026-11-23T12:14:53-05:00",
+      "date": "2026-11-23",
+      "status": "filled",
+      "symbol": "SLS",
+      "side": "buy",
+      "qty": "53",
+      "price": 13.73,
+      "plain": "BUY 53 SLS at 13.73"
+    },
+    {
+      "at": "2026-11-23T12:14:53-05:00",
+      "date": "2026-11-23",
+      "status": "filled",
+      "symbol": "VSXY",
+      "side": "buy",
+      "qty": "7",
+      "price": 94.68,
+      "plain": "BUY 7 VSXY at 94.68"
+    },
+    {
+      "at": "2026-11-23T12:14:53-05:00",
+      "date": "2026-11-23",
+      "status": "filled",
+      "symbol": "SN",
+      "side": "buy",
+      "qty": "3",
+      "price": 223.63,
+      "plain": "BUY 3 SN at 223.63"
     }
   ]
 }

@@ -32,6 +32,39 @@
       "stop": 22.72,
       "kind": "momentum",
       "exit_by": "2026-12-11"
+    },
+    {
+      "symbol": "SLS",
+      "name": "SELLAS Life Sciences (biotech)",
+      "qty": 53,
+      "entry": 13.73,
+      "date": "2026-11-23",
+      "time": "12:14",
+      "stop": 10.98,
+      "kind": "momentum",
+      "exit_by": "2026-12-11"
+    },
+    {
+      "symbol": "VSXY",
+      "name": "Victoria's Secret (retail)",
+      "qty": 7,
+      "entry": 94.68,
+      "date": "2026-11-23",
+      "time": "12:14",
+      "stop": 75.74,
+      "kind": "momentum",
+      "exit_by": "2026-12-11"
+    },
+    {
+      "symbol": "SN",
+      "name": "SharkNinja (home appliances)",
+      "qty": 3,
+      "entry": 223.63,
+      "date": "2026-11-23",
+      "time": "12:14",
+      "stop": 178.9,
+      "kind": "momentum",
+      "exit_by": "2026-12-11"
     }
   ]
 }

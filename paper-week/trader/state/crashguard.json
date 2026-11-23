@@ -1,5 +1,5 @@
 {
-  "active": true,
+  "active": false,
   "since": "2026-11-17",
   "sold": [
     {
@@ -25,7 +25,7 @@
     }
   ],
   "spy_close_above_200_streak": 0,
-  "note": "refill 3 slots at the 09:52 check after SPY closes above its 200-day 2 days in a row; the streak is set from official closes at the next pre-market check",
+  "note": "Turned OFF by the owner on 11-23 ('do whatever you want the guard is off'). No guard sales or guard-blocked refills from now on.",
   "closes": [
     {
       "date": "2026-11-17",
@@ -51,5 +51,6 @@
       "spy_200d": 732.76,
       "above": false
     }
-  ]
+  ],
+  "disabled_by_owner": "2026-11-23 12:10 ET"
 }

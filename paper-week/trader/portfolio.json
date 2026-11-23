@@ -1,5 +1,5 @@
 {
-  "cash": 2683.21,
+  "cash": 621.87,
   "positions": [
     {
       "ticker": "ERAS",
@@ -34,6 +34,42 @@
           "date": "2026-11-13",
           "shares": 26.0,
           "cost": 738.4
+        }
+      ]
+    },
+    {
+      "ticker": "SLS",
+      "shares": 53.0,
+      "lots": [
+        {
+          "id": "SLS-1",
+          "date": "2026-11-23",
+          "shares": 53.0,
+          "cost": 727.69
+        }
+      ]
+    },
+    {
+      "ticker": "VSXY",
+      "shares": 7.0,
+      "lots": [
+        {
+          "id": "VSXY-1",
+          "date": "2026-11-23",
+          "shares": 7.0,
+          "cost": 662.76
+        }
+      ]
+    },
+    {
+      "ticker": "SN",
+      "shares": 3.0,
+      "lots": [
+        {
+          "id": "SN-1",
+          "date": "2026-11-23",
+          "shares": 3.0,
+          "cost": 670.89
         }
       ]
     }

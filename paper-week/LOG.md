@@ -264,6 +264,11 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - Crypto: BTC 61,202 vs 50-day 76,664; ETH 1,723 vs 2,246; both below, stay out.
 - News on holdings: nothing new since Fri 13:05 (ERAS trial articles). No refills (guard active).
 - 09:53: stops all OPEN (ERAS 14.01, ECO 80.17, RXO 28.47). No planned entries (guard active, crypto below 50-day). SPY 717.32 (+4.0%). Account $4765.29 vs SPY benchmark $4737.18 (ahead $28.11; the cash lags a rally).
+- 12:10 **CRASH GUARD OFF by the owner** ("Gang do whatever you want the guard is off"), after SPY +4.8% and NVDA +32% (board reinstated Jensen Huang as CEO). Account had fallen $19.65 behind the SPY benchmark because of the guard's cash. Owner's call overrides the 2-day rule; the -20% stops stay.
+- 12:14 **Refill 3 slots** from a fresh momentum_pick.py (1341 stocks, 22 pass; slot = (cash 2683.21 - 500) / 3 = $727.74):
+  SLS 53 @ 13.73 (SELLAS, biotech, #1, 12-1 mom +647%, stop 10.98), VSXY 7 @ 94.68 (Victoria's Secret, retail, #6, +154%, stop 75.74),
+  SN 3 @ 223.63 (SharkNinja, appliances, #8, +128%, stop 178.90). Skipped: FOSL, ETON, EVC (under $50M a day), ORKA (third biotech), RXO (held).
+  News: SLS won its Phase 3 AML trial (11-17), then sold $150M of new shares (closed 11-20); ATR 18.9%, so it can swing 20% in a day. VSXY: Moody's outlook to positive (11-20), results due early Dec. SN: nothing material. Cash left $621.87.
 
 ## Scheduled check-ins
 
