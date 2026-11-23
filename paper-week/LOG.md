@@ -263,6 +263,7 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - ECO dividend $7.00/share (Yahoo dates the ex-date 11-20; the NYSE price drop is showing today, likely the Oslo vs US ex-date difference, not confirmed). Held since 11-13, so credited 8 x 7.00 = $56.00: cash $2627.21 -> $2683.21. ECO's -7% pre-market is mostly this payout, not a loss.
 - Crypto: BTC 61,202 vs 50-day 76,664; ETH 1,723 vs 2,246; both below, stay out.
 - News on holdings: nothing new since Fri 13:05 (ERAS trial articles). No refills (guard active).
+- 09:53: stops all OPEN (ERAS 14.01, ECO 80.17, RXO 28.47). No planned entries (guard active, crypto below 50-day). SPY 717.32 (+4.0%). Account $4765.29 vs SPY benchmark $4737.18 (ahead $28.11; the cash lags a rally).
 
 ## Scheduled check-ins
 
