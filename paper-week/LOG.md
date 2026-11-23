@@ -255,6 +255,15 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 
 - Sat 11-21 correction: SPY's official Fri close is 689.81 (the report used 690.87, a 15:52 price). Benchmark $4555.51 (-8.89%); account $4721.11, so ahead by $165.60 (not $158.60).
 
+## Mon 2026-11-23
+
+- Weekend: news watcher quiet Fri 16:43 to Mon 08:18 (container restart Sat 23:37, watcher restarted). S&P futures reopened Sun 18:00 ET about +2% (7078 vs Fri 6935); reason not found in the headlines.
+- 08:46 pre-market: stops all OPEN (ERAS 11.84, ECO 69.59, RXO 22.72). Pre-market ERAS 14.00 (+2.9%), ECO 78.70 (-7.2%), RXO no trades yet; SPY 706.46 (+2.4%); NVDA 136.53 (+8.8% after -14% Fri); TTWO 218.42.
+- Crash guard: SPY's official Fri close 689.81 vs 200-day 732.76, below; streak stays 0, guard active.
+- ECO dividend $7.00/share (Yahoo dates the ex-date 11-20; the NYSE price drop is showing today, likely the Oslo vs US ex-date difference, not confirmed). Held since 11-13, so credited 8 x 7.00 = $56.00: cash $2627.21 -> $2683.21. ECO's -7% pre-market is mostly this payout, not a loss.
+- Crypto: BTC 61,202 vs 50-day 76,664; ETH 1,723 vs 2,246; both below, stay out.
+- News on holdings: nothing new since Fri 13:05 (ERAS trial articles). No refills (guard active).
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
