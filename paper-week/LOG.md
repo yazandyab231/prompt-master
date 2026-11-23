@@ -269,6 +269,7 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   SLS 53 @ 13.73 (SELLAS, biotech, #1, 12-1 mom +647%, stop 10.98), VSXY 7 @ 94.68 (Victoria's Secret, retail, #6, +154%, stop 75.74),
   SN 3 @ 223.63 (SharkNinja, appliances, #8, +128%, stop 178.90). Skipped: FOSL, ETON, EVC (under $50M a day), ORKA (third biotech), RXO (held).
   News: SLS won its Phase 3 AML trial (11-17), then sold $150M of new shares (closed 11-20); ATR 18.9%, so it can swing 20% in a day. VSXY: Moody's outlook to positive (11-20), results due early Dec. SN: nothing material. Cash left $621.87.
+- 12:15 watcher EVENT (first read of the new holdings' feeds): 29 older SLS/VSXY/SN headlines, all seen in the pre-buy news check (SLS trial win and $150M offering, VSXY Moody's/upgrade, SN Q3 beat). No deal, halt or legal news → hold. Watcher restarted.
 
 ## Scheduled check-ins
 
