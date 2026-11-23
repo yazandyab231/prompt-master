@@ -270,6 +270,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   SN 3 @ 223.63 (SharkNinja, appliances, #8, +128%, stop 178.90). Skipped: FOSL, ETON, EVC (under $50M a day), ORKA (third biotech), RXO (held).
   News: SLS won its Phase 3 AML trial (11-17), then sold $150M of new shares (closed 11-20); ATR 18.9%, so it can swing 20% in a day. VSXY: Moody's outlook to positive (11-20), results due early Dec. SN: nothing material. Cash left $621.87.
 - 12:15 watcher EVENT (first read of the new holdings' feeds): 29 older SLS/VSXY/SN headlines, all seen in the pre-buy news check (SLS trial win and $150M offering, VSXY Moody's/upgrade, SN Q3 beat). No deal, halt or legal news → hold. Watcher restarted.
+- 15:33 summary: account $4737.07 (-$262.93 vs $5,000, -5.3%): cash $621.87 + ERAS 13.94 (-5.9%), ECO 78.99 (-9.2%; -1.1% with the $56 dividend), RXO 28.59 (+0.7%), SLS 13.16 (-4.1%), VSXY 95.59 (+1.0%), SN 225.34 (+0.8%). All stops OPEN.
+  SPY 723.98 (+5.0%) → benchmark $4781.16 (-4.4%); account behind by $44.09. SPY vs live 200-day 732.92: below (info only, guard off).
 
 ## Scheduled check-ins
 
