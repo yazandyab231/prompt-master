@@ -282,6 +282,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 09:53 ENTRIES: none planned (no empty slots, crypto out). All 6 stops OPEN. Account $4766.89 (-4.7%) vs SPY 719.10 benchmark $4748.94: ahead $17.95.
 - 11:10 NEWS WATCHER EVENT: ERAS +10.2% today, 15.30 (entry 14.81). No new headline explains it (only the 08:01 conference notice). Up move, no sell rule: hold.
 - 13:37 NEWS WATCHER EVENT: VSXY chair Donna James steps down, Rod Little new chair (WWD). Same succession already announced 07:00 and logged pre-market; VSXY 95.66 (entry 94.68). Not a sell rule: hold.
+- 15:33 DAILY SUMMARY: all 6 stops OPEN. ERAS 15.65 (+5.6%), ECO 80.26 (-7.7% price, +0.3% with the $56 dividend), RXO 28.80 (+1.4%), SLS 13.09 (-4.7%), VSXY 92.08 (-2.8%), SN 229.30 (+2.5%). Cash 621.87. Account $4820.80 (-3.6%).
+  SPY 716.13 → benchmark $4729.32 (-5.4%); account AHEAD by $91.48. SPY vs live 200-day 733.02: below (info only, guard off).
 
 ## Scheduled check-ins
 
