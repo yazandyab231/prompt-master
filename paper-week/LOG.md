@@ -274,6 +274,12 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   SPY 723.98 (+5.0%) → benchmark $4781.16 (-4.4%); account behind by $44.09. SPY vs live 200-day 732.92: below (info only, guard off).
 - 19:25 NEWS EVENT (logged after a container restart): SharkNinja (SN) will join the S&P 500 (AES leaves), per 4 headlines 18:15-19:21. Good news, not a sell rule. SN closed 225.37 (entry 223.63), after hours 227.05. Hold.
 
+## Tue 2026-11-24
+- Mon official closes: SPY 722.29 (my 15:33 line used 723.98, a 15:33 price). Account at Mon close $4729.69 (-5.4%) vs SPY benchmark $4770.00 (-4.6%): behind $40.31.
+- 08:45 PRE-MARKET: all 6 stops OPEN. Pre-market: ERAS 13.90 (+0.1%), ECO 80.03 (+1.7%), RXO no trades, SLS 13.25 (-0.2%), VSXY no trades, SN 223.90 (-0.7% after +6.0% Mon on the S&P 500 news). SPY 713.47 (-1.2%), NVDA 156.98 (-4.9%).
+  News: SN joins the S&P 500 (AES leaves); VSXY board chair succession and Amazon pulling unauthorized VS listings on Thanksgiving (minor); ERAS December conference talks (routine). One SN headline is about Smith+Nephew, a ticker mix-up: ignored. No sell rule hit.
+  Dividends: none new (ECO's 11-20 $7.00 already credited). Crypto: BTC 60078 < 50d 76159, ETH 1693 < 50d 2226: stay out. No empty slots: no refill. Crash guard off (SPY below its 200-day 732.91, info only).
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
