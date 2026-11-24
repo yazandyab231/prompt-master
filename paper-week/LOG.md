@@ -279,6 +279,7 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 08:45 PRE-MARKET: all 6 stops OPEN. Pre-market: ERAS 13.90 (+0.1%), ECO 80.03 (+1.7%), RXO no trades, SLS 13.25 (-0.2%), VSXY no trades, SN 223.90 (-0.7% after +6.0% Mon on the S&P 500 news). SPY 713.47 (-1.2%), NVDA 156.98 (-4.9%).
   News: SN joins the S&P 500 (AES leaves); VSXY board chair succession and Amazon pulling unauthorized VS listings on Thanksgiving (minor); ERAS December conference talks (routine). One SN headline is about Smith+Nephew, a ticker mix-up: ignored. No sell rule hit.
   Dividends: none new (ECO's 11-20 $7.00 already credited). Crypto: BTC 60078 < 50d 76159, ETH 1693 < 50d 2226: stay out. No empty slots: no refill. Crash guard off (SPY below its 200-day 732.91, info only).
+- 09:53 ENTRIES: none planned (no empty slots, crypto out). All 6 stops OPEN. Account $4766.89 (-4.7%) vs SPY 719.10 benchmark $4748.94: ahead $17.95.
 
 ## Scheduled check-ins
 
