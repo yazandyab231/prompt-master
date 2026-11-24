@@ -272,6 +272,7 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 12:15 watcher EVENT (first read of the new holdings' feeds): 29 older SLS/VSXY/SN headlines, all seen in the pre-buy news check (SLS trial win and $150M offering, VSXY Moody's/upgrade, SN Q3 beat). No deal, halt or legal news → hold. Watcher restarted.
 - 15:33 summary: account $4737.07 (-$262.93 vs $5,000, -5.3%): cash $621.87 + ERAS 13.94 (-5.9%), ECO 78.99 (-9.2%; -1.1% with the $56 dividend), RXO 28.59 (+0.7%), SLS 13.16 (-4.1%), VSXY 95.59 (+1.0%), SN 225.34 (+0.8%). All stops OPEN.
   SPY 723.98 (+5.0%) → benchmark $4781.16 (-4.4%); account behind by $44.09. SPY vs live 200-day 732.92: below (info only, guard off).
+- 19:25 NEWS EVENT (logged after a container restart): SharkNinja (SN) will join the S&P 500 (AES leaves), per 4 headlines 18:15-19:21. Good news, not a sell rule. SN closed 225.37 (entry 223.63), after hours 227.05. Hold.
 
 ## Scheduled check-ins
 
