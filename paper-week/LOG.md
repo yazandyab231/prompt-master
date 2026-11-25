@@ -293,6 +293,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
   Dividends: none new. Crypto: BTC 58167 < 50d 75638, ETH 1631 < 50d 2205: stay out. No empty slots: no refill. Thu 11-26 market closed (Thanksgiving); Fri 11-27 closes 13:00.
 - 09:41 NEWS WATCHER EVENT: SLS -8.9% today, 12.07 (entry 13.73, stop 10.98, 9% below). No SLS news in 48h; the whole market is falling (SPY 698.02, -2.9%). No sell rule hit: hold, the -20% stop stays.
 - 09:52 ENTRIES: none planned (no empty slots, crypto out). All 6 stops OPEN. Account $4694.25 (-6.1%) vs SPY 697.71 benchmark $4607.68: ahead $86.58.
+- 15:33 DAILY SUMMARY: all 6 stops OPEN. ERAS 15.77 (+6.5%), ECO 81.60 (-6.2% price, +1.9% with the $56 dividend), RXO 29.27 (+3.0%), SLS 12.76 (-7.1%), VSXY 90.45 (-4.5%), SN 232.55 (+4.0%). Cash 621.87. Account $4831.15 (-3.4%).
+  SPY 714.74 → benchmark $4720.14 (-5.6%); account AHEAD by $111.00. SPY vs live 200-day 733.15: below (info only, guard off). Market recovered most of the morning drop (SPY was 697.71 at 09:52).
 
 ## Scheduled check-ins
 
