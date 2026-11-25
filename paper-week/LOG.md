@@ -285,6 +285,13 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 15:33 DAILY SUMMARY: all 6 stops OPEN. ERAS 15.65 (+5.6%), ECO 80.26 (-7.7% price, +0.3% with the $56 dividend), RXO 28.80 (+1.4%), SLS 13.09 (-4.7%), VSXY 92.08 (-2.8%), SN 229.30 (+2.5%). Cash 621.87. Account $4820.80 (-3.6%).
   SPY 716.13 → benchmark $4729.32 (-5.4%); account AHEAD by $91.48. SPY vs live 200-day 733.02: below (info only, guard off).
 
+## Wed 2026-11-25
+- Tue official closes: SPY 718.78. Account at Tue close $4848.63 (-3.0%) vs SPY benchmark $4746.82 (-5.1%): AHEAD $101.81.
+- 08:45 PRE-MARKET: all 6 stops OPEN. Pre-market: ERAS 15.50 (-2.1%), ECO 79.00 (-1.5%), RXO no trades, SLS 12.86 (-2.9%), VSXY 92.30 (-1.2%), SN 226.60 (-1.0%). SPY 703.60 (-2.1%), NVDA 145.89 (-6.1%).
+  Market: the AI-stock selloff is back (Nasdaq futures down), PCE inflation came in hotter than expected (Fed worries), and reports say a new round of Trump tariffs is close. None of our 6 is an AI/chip stock.
+  News on holdings: only more SN S&P 500 coverage, an ERAS hype piece (no new facts) and an Abercrombie earnings item tagged to VSXY (a peer, not VSXY). No sell rule hit.
+  Dividends: none new. Crypto: BTC 58167 < 50d 75638, ETH 1631 < 50d 2205: stay out. No empty slots: no refill. Thu 11-26 market closed (Thanksgiving); Fri 11-27 closes 13:00.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
