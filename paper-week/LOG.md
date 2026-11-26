@@ -296,6 +296,10 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 15:33 DAILY SUMMARY: all 6 stops OPEN. ERAS 15.77 (+6.5%), ECO 81.60 (-6.2% price, +1.9% with the $56 dividend), RXO 29.27 (+3.0%), SLS 12.76 (-7.1%), VSXY 90.45 (-4.5%), SN 232.55 (+4.0%). Cash 621.87. Account $4831.15 (-3.4%).
   SPY 714.74 → benchmark $4720.14 (-5.6%); account AHEAD by $111.00. SPY vs live 200-day 733.15: below (info only, guard off). Market recovered most of the morning drop (SPY was 697.71 at 09:52).
 
+## Thu 2026-11-26 (market CLOSED, Thanksgiving)
+
+- 08:34 NEWS EVENT: ERAS "Is Erasca Reasonable After Its ERAS 0015 Trial Progress?" is a valuation opinion piece, not new trial data or a filing. Not a sell trigger. Market closed. Hold.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
