@@ -300,6 +300,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 
 - 08:34 NEWS EVENT: ERAS "Is Erasca Reasonable After Its ERAS 0015 Trial Progress?" is a valuation opinion piece, not new trial data or a filing. Not a sell trigger. Market closed. Hold.
 
+- 08:44 PRE-MARKET: market CLOSED (Thanksgiving). Step 0 only: news watcher running. No trades. Fri 11-27 closes early at 13:00.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
