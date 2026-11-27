@@ -320,8 +320,8 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - Moves: Mon 11-23 the owner turned the crash guard off; 3 empty slots refilled at 12:14 (SLS, VSXY, SN). No sales.
 - Lesson: our whole lead over SPY still comes from week 1 (losing less while the market fell); this week our picks only matched the market. Two weeks is too short to call the stock picking good.
 
-## Sat 2026-11-28 (market CLOSED)
-- Fri 18:14 ET NEWS SLS: Yahoo headline "SELLAS (SLS) Cleared A Phase 3 Hurdle, Is It Still Below Fair Value?" (a valuation/opinion piece; the article could not be read, the proxy blocks finance.yahoo.com, so its details are unverified). Not a sell trigger (no buyout, halt, fraud, bankruptcy or delisting). HOLD SLS 53, stop 10.98 unchanged.
+### After the close (Fri 11-27)
+- 18:14 ET NEWS SLS: Yahoo headline "SELLAS (SLS) Cleared A Phase 3 Hurdle, Is It Still Below Fair Value?" (a valuation/opinion piece; the article could not be read, the proxy blocks finance.yahoo.com, so its details are unverified). Not a sell trigger (no buyout, halt, fraud, bankruptcy or delisting). HOLD SLS 53, stop 10.98 unchanged.
 
 ## Scheduled check-ins
 
