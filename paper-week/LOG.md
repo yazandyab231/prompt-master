@@ -311,6 +311,15 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 15:34 DAILY SUMMARY (closes final at 13:00): all 6 stops OPEN. ERAS 16.86 (+13.8%), ECO 81.12 (+1.3% with the dividend), RXO 29.47 (+3.8%), SLS 13.66 (-0.5%), VSXY 94.23 (-0.5%), SN 236.98 (+6.0%). Cash 621.87. Account $4974.58 (-0.5%).
   SPY 728.32 (+1.6% today) → benchmark $4809.83 (-3.8%); account AHEAD by $164.75. SPY vs live 200-day 733.34: below (info only, guard off). Account +$132.10 today (vs Wed close $4842.48).
 
+### Weekly report 2 (Mon 11-23 to Fri 11-27, closes final at the 13:00 early close)
+
+- Account $4974.58 (-$25.42, -0.5% vs $5,000): cash $621.87 + ERAS 50 x 16.86, ECO 8 x 81.12, RXO 26 x 29.47, SLS 53 x 13.66, VSXY 7 x 94.23, SN 3 x 236.98.
+- SPY benchmark: 728.32 (-3.8% since 757.12 on 11-12) → $4809.83. Account AHEAD by $164.75 (it was ahead $165.60 at last week's close).
+- This week: account +$253.47 (+5.4%, includes the $56 ECO dividend) vs SPY +$254.32 (+5.6%). A tie: SPY beat us by $0.85.
+- Holdings since entry: ERAS +13.8%, SN +6.0%, RXO +3.8%, ECO +1.3% (with the dividend), SLS -0.5%, VSXY -0.5%. Stops hit: none.
+- Moves: Mon 11-23 the owner turned the crash guard off; 3 empty slots refilled at 12:14 (SLS, VSXY, SN). No sales.
+- Lesson: our whole lead over SPY still comes from week 1 (losing less while the market fell); this week our picks only matched the market. Two weeks is too short to call the stock picking good.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
