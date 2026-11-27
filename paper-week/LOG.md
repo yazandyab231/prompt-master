@@ -302,6 +302,11 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 
 - 08:44 PRE-MARKET: market CLOSED (Thanksgiving). Step 0 only: news watcher running. No trades. Fri 11-27 closes early at 13:00.
 
+## Fri 2026-11-27 (early close 13:00 ET)
+
+- Wed official closes: ERAS 15.82, ECO 81.59, RXO 29.30, SLS 12.77, VSXY 91.54, SN 232.50; SPY 716.70 (my Wed 15:33 line used intraday 714.74). Account $4842.48 (-3.2%) vs bench $4733.09 (-5.3%), AHEAD $109.39.
+- 08:45 PRE-MARKET: watcher running; all 6 stops OPEN (nearest: SLS 12.77 vs stop 10.98, 14% room). Holdings news since Wed: only opinion/preview pieces (ERAS valuation piece, VSXY earnings preview: VSXY reports next week, so expect a bigger move). No Friday pre-market prints yet. S&P futures 7307.75 at 08:35, about +0.8% above Wed evening (headline: "futures top 7,300"). Crypto: BTC 61,355 vs 50d 74,679, ETH 1,720 vs 50d 2,167, both BELOW, stay out. No empty slot (6/6 held, cash $621.87), so no refill plan. Short day: close 13:00, so the 15:33/15:51 checks run after the close.
+
 ## Scheduled check-ins
 
 All New York time, Monday to Friday, into this chat. Delete all of them after the final report.
