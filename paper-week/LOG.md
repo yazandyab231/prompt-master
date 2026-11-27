@@ -309,7 +309,7 @@ TTWO put on watch (owner's idea, GTA VI launches 11-19): buy only on a setup tha
 - 09:53 ENTRIES: none planned (6/6 held). All stops OPEN. ERAS 16.88 (+6.7% today), SLS 12.59, ECO 80.60. Account $4873.85 vs bench $4766.24 (SPY 721.72), AHEAD $107.61.
 - 14:20 NEWS EVENT (after the 13:00 close): ERAS headline "Erasca Reports Early Cancer Responses, Speeds Up Phase 3 Pancreatic Trial Plan" (MarketBeat). Could not open the story (site not on this environment's network allowlist), so I could not confirm whether it is new or a recap of earlier news. The headline is positive and matches none of the sell rules (buyout, halt, fraud, bankruptcy, delisting). Hold. ERAS rose about 6% today.
 - 15:34 DAILY SUMMARY (closes final at 13:00): all 6 stops OPEN. ERAS 16.86 (+13.8%), ECO 81.12 (+1.3% with the dividend), RXO 29.47 (+3.8%), SLS 13.66 (-0.5%), VSXY 94.23 (-0.5%), SN 236.98 (+6.0%). Cash 621.87. Account $4974.58 (-0.5%).
-  SPY 728.32 (+1.6% today) → benchmark $4809.83 (-3.8%); account AHEAD by $164.75. SPY vs live 200-day 733.34: below (info only, guard off). Best day of the month for us: +$132 today.
+  SPY 728.32 (+1.6% today) → benchmark $4809.83 (-3.8%); account AHEAD by $164.75. SPY vs live 200-day 733.34: below (info only, guard off). Account +$132.10 today (vs Wed close $4842.48).
 
 ## Scheduled check-ins
 
